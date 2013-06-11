@@ -1,17 +1,11 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from kronometer.biker.views import biker_list, biker_create, set_start_time, \
+    set_end_time
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'kronometer.views.home', name='home'),
-    # url(r'^kronometer/', include('kronometer.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+    url(r'^biker/list', biker_list, name='biker_list'),
+    url(r'^biker/create', biker_create, name='biker_create'),
+    url(r'^biker/set_start_time', set_start_time, name='set_start_time'),
+    url(r'^biker/set_end_time', set_end_time, name='set_end_time'),
 )
