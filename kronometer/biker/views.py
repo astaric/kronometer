@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 
 from django.core import serializers
@@ -21,7 +22,16 @@ def biker_create(request):
 
 
 def set_start_time(request):
-    pass
+    number = request.POST.get('number') or request.GET.get('number')
+    start_time = request.POST.get('start_time') or request.GET.get('start_time')
+    start_time = float(start_time) / 1000
+    start_time = datetime.fromtimestamp(start_time)
+
+    biker = Biker.objects.get(number=number)
+    biker.start_time = start_time
+    biker.save()
+
+    return HttpResponse(serializers.serialize("json", [biker]), mimetype="application/json")
 
 
 def set_end_time(request):

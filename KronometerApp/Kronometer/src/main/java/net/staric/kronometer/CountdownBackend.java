@@ -2,9 +2,6 @@ package net.staric.kronometer;
 
 import java.util.Date;
 
-/**
- * Created by anze on 6/12/13.
- */
 public class CountdownBackend {
     private static CountdownBackend instance = null;
     protected CountdownBackend() {}

@@ -23,6 +23,7 @@ public class MainActivity extends Activity{
     Timer timer;
     Spinner contestants;
     TextView countdown;
+    MenuItem syncStatus;
 
     ContestantBackend contestantBackend;
     CountdownBackend countdownBackend;
@@ -49,7 +50,9 @@ public class MainActivity extends Activity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
+        this.syncStatus = menu.findItem(R.id.action_refresh_bikers);
         return true;
     }
 
@@ -59,7 +62,7 @@ public class MainActivity extends Activity{
             case R.id.action_settings:
                 return true;
             case R.id.action_refresh_bikers:
-                updateContestants();
+                syncContestants();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -67,12 +70,12 @@ public class MainActivity extends Activity{
     }
 
 
-    public void updateContestants() {
+    public void syncContestants() {
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new UpdateContestantListTask().execute();
+            new SyncContestantListTask().execute();
         } else {
             new AlertDialog.Builder(this)
                     .setTitle("No connection")
@@ -96,16 +99,32 @@ public class MainActivity extends Activity{
         }
     }
 
-    private class UpdateContestantListTask extends AsyncTask<Void, Void, Void> {
+    private class SyncContestantListTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            syncStatus.setTitle("Downloading");
+        }
+
         @Override
         protected Void doInBackground(Void... voids) {
-            MainActivity.this.contestantBackend.updateContestants();
+            contestantBackend.pullContestants();
+            for (Contestant contestant : contestantBackend.getPendingContestants()) {
+                contestantBackend.pushContestant(contestant);
+                publishProgress();
+            }
             return null;
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            int pending = contestantBackend.getNumberOfPendingContestants();
+            syncStatus.setTitle(String.format("Uploading (%d)", pending));
+        }
+
+        @Override
         protected void onPostExecute(Void voids) {
-            MainActivity.this.contestantsAdapter.notifyDataSetChanged();
+            contestantsAdapter.notifyDataSetChanged();
+            updateSyncStatus();
         }
     }
 
@@ -124,5 +143,15 @@ public class MainActivity extends Activity{
         if (index < contestants.getCount() - 1) {
             contestants.setSelection(index+1);
         }
+
+        updateSyncStatus();
+    }
+
+    public void updateSyncStatus() {
+        int pending = contestantBackend.getNumberOfPendingContestants();
+        if (pending == 0)
+            syncStatus.setTitle("Synced");
+        else
+            syncStatus.setTitle(String.format("Pending (%d)", pending));
     }
 }
