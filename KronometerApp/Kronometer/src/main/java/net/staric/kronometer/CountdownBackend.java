@@ -1,0 +1,32 @@
+package net.staric.kronometer;
+
+import java.util.Date;
+
+/**
+ * Created by anze on 6/12/13.
+ */
+public class CountdownBackend {
+    private static CountdownBackend instance = null;
+    protected CountdownBackend() {}
+    public static CountdownBackend getInstance() {
+        if(instance == null) {
+            instance = new CountdownBackend();
+        }
+        return instance;
+    }
+
+    private Date lastReset;
+
+    void resetCountdown() {
+        lastReset = new Date();
+    }
+
+    int getCountdownValue() {
+        if (lastReset == null)
+            return 0;
+
+        Date currentTime = new Date();
+        int countdownValue = (int)(lastReset.getTime() + 30000 - currentTime.getTime()) / 1000;
+        return countdownValue > 0 ? countdownValue : 0;
+    }
+}
