@@ -4,4 +4,6 @@ KronometerApp/Kronometer/Kronometer.apk
 KronometerApp/Kronometer/build/
 KronometerApp/key.store
 
+.idea/workspace.xml
 *.pyc
+database.db
