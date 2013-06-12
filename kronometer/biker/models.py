@@ -7,6 +7,8 @@ class Category(models.Model):
 
 
 class Biker(models.Model):
+    number = models.IntegerField(unique=True)
+
     name = models.TextField()
     surname = models.TextField()
 

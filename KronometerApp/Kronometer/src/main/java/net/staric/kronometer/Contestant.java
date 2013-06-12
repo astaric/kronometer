@@ -31,8 +31,8 @@ public class Contestant {
 
     static Contestant fromJson(JSONObject jsonObject) {
         try {
-            int id = jsonObject.getInt("pk");
             JSONObject fields = jsonObject.getJSONObject("fields");
+            int id = fields.getInt("number");
             String name = fields.getString("name");
             String surname = fields.getString("surname");
 

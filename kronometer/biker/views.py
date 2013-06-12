@@ -12,12 +12,12 @@ def biker_list(request):
 
 
 def biker_create(request):
+    number = request.POST.get('number') or request.GET.get('number')
     name = request.POST.get('name') or request.GET.get('name')
     surname = request.POST.get('surname') or request.GET.get('surname')
-    Biker.objects.create(name=name, surname=surname)
+    biker = Biker.objects.create(number=number, name=name, surname=surname)
 
-    response_data = dict(response='ok')
-    return HttpResponse(json.dumps(response_data), mimetype="application/json")
+    return HttpResponse(serializers.serialize("json", [biker]), mimetype="application/json")
 
 
 def set_start_time(request):
