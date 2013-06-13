@@ -35,4 +35,13 @@ def set_start_time(request):
 
 
 def set_end_time(request):
-    pass
+    number = request.POST.get('number') or request.GET.get('number')
+    end_time = request.POST.get('end_time') or request.GET.get('start_time')
+    end_time = float(end_time) / 1000
+    end_time = datetime.fromtimestamp(end_time)
+
+    biker = Biker.objects.get(number=number)
+    biker.end_time = end_time
+    biker.save()
+
+    return HttpResponse(serializers.serialize("json", [biker]), mimetype="application/json")
