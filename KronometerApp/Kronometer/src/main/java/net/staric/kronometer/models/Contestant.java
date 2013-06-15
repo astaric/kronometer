@@ -1,27 +1,58 @@
 package net.staric.kronometer.models;
 
+import net.staric.kronometer.ContestantBackend;
+import net.staric.kronometer.Update;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Contestant implements Comparable<Contestant> {
     public int id;
     public String name;
     public String surname;
-    public Date startTime;
+    public Category category;
+    public boolean domestic;
+    private Date startTime;
 
     public String syncStatus;
 
-    Contestant(int id, String name, String surname) {
+    public Contestant(int id, String name, String surname) {
+        this(id, name, surname, null, false);
+    }
+
+    public Contestant(int id, String name, String surname, Category category, boolean domestic) {
         this.id = id;
         this.name = name;
         this.surname = surname;
+        this.category = category;
+        this.domestic = domestic;
         this.syncStatus = "";
+    }
+
+    public static Contestant create(int id, String name, String surname, Category category, boolean domestic) throws Exception {
+        ContestantBackend backend = ContestantBackend.getInstance();
+        Contestant contestant = new Contestant(id, name, surname, category, domestic);
+        backend.addContestant(contestant);
+        return contestant;
     }
 
     public String getFullName() {
         return String.format("%s %s", this.name, this.surname);
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+        ContestantBackend.getInstance().addUpdate(new StartTimeUpdate(this));
     }
 
     @Override
@@ -44,5 +75,28 @@ public class Contestant implements Comparable<Contestant> {
 
     public int compareTo(Contestant other) {
         return ((Integer)this.id).compareTo(other.id);
+    }
+}
+
+
+class StartTimeUpdate extends Update {
+    int number;
+    Date startTime;
+
+    protected StartTimeUpdate(Contestant contestant) {
+        this.number = contestant.id;
+        this.startTime = contestant.getStartTime();
+    }
+
+
+    protected String getUpdateUrl() {
+        return "https://kronometer.herokuapp.com/biker/set_start_time";
+    }
+
+    protected List<NameValuePair> getUpdateParameters() {
+        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        params.add(new BasicNameValuePair("number", "" + number));
+        params.add(new BasicNameValuePair("start_time", "" + startTime.getTime()));
+        return params;
     }
 }

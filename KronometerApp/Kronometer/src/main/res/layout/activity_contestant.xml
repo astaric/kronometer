@@ -68,7 +68,8 @@
                 android:id="@+id/button_add_more"
                 android:layout_alignParentBottom="true"
                 android:layout_toRightOf="@+id/button_add"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="createNewContestant"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import net.staric.kronometer.Update;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.ContestantAdapter;
 import net.staric.kronometer.ContestantBackend;
@@ -53,6 +54,8 @@ public class MainActivity extends Activity{
 
         timer = new Timer();
         timer.schedule(new updateCountdown(), 0, 500);
+
+        updateSyncStatus();
     }
 
     @Override
@@ -60,6 +63,7 @@ public class MainActivity extends Activity{
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main, menu);
         this.syncStatus = menu.findItem(R.id.action_refresh_bikers);
+        updateSyncStatus();
         return true;
     }
 
@@ -119,8 +123,8 @@ public class MainActivity extends Activity{
         @Override
         protected Void doInBackground(Void... voids) {
             contestantBackend.pull();
-            for (Contestant contestant : contestantBackend.getPendingContestants()) {
-                contestantBackend.pushContestant(contestant);
+            for (Update update : contestantBackend.getPendingUpdates()) {
+                contestantBackend.push(update);
                 publishProgress();
             }
             return null;
@@ -147,7 +151,7 @@ public class MainActivity extends Activity{
         int index = contestants.getSelectedItemPosition();
         Contestant contestant = (Contestant)contestants.getSelectedItem();
 
-        contestantBackend.updateStartTime(contestant, startTime);
+        contestant.setStartTime(startTime);
         countdownBackend.resetCountdown();
 
         contestantsAdapter.notifyDataSetChanged();
@@ -159,10 +163,12 @@ public class MainActivity extends Activity{
     }
 
     public void updateSyncStatus() {
-        int pending = contestantBackend.getNumberOfPendingContestants();
-        if (pending == 0)
-            syncStatus.setTitle("Synced");
-        else
-            syncStatus.setTitle(String.format("Pending (%d)", pending));
+        if (syncStatus != null) {
+            int pending = contestantBackend.getNumberOfPendingContestants();
+            if (pending == 0)
+                syncStatus.setTitle("Synced");
+            else
+                syncStatus.setTitle(String.format("Pending (%d)", pending));
+        }
     }
 }

@@ -48,7 +48,6 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
             holder.txtId = (TextView)row.findViewById(R.id.cid);
             holder.txtName = (TextView)row.findViewById(R.id.name);
             holder.txtStartTime = (TextView)row.findViewById(R.id.startTime);
-            holder.txtSyncStatus = (TextView)row.findViewById(R.id.syncStatus);
 
             row.setTag(holder);
         }
@@ -60,8 +59,7 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
         Contestant contestant = data.get(position);
         holder.txtId.setText(((Integer) contestant.id).toString());
         holder.txtName.setText(contestant.getFullName());
-        holder.txtStartTime.setText((contestant.startTime == null) ? "" : contestant.startTime.toString());
-        holder.txtSyncStatus.setText("OK");
+        holder.txtStartTime.setText((contestant.getStartTime() == null) ? "" : contestant.getStartTime().toString());
 
         return row;
     }

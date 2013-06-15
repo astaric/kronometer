@@ -23,7 +23,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -39,25 +38,30 @@ public class ContestantBackend {
 
     private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
     private SparseArray<Contestant> contestantMap = new SparseArray<Contestant>();
-    private ArrayList<Contestant> pendingContestants = new ArrayList<Contestant>();
 
     private ArrayList<Category> categories = new ArrayList<Category>();
     private SparseArray<Category> categoryMap = new SparseArray<Category>();
 
+    private ArrayList<Update> pendingUpdates = new ArrayList<Update>();
+
     public List<Contestant> getContestants() {
-        return Collections.unmodifiableList(contestants);
+        return contestants;
+    }
+
+    public SparseArray<Contestant> getContestantMap() {
+        return contestantMap;
     }
 
     public List<Category> getCategories() {
-        return Collections.unmodifiableList(categories);
+        return categories;
     }
 
     public int getNumberOfPendingContestants() {
-        return pendingContestants.size();
+        return pendingUpdates.size();
     }
 
-    public List<Contestant> getPendingContestants() {
-        return new ArrayList<Contestant>(pendingContestants);
+    public List<Update> getPendingUpdates() {
+        return new ArrayList<Update>(pendingUpdates);
     }
 
     public void pull() {
@@ -138,31 +142,59 @@ public class ContestantBackend {
         return "[]";
     }
 
-    public void pushContestant(Contestant contestant) {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("https://kronometer.herokuapp.com/biker/set_start_time");
-
-        try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(
-                    new BasicNameValuePair("number", "" + contestant.id));
-            nameValuePairs.add(
-                    new BasicNameValuePair("start_time", "" + contestant.startTime.getTime()));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            HttpResponse response = httpclient.execute(httppost);
-            pendingContestants.remove(contestant);
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+    public void push(Update update) {
+        boolean success = update.push();
+        if (success) {
+            pendingUpdates.remove(update);
         }
-
     }
 
-    public void updateStartTime(Contestant contestant, Date startTime) {
-        contestant.startTime = startTime;
-        contestant.syncStatus = "SYNC";
-        pendingContestants.add(contestant);
+    public void addContestant(Contestant contestant) throws Exception {
+        if (contestantMap.get(contestant.id, null) != null)
+            throw new Exception("Contestant with id already exists.");
+
+        Update update = new NewContestantUpdate(contestant);
+        if (!update.push())
+            throw new Exception("Contestant with id already exists");
+
+        this.getContestants().add(contestant);
+        this.getContestantMap().append(contestant.id, contestant);
     }
+
+    public void addUpdate(Update update) {
+        pendingUpdates.add(update);
+    }
+}
+
+class NewContestantUpdate extends Update {
+    int number;
+    String name;
+    String surname;
+    Category category;
+    boolean domestic;
+
+    protected NewContestantUpdate(Contestant contestant) {
+        this.number = contestant.id;
+        this.name = contestant.name;
+        this.surname = contestant.surname;
+        this.category = contestant.category;
+        this.domestic = contestant.domestic;
+    }
+
+    protected String getUpdateUrl() {
+        return "https://kronometer.herokuapp.com/biker/create";
+    }
+
+    protected List<NameValuePair> getUpdateParameters() {
+        List<NameValuePair> params = new ArrayList<NameValuePair>(6);
+        params.add(new BasicNameValuePair("number", "" + number));
+        params.add(new BasicNameValuePair("name", name));
+        params.add(new BasicNameValuePair("surname", surname));
+        if (category != null)
+            params.add(new BasicNameValuePair("category", "" + category.id));
+        if (domestic)
+            params.add(new BasicNameValuePair("domestic", "true"));
+        return params;
+    }
+
 }
