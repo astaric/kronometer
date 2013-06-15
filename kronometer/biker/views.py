@@ -22,9 +22,17 @@ def biker_create(request):
     number = request.POST.get('number') or request.GET.get('number')
     name = request.POST.get('name') or request.GET.get('name')
     surname = request.POST.get('surname') or request.GET.get('surname')
-    biker = Biker.objects.create(number=number, name=name, surname=surname)
-
-    return HttpResponse(serializers.serialize("json", [biker]), mimetype="application/json")
+    category_id = request.POST.get('category') or request.GET.get('category')
+    domestic = request.POST.get('domestic') or request.POST.get('domestic')
+    biker = Biker.objects.create(
+        number=number,
+        name=name,
+        surname=surname,
+        category_id=category_id,
+        domestic=bool(domestic)
+    )
+    return HttpResponse(serializers.serialize("json", [biker]),
+                        mimetype="application/json")
 
 
 def set_start_time(request):
@@ -37,7 +45,8 @@ def set_start_time(request):
     biker.start_time = start_time
     biker.save()
 
-    return HttpResponse(serializers.serialize("json", [biker]), mimetype="application/json")
+    return HttpResponse(serializers.serialize("json", [biker]),
+                        mimetype="application/json")
 
 
 def set_end_time(request):
@@ -50,7 +59,8 @@ def set_end_time(request):
     biker.end_time = end_time
     biker.save()
 
-    return HttpResponse(serializers.serialize("json", [biker]), mimetype="application/json")
+    return HttpResponse(serializers.serialize("json", [biker]),
+                        mimetype="application/json")
 
 
 def category_list(request):
@@ -61,4 +71,5 @@ def category_list(request):
 def category_create(request):
     name = request.POST.get("name") or request.GET.get("name")
     category = Category.objects.create(name=name)
-    return HttpResponse(serializers.serialize("json", [category]), mimetype="application/json")
+    return HttpResponse(serializers.serialize("json", [category]),
+                        mimetype="application/json")

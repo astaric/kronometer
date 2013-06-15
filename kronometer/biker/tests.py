@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils.timezone import datetime, make_aware, utc
 
-from kronometer.biker.models import Biker
+from kronometer.biker.models import Biker, Category
 
 
 class BikerTest(TestCase):
@@ -34,3 +34,19 @@ class ViewTests(TestCase):
         biker = Biker.objects.get(number=1)
         self.assertEqual(biker.start_time,
                          make_aware(datetime(2013, 6, 12, 22, 31, 44, 67000), utc))
+
+    def test_create_contestant(self):
+        category = Category.objects.create(name="Dummy Category")
+        self.client.post(reverse('biker_create'), dict(
+            number="1",
+            name="John",
+            surname="Doe",
+            category=str(category.id),
+            domestic="Yes")
+        )
+
+        biker = Biker.objects.filter(number=1)[0]
+        self.assertEqual(biker.name, "John")
+        self.assertEqual(biker.surname, "Doe")
+        self.assertEqual(biker.category, category)
+        self.assertEqual(biker.domestic, True)
