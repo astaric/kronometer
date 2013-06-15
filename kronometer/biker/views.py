@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 from django.core import serializers
 from django.http import HttpResponse
@@ -19,20 +20,25 @@ def biker_list(request):
 
 
 def biker_create(request):
-    number = request.POST.get('number') or request.GET.get('number')
-    name = request.POST.get('name') or request.GET.get('name')
-    surname = request.POST.get('surname') or request.GET.get('surname')
-    category_id = request.POST.get('category') or request.GET.get('category')
-    domestic = request.POST.get('domestic') or request.POST.get('domestic')
-    biker = Biker.objects.create(
-        number=number,
-        name=name,
-        surname=surname,
-        category_id=category_id,
-        domestic=bool(domestic)
-    )
-    return HttpResponse(serializers.serialize("json", [biker]),
-                        mimetype="application/json")
+    params = request.POST if request.method == 'POST' else request.GET
+    number = params.get('number')
+    name = params.get('name')
+    surname = params.get('surname')
+    category_id = params.get('category')
+    domestic = params.get('domestic')
+    try:
+        biker = Biker.objects.create(
+            number=number,
+            name=name,
+            surname=surname,
+            category_id=category_id,
+            domestic=bool(domestic)
+        )
+        return HttpResponse(serializers.serialize("json", [biker]),
+                            mimetype="application/json")
+    except Exception as e:
+        return HttpResponse(json.dumps({"error": str(e)}), status=500)
+
 
 
 def set_start_time(request):

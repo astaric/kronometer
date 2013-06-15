@@ -4,6 +4,7 @@ when you run "manage.py test".
 
 Replace this with more appropriate tests for your application.
 """
+import json
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils.timezone import datetime, make_aware, utc
@@ -50,3 +51,14 @@ class ViewTests(TestCase):
         self.assertEqual(biker.surname, "Doe")
         self.assertEqual(biker.category, category)
         self.assertEqual(biker.domestic, True)
+
+    def test_create_contestant_handles_errors(self):
+        response = self.client.post(reverse('biker_create'), dict(
+            name="",
+            surname="",
+        ))
+
+        self.assertEqual(response.status_code, 500)
+        jsonResponse = json.loads(response.content)
+        self.assertEqual(jsonResponse,
+                         {"error": "biker_biker.number may not be NULL"})
