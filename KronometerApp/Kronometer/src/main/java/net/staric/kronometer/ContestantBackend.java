@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 
 public class ContestantBackend {
@@ -96,6 +96,8 @@ public class ContestantBackend {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        Collections.sort(contestants);
     }
 
     private String downloadContestantList() {
