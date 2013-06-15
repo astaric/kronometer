@@ -23,6 +23,13 @@ public class Contestant implements Comparable<Contestant> {
 
     public String syncStatus;
 
+    public boolean dummy=false;
+
+    public Contestant() {
+        dummy=true;
+        id=999999;
+    }
+
     public Contestant(int id, String name, String surname) {
         this(id, name, surname, null, false);
     }
@@ -45,6 +52,8 @@ public class Contestant implements Comparable<Contestant> {
     }
 
     public Update setStartTime(Date startTime) {
+        if (dummy)
+            return null;
         this.startTime = startTime;
         Update update = new StartTimeUpdate(this);
         ContestantBackend.getInstance().addUpdate(update);

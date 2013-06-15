@@ -6,12 +6,10 @@ import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -26,7 +24,9 @@ import java.util.List;
 
 public class ContestantBackend {
     private static ContestantBackend instance = null;
-    protected ContestantBackend() {}
+    protected ContestantBackend() {
+        contestants.add(new Contestant());
+    }
     public static ContestantBackend getInstance() {
         if(instance == null) {
             instance = new ContestantBackend();

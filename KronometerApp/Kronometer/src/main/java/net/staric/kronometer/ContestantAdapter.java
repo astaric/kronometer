@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.staric.kronometer.models.Contestant;
@@ -45,6 +46,7 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new ContestantHolder();
+            holder.frame = (RelativeLayout)row.findViewById(R.id.frame);
             holder.txtId = (TextView)row.findViewById(R.id.cid);
             holder.txtName = (TextView)row.findViewById(R.id.name);
             holder.txtStartTime = (TextView)row.findViewById(R.id.startTime);
@@ -57,15 +59,26 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
         }
 
         Contestant contestant = data.get(position);
-        holder.txtId.setText(((Integer) contestant.id).toString());
-        holder.txtName.setText(contestant.getFullName());
-        holder.txtStartTime.setText((contestant.getStartTime() == null) ? "" : contestant.getStartTime().toString());
+        if (contestant.dummy) {
+            holder.txtId.setText("");
+            holder.txtName.setText("");
+            holder.txtStartTime.setText("");
+        } else {
+            if (contestant.getStartTime() != null)
+                holder.frame.setBackgroundColor(0xff630b08);
+            else
+                holder.frame.setBackgroundColor(0x00000000);
+            holder.txtId.setText(((Integer) contestant.id).toString());
+            holder.txtName.setText(contestant.getFullName());
+            holder.txtStartTime.setText((contestant.getStartTime() == null) ? "" : contestant.getStartTime().toString());
+        }
 
         return row;
     }
 
     static class ContestantHolder
     {
+        RelativeLayout frame;
         TextView txtId;
         TextView txtName;
         TextView txtStartTime;

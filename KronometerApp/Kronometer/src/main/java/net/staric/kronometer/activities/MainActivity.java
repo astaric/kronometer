@@ -152,7 +152,7 @@ public class MainActivity extends Activity{
         Contestant contestant = (Contestant)contestants.getSelectedItem();
 
         Update update = contestant.setStartTime(startTime);
-        if (Utils.hasInternetConnection(this))
+        if (update != null && Utils.hasInternetConnection(this))
             new PushStartTime().execute(update);
         countdownBackend.resetCountdown();
 
