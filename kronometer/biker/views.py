@@ -10,7 +10,8 @@ from kronometer.biker.models import Biker, Category
 
 def results(request):
     bikers = list(Biker.objects.select_related('category'))
-    bikers.sort(key=lambda b: (b.category_name, b.duration))
+    bikers.sort(
+        key=lambda b: (b.category_name, b.duration is None, b.duration))
     return render(request, 'biker/results.html', {"bikers": bikers})
 
 

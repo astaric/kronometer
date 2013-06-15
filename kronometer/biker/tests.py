@@ -4,6 +4,7 @@ when you run "manage.py test".
 
 Replace this with more appropriate tests for your application.
 """
+from datetime import timedelta
 import json
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -17,11 +18,11 @@ class BikerTest(TestCase):
         b = Biker(name="John", surname="Doe")
         self.assertIsNone(b.duration)
 
-        b.start_time = datetime.datetime.now()
+        b.start_time = datetime.now()
         self.assertIsNone(b.duration)
 
-        b.end_time = b.start_time + datetime.timedelta(minutes=1)
-        self.assertEqual(b.duration, datetime.timedelta(minutes=1))
+        b.end_time = b.start_time + timedelta(minutes=1)
+        self.assertEqual(b.duration, timedelta(minutes=1))
 
 
 class ViewTests(TestCase):
@@ -62,3 +63,12 @@ class ViewTests(TestCase):
         jsonResponse = json.loads(response.content)
         self.assertEqual(jsonResponse,
                          {"error": "biker_biker.number may not be NULL"})
+
+    def test_partial_results(self):
+        Biker.objects.create(number=1,
+                             start_time=datetime.now())
+        Biker.objects.create(number=2,
+                             start_time=datetime.now(),
+                             end_time=datetime.now())
+
+        self.client.post(reverse("results"))
