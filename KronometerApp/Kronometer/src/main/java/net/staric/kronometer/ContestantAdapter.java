@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import net.staric.kronometer.models.Contestant;
+
 import java.util.List;
 
 public class ContestantAdapter extends ArrayAdapter<Contestant> {

@@ -2,6 +2,9 @@ package net.staric.kronometer;
 
 import android.util.SparseArray;
 
+import net.staric.kronometer.models.Category;
+import net.staric.kronometer.models.Contestant;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -38,8 +41,15 @@ public class ContestantBackend {
     private SparseArray<Contestant> contestantMap = new SparseArray<Contestant>();
     private ArrayList<Contestant> pendingContestants = new ArrayList<Contestant>();
 
+    private ArrayList<Category> categories = new ArrayList<Category>();
+    private SparseArray<Category> categoryMap = new SparseArray<Category>();
+
     public List<Contestant> getContestants() {
         return Collections.unmodifiableList(contestants);
+    }
+
+    public List<Category> getCategories() {
+        return Collections.unmodifiableList(categories);
     }
 
     public int getNumberOfPendingContestants() {
@@ -50,13 +60,11 @@ public class ContestantBackend {
         return new ArrayList<Contestant>(pendingContestants);
     }
 
-    public void pullContestants() {
-        String contestantsJson = downloadContestantList();
+    public void pull() {
         try {
-            JSONArray jsonArray = new JSONArray(contestantsJson);
-
-            for(int i=0; i<jsonArray.length(); i++) {
-                Contestant newContestant = Contestant.fromJson(jsonArray.getJSONObject(i));
+            JSONArray contestantList = new JSONArray(downloadContestantList());
+            for(int i=0; i<contestantList.length(); i++) {
+                Contestant newContestant = Contestant.fromJson(contestantList.getJSONObject(i));
                 Contestant existingContestant;
                 if ((existingContestant = contestantMap.get(newContestant.id, null)) != null) {
                     existingContestant.name = newContestant.name;
@@ -69,16 +77,39 @@ public class ContestantBackend {
         } catch (JSONException exc) {
             System.out.println(exc.getMessage());
         }
+        try {
+            JSONArray categoryList = new JSONArray(downloadCategoryList());
+            for(int i=0; i<categoryList.length(); i++) {
+                Category newCategory = Category.fromJson(categoryList.getJSONObject(i));
+                Category existingCategory;
+                if ((existingCategory = categoryMap.get(newCategory.id, null)) != null) {
+                    existingCategory.name = newCategory.name;
+                } else {
+                    categories.add(newCategory);
+                    categoryMap.put(newCategory.id, newCategory);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private String downloadContestantList() {
+        return downloadList("https://kronometer.herokuapp.com/biker/list");
+    }
+
+    private String downloadCategoryList() {
+        return downloadList("https://kronometer.herokuapp.com/category/list");
+    }
+
+    private String downloadList(String url) {
         BufferedReader in = null;
         try {
             HttpClient client = new DefaultHttpClient();
 
             HttpGet request = new HttpGet();
             request.setHeader("Content-Type", "text/plain; charset=utf-8");
-            request.setURI(new URI("https://kronometer.herokuapp.com/biker/list"));
+            request.setURI(new URI(url));
             HttpResponse response = client.execute(request);
             in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 

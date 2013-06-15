@@ -1,4 +1,4 @@
-package net.staric.kronometer;
+package net.staric.kronometer.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -6,12 +6,12 @@ import org.json.JSONObject;
 import java.util.Date;
 
 public class Contestant implements Comparable<Contestant> {
-    int id;
-    String name;
-    String surname;
-    Date startTime;
-    Date endTime;
-    String syncStatus;
+    public int id;
+    public String name;
+    public String surname;
+    public Date startTime;
+
+    public String syncStatus;
 
     Contestant(int id, String name, String surname) {
         this.id = id;
@@ -20,7 +20,7 @@ public class Contestant implements Comparable<Contestant> {
         this.syncStatus = "";
     }
 
-    String getFullName() {
+    public String getFullName() {
         return String.format("%s %s", this.name, this.surname);
     }
 
@@ -29,7 +29,7 @@ public class Contestant implements Comparable<Contestant> {
         return getFullName();
     }
 
-    static Contestant fromJson(JSONObject jsonObject) {
+    public static Contestant fromJson(JSONObject jsonObject) {
         try {
             JSONObject fields = jsonObject.getJSONObject("fields");
             int id = fields.getInt("number");
