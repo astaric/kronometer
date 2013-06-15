@@ -1,9 +1,8 @@
 from django.db import models
 
 
-# Create your models here.
 class Category(models.Model):
-    pass
+    name = models.TextField()
 
 
 class Biker(models.Model):
@@ -21,3 +20,12 @@ class Biker(models.Model):
     def duration(self):
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
+        else:
+            return ""
+
+    @property
+    def category_name(self):
+        if self.category is not None:
+            return self.category.name
+        else:
+            return "Nerazporejeni"

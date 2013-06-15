@@ -1,10 +1,16 @@
 from datetime import datetime
-import json
 
 from django.core import serializers
 from django.http import HttpResponse
+from django.shortcuts import render
 
-from kronometer.biker.models import Biker
+from kronometer.biker.models import Biker, Category
+
+
+def results(request):
+    bikers = list(Biker.objects.select_related('category'))
+    bikers.sort(key=lambda b: (b.category_name, b.duration))
+    return render(request, 'biker/results.html', {"bikers": bikers})
 
 
 def biker_list(request):
@@ -45,3 +51,14 @@ def set_end_time(request):
     biker.save()
 
     return HttpResponse(serializers.serialize("json", [biker]), mimetype="application/json")
+
+
+def category_list(request):
+    return HttpResponse(serializers.serialize(
+        "json", Biker.objects.order_by('id')), mimetype="application/json")
+
+
+def category_create(request):
+    name = request.POST.get("name") or request.GET.get("name")
+    category = Category.objects.create(name=name)
+    return HttpResponse(serializers.serialize("json", [category]), mimetype="application/json")
