@@ -22,7 +22,7 @@ class Biker(models.Model):
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
         else:
-            return ""
+            return None
 
     @property
     def category_name(self):
