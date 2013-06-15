@@ -1,11 +1,7 @@
 package net.staric.kronometer.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,11 +10,11 @@ import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import net.staric.kronometer.Update;
+import net.staric.kronometer.backend.Update;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.ContestantAdapter;
-import net.staric.kronometer.ContestantBackend;
-import net.staric.kronometer.CountdownBackend;
+import net.staric.kronometer.backend.ContestantBackend;
+import net.staric.kronometer.backend.CountdownBackend;
 import net.staric.kronometer.R;
 import net.staric.kronometer.utils.PushUpdates;
 import net.staric.kronometer.utils.Utils;

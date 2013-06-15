@@ -1,7 +1,8 @@
 package net.staric.kronometer.models;
 
-import net.staric.kronometer.ContestantBackend;
-import net.staric.kronometer.Update;
+import net.staric.kronometer.backend.ContestantBackend;
+import net.staric.kronometer.backend.StartTimeUpdate;
+import net.staric.kronometer.backend.Update;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -74,24 +75,4 @@ public class Contestant implements Comparable<Contestant> {
 }
 
 
-class StartTimeUpdate extends Update {
-    int number;
-    Date startTime;
 
-    protected StartTimeUpdate(Contestant contestant) {
-        this.number = contestant.id;
-        this.startTime = contestant.getStartTime();
-    }
-
-
-    protected String getUpdateUrl() {
-        return "https://kronometer.herokuapp.com/biker/set_start_time";
-    }
-
-    protected List<NameValuePair> getUpdateParameters() {
-        List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-        params.add(new BasicNameValuePair("number", "" + number));
-        params.add(new BasicNameValuePair("start_time", "" + startTime.getTime()));
-        return params;
-    }
-}

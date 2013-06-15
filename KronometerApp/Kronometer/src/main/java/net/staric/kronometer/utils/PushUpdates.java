@@ -2,8 +2,8 @@ package net.staric.kronometer.utils;
 
 import android.os.AsyncTask;
 
-import net.staric.kronometer.ContestantBackend;
-import net.staric.kronometer.Update;
+import net.staric.kronometer.backend.ContestantBackend;
+import net.staric.kronometer.backend.Update;
 
 public class PushUpdates extends AsyncTask<Update, Integer, Void> {
     @Override

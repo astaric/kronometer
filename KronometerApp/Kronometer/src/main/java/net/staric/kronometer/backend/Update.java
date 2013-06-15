@@ -1,4 +1,4 @@
-package net.staric.kronometer;
+package net.staric.kronometer.backend;
 
 import net.staric.kronometer.utils.Utils;
 
