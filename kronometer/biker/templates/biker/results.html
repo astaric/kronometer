@@ -12,7 +12,7 @@
     <li>{{ category.grouper }}
     <ul>
         {% for biker in category.list %}
-          <li>{{ forloop.counter }} {{ biker.name }} {{ biker.surname }} {{biker.duration}}</li>
+          <li>{{ forloop.counter }} {{ biker.name }} {{ biker.surname }} {{biker.duration|default_if_none:""}}</li>
         {% endfor %}
     </ul>
     </li>
