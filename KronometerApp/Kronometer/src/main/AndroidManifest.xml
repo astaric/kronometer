@@ -17,13 +17,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="net.staric.kronometer.MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+                android:name=".activities.ContestantActivity"
+                android:label="New Contestant"
+                android:parentActivityName="net.staric.kronometer.MainActivity" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="net.staric.kronometer.MainActivity" />
         </activity>
     </application>
 

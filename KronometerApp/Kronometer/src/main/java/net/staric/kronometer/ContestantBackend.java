@@ -18,13 +18,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.text.Format;
-import java.text.SimpleDateFormat;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.SimpleTimeZone;
 
 public class ContestantBackend {
     private static ContestantBackend instance = null;
@@ -84,15 +82,20 @@ public class ContestantBackend {
             HttpResponse response = client.execute(request);
             in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-            StringBuffer sb = new StringBuffer("");
+            StringBuilder sb = new StringBuilder("");
             String line = "";
             while ((line = in.readLine()) != null) {
-                sb.append(line + '\n');
+                sb.append(line);
+                sb.append('\n');
             }
             in.close();
             return sb.toString();
-        } catch (Exception exc) {
-            System.out.println(exc.getMessage());
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         } finally {
             if (in != null) {
                 try {

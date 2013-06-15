@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-public class Contestant {
+public class Contestant implements Comparable<Contestant> {
     int id;
     String name;
     String surname;
@@ -40,5 +40,9 @@ public class Contestant {
         } catch (JSONException exc) {
             return null;
         }
+    }
+
+    public int compareTo(Contestant other) {
+        return ((Integer)this.id).compareTo(other.id);
     }
 }

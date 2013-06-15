@@ -14,11 +14,11 @@ public class CountdownBackend {
 
     private Date lastReset;
 
-    void resetCountdown() {
+    public void resetCountdown() {
         lastReset = new Date();
     }
 
-    int getCountdownValue() {
+    public int getCountdownValue() {
         if (lastReset == null)
             return 0;
 

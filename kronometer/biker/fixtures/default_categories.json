@@ -1,0 +1,51 @@
+[
+  {
+    "model": "biker.category",
+    "pk": 1,
+    "fields": {
+      "name": "U\u010denci O\u0160"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 2,
+    "fields": {
+      "name": "Mo\u0161ki do 40 let"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 3,
+    "fields": {
+      "name": "Mo\u0161ki od 40 do 60 let"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 4,
+    "fields": {
+      "name": "Mo\u0161ki 60 in ve\u010d"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 5,
+    "fields": {
+      "name": "U\u010denke O\u0160"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 6,
+    "fields": {
+      "name": "\u017denske do 35"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 7,
+    "fields": {
+      "name": "\u017denske nad 35"
+    }
+  }
+]

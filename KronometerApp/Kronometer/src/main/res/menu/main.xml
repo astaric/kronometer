@@ -7,4 +7,8 @@
         android:title="@string/action_settings"
         android:orderInCategory="200"
         android:showAsAction="never" />
+    <item android:id="@+id/action_new_contestant"
+          android:title="New contestant"
+          android:orderInCategory="300"
+          android:showAsAction="never" />
 </menu>

@@ -55,7 +55,7 @@ def set_end_time(request):
 
 def category_list(request):
     return HttpResponse(serializers.serialize(
-        "json", Biker.objects.order_by('id')), mimetype="application/json")
+        "json", Category.objects.order_by('id')), mimetype="application/json")
 
 
 def category_create(request):
