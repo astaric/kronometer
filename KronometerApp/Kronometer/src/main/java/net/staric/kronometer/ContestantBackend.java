@@ -149,16 +149,11 @@ public class ContestantBackend {
         }
     }
 
-    public void addContestant(Contestant contestant) throws Exception {
+    public Update createContestantUpdate(Contestant contestant) throws Exception {
         if (contestantMap.get(contestant.id, null) != null)
             throw new Exception("Contestant with id already exists.");
 
-        Update update = new NewContestantUpdate(contestant);
-        if (!update.push())
-            throw new Exception("Contestant with id already exists");
-
-        this.getContestants().add(contestant);
-        this.getContestantMap().append(contestant.id, contestant);
+        return new NewContestantUpdate(contestant);
     }
 
     public void addUpdate(Update update) {

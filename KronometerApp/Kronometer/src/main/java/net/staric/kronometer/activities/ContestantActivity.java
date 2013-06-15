@@ -1,7 +1,9 @@
 package net.staric.kronometer.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -11,6 +13,7 @@ import android.widget.Spinner;
 
 import net.staric.kronometer.ContestantBackend;
 import net.staric.kronometer.R;
+import net.staric.kronometer.Update;
 import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
 
@@ -46,37 +49,74 @@ public class ContestantActivity extends Activity {
     }
 
     public void createNewContestant(View view) {
-        if (createContestant()) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivities(new Intent[]{intent});
+        Update update = createContestantUpdate();
+        if (update != null) {
+            new PushUpdatedTask(MainActivity.class).execute(update);
         }
     }
 
-    public void createNewContestantAndAddAnother() {
-        if (createContestant()) {
-            Intent intent = new Intent(this, ContestantActivity.class);
-            startActivities(new Intent[]{intent});
+    public void createNewContestantAndAddAnother(View view) {
+        Update update = createContestantUpdate();
+        if (update != null) {
+            new PushUpdatedTask(ContestantActivity.class).execute(update);
         }
     }
 
-    private boolean createContestant() {
+    private Update createContestantUpdate() {
         int number;
         try {
             number = Integer.parseInt(numberEditText.getText().toString());
-            Contestant.create(
+            Contestant contestant = new Contestant(
                     number,
                     nameEditText.getText().toString(),
                     surnameEditText.getText().toString(),
                     (Category)categorySpinner.getSelectedItem(),
                     domesticCheckBox.isChecked()
             );
-            return true;
+            return contestantsBackend.createContestantUpdate(contestant);
         } catch (NumberFormatException e) {
             numberEditText.setError("Invalid number");
-            return false;
         } catch (Exception e) {
             numberEditText.setError("Contestant with this number already exists.");
-            return false;
+        }
+        return null;
+    }
+
+    private class PushUpdatedTask extends AsyncTask<Update, Void, Boolean> {
+        Class nextActivity;
+        private ProgressDialog progressDialog;
+
+        public PushUpdatedTask(Class nextActivity) {
+            super();
+            this.nextActivity = nextActivity;
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            progressDialog= ProgressDialog.show(ContestantActivity.this,
+                    "Uploading changes", "Sending contestant to server.", true);
+        }
+
+        @Override
+        protected Boolean doInBackground(Update... updates) {
+            for (Update u: updates) {
+                if (!u.push())
+                    return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            progressDialog.dismiss();
+
+            if (success) {
+                Intent intent = new Intent(ContestantActivity.this, nextActivity);
+                startActivities(new Intent[]{intent});
+            } else {
+                numberEditText.setError("Contestant with this number already exists.");
+            }
         }
     }
 }

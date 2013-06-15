@@ -35,13 +35,6 @@ public class Contestant implements Comparable<Contestant> {
         this.syncStatus = "";
     }
 
-    public static Contestant create(int id, String name, String surname, Category category, boolean domestic) throws Exception {
-        ContestantBackend backend = ContestantBackend.getInstance();
-        Contestant contestant = new Contestant(id, name, surname, category, domestic);
-        backend.addContestant(contestant);
-        return contestant;
-    }
-
     public String getFullName() {
         return String.format("%s %s", this.name, this.surname);
     }
@@ -50,9 +43,11 @@ public class Contestant implements Comparable<Contestant> {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public Update setStartTime(Date startTime) {
         this.startTime = startTime;
-        ContestantBackend.getInstance().addUpdate(new StartTimeUpdate(this));
+        Update update = new StartTimeUpdate(this);
+        ContestantBackend.getInstance().addUpdate(update);
+        return update;
     }
 
     @Override

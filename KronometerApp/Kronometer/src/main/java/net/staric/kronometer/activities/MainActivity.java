@@ -20,6 +20,8 @@ import net.staric.kronometer.ContestantAdapter;
 import net.staric.kronometer.ContestantBackend;
 import net.staric.kronometer.CountdownBackend;
 import net.staric.kronometer.R;
+import net.staric.kronometer.utils.PushUpdates;
+import net.staric.kronometer.utils.Utils;
 
 import java.util.Date;
 import java.util.Timer;
@@ -86,18 +88,8 @@ public class MainActivity extends Activity{
 
 
     public void syncContestants() {
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
+        if (Utils.hasInternetConnection(this))
             new SyncContestantListTask().execute();
-        } else {
-            new AlertDialog.Builder(this)
-                    .setTitle("No connection")
-                    .setMessage("Your internet connections is not available.")
-                    .setNeutralButton("Close", null)
-                    .show();
-        }
     }
 
     private class updateCountdown extends TimerTask {
@@ -143,6 +135,18 @@ public class MainActivity extends Activity{
         }
     }
 
+    private class PushStartTime extends PushUpdates {
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            syncStatus.setTitle(String.format("Uploading (%d/%d)", progress[0], progress[1]));
+        }
+
+        @Override
+        protected void onPostExecute(Void voids) {
+            updateSyncStatus();
+        }
+    }
+
     public void clickStart(View view) {
         if (contestants.getCount() == 0)
             return;
@@ -151,7 +155,9 @@ public class MainActivity extends Activity{
         int index = contestants.getSelectedItemPosition();
         Contestant contestant = (Contestant)contestants.getSelectedItem();
 
-        contestant.setStartTime(startTime);
+        Update update = contestant.setStartTime(startTime);
+        if (Utils.hasInternetConnection(this))
+            new PushStartTime().execute(update);
         countdownBackend.resetCountdown();
 
         contestantsAdapter.notifyDataSetChanged();
