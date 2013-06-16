@@ -9,5 +9,5 @@ urlpatterns = patterns('',
     url(r'^biker/set_end_time', views.set_end_time, name='set_end_time'),
     url(r'^category/list', views.category_list, name='category/list'),
     url(r'^category/create', views.category_create, name='category/list'),
-    url(r'^$', views.results, name='results'),
+    url(r'^', views.results, name='results'),
 )
