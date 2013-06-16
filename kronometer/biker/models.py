@@ -4,6 +4,9 @@ from django.db import models
 class Category(models.Model):
     name = models.TextField()
 
+    def __unicode__(self):
+        return self.name
+
 
 class Biker(models.Model):
     number = models.IntegerField(unique=True)
@@ -30,3 +33,6 @@ class Biker(models.Model):
             return self.category.name
         else:
             return "Nerazporejeni"
+
+    def __unicode__(self):
+        return '%s %s %s' % (self.number, self.name, self.surname)

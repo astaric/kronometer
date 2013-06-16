@@ -1,6 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 
-from kronometer.biker import  views
+from kronometer.biker import views
+
+from django.contrib import admin
+admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^biker/list', views.biker_list, name='biker_list'),
@@ -9,5 +12,7 @@ urlpatterns = patterns('',
     url(r'^biker/set_end_time', views.set_end_time, name='set_end_time'),
     url(r'^category/list', views.category_list, name='category/list'),
     url(r'^category/create', views.category_create, name='category/list'),
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^', views.results, name='results'),
+
 )
