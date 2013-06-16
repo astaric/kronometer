@@ -64,10 +64,13 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
             holder.txtName.setText("");
             holder.txtStartTime.setText("");
         } else {
-            if (contestant.getStartTime() != null)
-                holder.frame.setBackgroundColor(0xff630b08);
-            else
-                holder.frame.setBackgroundColor(0x00000000);
+            if (contestant.getStartTime() != null) {
+                holder.frame.setBackgroundColor(0xffffffff);
+                holder.txtId.setTextColor(0xff000000);
+                holder.txtName.setTextColor(0xff000000);
+                holder.txtStartTime.setTextColor(0xff000000);
+            }
+
             holder.txtId.setText(((Integer) contestant.id).toString());
             holder.txtName.setText(contestant.getFullName());
             holder.txtStartTime.setText((contestant.getStartTime() == null) ? "" : contestant.getStartTime().toString());
