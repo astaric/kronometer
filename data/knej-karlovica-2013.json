@@ -1,0 +1,539 @@
+[
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "U\u010denci O\u0160"
+        },
+        "pk": 1
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "Mo\u0161ki do 40 let"
+        },
+        "pk": 2
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "Mo\u0161ki od 40 do 60 let"
+        },
+        "pk": 3
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "Mo\u0161ki 60 in ve\u010d"
+        },
+        "pk": 4
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "U\u010denke O\u0160"
+        },
+        "pk": 5
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "\u017denske do 35"
+        },
+        "pk": 6
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "\u017denske nad 35"
+        },
+        "pk": 7
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "Pred\u0161olski"
+        },
+        "pk": 8
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:00:36.782Z",
+            "surname": "Peterlin",
+            "domestic": false,
+            "name": "Nejc",
+            "number": 1,
+            "category": 2,
+            "end_time": "2013-06-16T15:08:15.526Z"
+        },
+        "pk": 41
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:01:04.190Z",
+            "surname": "Jakli\u010d",
+            "domestic": true,
+            "name": "Nejc",
+            "number": 2,
+            "category": 1,
+            "end_time": "2013-06-16T15:14:20.320Z"
+        },
+        "pk": 42
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:01:32.721Z",
+            "surname": "Zalar",
+            "domestic": false,
+            "name": "Matic",
+            "number": 3,
+            "category": 2,
+            "end_time": "2013-06-16T15:09:34.529Z"
+        },
+        "pk": 43
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:02:01.115Z",
+            "surname": "Vir\u0161ek",
+            "domestic": false,
+            "name": "Roman",
+            "number": 4,
+            "category": 2,
+            "end_time": "2013-06-16T15:09:32.346Z"
+        },
+        "pk": 44
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:02:30.347Z",
+            "surname": "Adami\u010d",
+            "domestic": false,
+            "name": "Simon",
+            "number": 5,
+            "category": 2,
+            "end_time": "2013-06-16T15:12:02.412Z"
+        },
+        "pk": 45
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:02:57.773Z",
+            "surname": "Nedeljkovi\u010d",
+            "domestic": true,
+            "name": "\u017dan",
+            "number": 6,
+            "category": 2,
+            "end_time": "2013-06-16T15:14:07.151Z"
+        },
+        "pk": 46
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:03:25.961Z",
+            "surname": "Kutnar",
+            "domestic": true,
+            "name": "Lovro",
+            "number": 7,
+            "category": 1,
+            "end_time": "2013-06-16T15:14:59.957Z"
+        },
+        "pk": 47
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:03:54Z",
+            "surname": "Kutnar",
+            "domestic": true,
+            "name": "Marija",
+            "number": 8,
+            "category": 7,
+            "end_time": "2013-06-16T15:16:46.781Z"
+        },
+        "pk": 48
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:04:21.439Z",
+            "surname": "Kutnar",
+            "domestic": true,
+            "name": "Eva",
+            "number": 9,
+            "category": 5,
+            "end_time": "2013-06-16T15:14:58.365Z"
+        },
+        "pk": 49
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:04:49.252Z",
+            "surname": "Kutnar",
+            "domestic": true,
+            "name": "Franc",
+            "number": 10,
+            "category": 3,
+            "end_time": "2013-06-16T15:13:28.466Z"
+        },
+        "pk": 50
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:05:17.378Z",
+            "surname": "Svete",
+            "domestic": true,
+            "name": "Bla\u017e",
+            "number": 11,
+            "category": 2,
+            "end_time": "2013-06-16T15:13:26.443Z"
+        },
+        "pk": 51
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:05:45.655Z",
+            "surname": "Adami\u010d",
+            "domestic": true,
+            "name": "Erazem",
+            "number": 12,
+            "category": 8,
+            "end_time": "2013-06-16T15:21:41.184Z"
+        },
+        "pk": 52
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:06:14.301Z",
+            "surname": "Adami\u010d",
+            "domestic": true,
+            "name": "Jure",
+            "number": 13,
+            "category": 2,
+            "end_time": "2013-06-16T15:21:42.056Z"
+        },
+        "pk": 53
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:06:42.038Z",
+            "surname": "Gradi\u0161ar",
+            "domestic": true,
+            "name": "\u017dak",
+            "number": 14,
+            "category": 1,
+            "end_time": "2013-06-16T15:18:42.517Z"
+        },
+        "pk": 54
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:07:09.949Z",
+            "surname": "Gradi\u0161ar",
+            "domestic": true,
+            "name": "\u010crt",
+            "number": 15,
+            "category": 1,
+            "end_time": "2013-06-16T15:21:29.978Z"
+        },
+        "pk": 55
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:07:37.915Z",
+            "surname": "Gradi\u0161ar",
+            "domestic": true,
+            "name": "Ne\u017ea",
+            "number": 16,
+            "category": 8,
+            "end_time": "2013-06-16T15:24:16.828Z"
+        },
+        "pk": 56
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:08:06.215Z",
+            "surname": "\u017du\u017eek",
+            "domestic": true,
+            "name": "Anton",
+            "number": 17,
+            "category": 3,
+            "end_time": "2013-06-16T15:18:27.416Z"
+        },
+        "pk": 57
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:08:33.852Z",
+            "surname": "Zidar Zupan",
+            "domestic": true,
+            "name": "Alenka",
+            "number": 18,
+            "category": 7,
+            "end_time": "2013-06-16T15:21:05.683Z"
+        },
+        "pk": 58
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:09:01.562Z",
+            "surname": "Brodnik",
+            "domestic": true,
+            "name": "Lana",
+            "number": 19,
+            "category": 5,
+            "end_time": "2013-06-16T15:23:38.813Z"
+        },
+        "pk": 59
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:09:29.847Z",
+            "surname": "Brodnik",
+            "domestic": true,
+            "name": "Tatjana",
+            "number": 20,
+            "category": 7,
+            "end_time": "2013-06-16T15:21:51.850Z"
+        },
+        "pk": 60
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:09:58.199Z",
+            "surname": "Brodnik",
+            "domestic": true,
+            "name": "Anton",
+            "number": 21,
+            "category": 4,
+            "end_time": "2013-06-16T15:21:00.436Z"
+        },
+        "pk": 61
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:10:26.534Z",
+            "surname": "Skubic",
+            "domestic": false,
+            "name": "Borislav",
+            "number": 22,
+            "category": 3,
+            "end_time": "2013-06-16T15:17:21.110Z"
+        },
+        "pk": 62
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:10:54.929Z",
+            "surname": "Jak\u0161a",
+            "domestic": true,
+            "name": "Silvester",
+            "number": 23,
+            "category": 2,
+            "end_time": "2013-06-16T15:19:21.483Z"
+        },
+        "pk": 63
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:11:23.367Z",
+            "surname": "Verov\u0161ek",
+            "domestic": true,
+            "name": "Olga",
+            "number": 24,
+            "category": 7,
+            "end_time": "2013-06-16T15:23:58.071Z"
+        },
+        "pk": 64
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:11:52.303Z",
+            "surname": "Gruden",
+            "domestic": true,
+            "name": "Hilda",
+            "number": 25,
+            "category": 7,
+            "end_time": "2013-06-16T15:24:11.991Z"
+        },
+        "pk": 65
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:12:20.538Z",
+            "surname": "Sivec",
+            "domestic": true,
+            "name": "Miha",
+            "number": 26,
+            "category": 2,
+            "end_time": "2013-06-16T15:21:55.575Z"
+        },
+        "pk": 66
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:12:48.320Z",
+            "surname": "Hren",
+            "domestic": true,
+            "name": "Nik",
+            "number": 27,
+            "category": 1,
+            "end_time": "2013-06-16T15:24:52.640Z"
+        },
+        "pk": 67
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:13:17.253Z",
+            "surname": "Hren",
+            "domestic": true,
+            "name": "Matej",
+            "number": 28,
+            "category": 3,
+            "end_time": "2013-06-16T15:23:08.950Z"
+        },
+        "pk": 68
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:13:45.674Z",
+            "surname": "Pirkovi\u010d",
+            "domestic": true,
+            "name": "Ga\u0161per",
+            "number": 29,
+            "category": 1,
+            "end_time": "2013-06-16T15:28:31.474Z"
+        },
+        "pk": 69
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:14:14.073Z",
+            "surname": "Pirkovi\u010d",
+            "domestic": true,
+            "name": "Bo\u0161tjan",
+            "number": 30,
+            "category": 2,
+            "end_time": "2013-06-16T15:26:49.828Z"
+        },
+        "pk": 70
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:14:41.475Z",
+            "surname": "Kotnik",
+            "domestic": false,
+            "name": "Herbert",
+            "number": 31,
+            "category": 4,
+            "end_time": "2013-06-16T15:22:32.288Z"
+        },
+        "pk": 71
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:15:09.277Z",
+            "surname": "Pape\u017e",
+            "domestic": true,
+            "name": "Rok",
+            "number": 32,
+            "category": 2,
+            "end_time": "2013-06-16T15:23:27.617Z"
+        },
+        "pk": 72
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:15:37.850Z",
+            "surname": "\u0160kulj",
+            "domestic": true,
+            "name": "Jo\u017ee",
+            "number": 33,
+            "category": 3,
+            "end_time": "2013-06-16T15:23:48.527Z"
+        },
+        "pk": 73
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:16:05.992Z",
+            "surname": "Buh",
+            "domestic": false,
+            "name": "Cveta",
+            "number": 34,
+            "category": 7,
+            "end_time": "2013-06-16T15:25:13.600Z"
+        },
+        "pk": 74
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:16:35.120Z",
+            "surname": "Tanko",
+            "domestic": true,
+            "name": "Toma\u017e",
+            "number": 35,
+            "category": 2,
+            "end_time": "2013-06-16T15:25:08.372Z"
+        },
+        "pk": 75
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:17:03.548Z",
+            "surname": "Kri\u010dka",
+            "domestic": true,
+            "name": "Andrej",
+            "number": 36,
+            "category": 2,
+            "end_time": "2013-06-16T15:24:57.647Z"
+        },
+        "pk": 76
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "start_time": "2013-06-16T15:17:29.903Z",
+            "surname": "Stari\u010d",
+            "domestic": true,
+            "name": "Jo\u017ee",
+            "number": 42,
+            "category": 3,
+            "end_time": "2013-06-16T15:27:12.250Z"
+        },
+        "pk": 77
+    }
+]
