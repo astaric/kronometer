@@ -4,11 +4,26 @@
     <title></title>
 </head>
 <body>
-<h1>Kronometer Knej-Karlovica 2013</h1>
+<h1>Kronometer Knej-Karlovica 2013 - Skupno</h1>
 {% regroup bikers by category_name as results %}
 
 <ul>
 {% for category in results %}
+    <li>{{ category.grouper }}
+    <ul>
+        {% for biker in category.list %}
+          <li>{{ forloop.counter }} {{ biker.name }} {{ biker.surname }} {{biker.duration|default_if_none:""}}</li>
+        {% endfor %}
+    </ul>
+    </li>
+{% endfor %}
+</ul>
+
+<h1>Kronometer Knej-Karlovica 2013 - Občinsko</h1>
+{% regroup domestic_bikers by category_name as domestic_results %}
+
+<ul>
+{% for category in domestic_results %}
     <li>{{ category.grouper }}
     <ul>
         {% for biker in category.list %}

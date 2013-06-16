@@ -12,7 +12,12 @@ def results(request):
     bikers = list(Biker.objects.select_related('category'))
     bikers.sort(
         key=lambda b: (b.category_name, b.duration is None, b.duration))
-    return render(request, 'biker/results.html', {"bikers": bikers})
+    domestic_bikers = list(Biker.objects.filter(domestic=True)
+                                        .select_related('category'))
+    domestic_bikers.sort(
+        key=lambda b: (b.category_name, b.duration is None, b.duration))
+    return render(request, 'biker/results.html', {"bikers": bikers,
+                                                  "domestic_bikers":domestic_bikers})
 
 
 def biker_list(request):
