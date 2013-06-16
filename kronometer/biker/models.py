@@ -17,8 +17,8 @@ class Biker(models.Model):
     category = models.ForeignKey(Category, null=True)
     domestic = models.BooleanField()
 
-    start_time = models.DateTimeField(null=True)
-    end_time = models.DateTimeField(null=True)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
 
     @property
     def duration(self):
