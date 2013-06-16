@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url, include
 
 from kronometer.biker import views
+from kronometer import settings
 
 from django.contrib import admin
 admin.autodiscover()
@@ -13,6 +14,8 @@ urlpatterns = patterns('',
     url(r'^category/list', views.category_list, name='category/list'),
     url(r'^category/create', views.category_create, name='category/list'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.STATIC_ROOT,
+    }),
     url(r'^', views.results, name='results'),
-
 )
