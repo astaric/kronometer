@@ -11,4 +11,8 @@
           android:title="New contestant"
           android:orderInCategory="300"
           android:showAsAction="never" />
+    <item android:id="@+id/action_finish"
+        android:title="Finish"
+        android:orderInCategory="400"
+        android:showAsAction="never" />
 </menu>

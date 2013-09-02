@@ -77,6 +77,9 @@ public class MainActivity extends Activity{
                 Intent intent = new Intent(this, ContestantActivity.class);
                 startActivities(new Intent[]{intent});
                 return true;
+            case R.id.action_finish:
+                startActivities(new Intent[]{new Intent(this, FinishActivity.class)});
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

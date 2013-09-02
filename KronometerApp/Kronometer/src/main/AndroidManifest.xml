@@ -33,6 +33,13 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="net.staric.kronometer.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.FinishActivity"
+            android:label="Finish">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
