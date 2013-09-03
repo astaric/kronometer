@@ -22,7 +22,7 @@
         <ListView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/listView2"
+            android:id="@+id/contestants"
             android:layout_gravity="right|center_vertical"
             android:layout_weight="1" />
     </LinearLayout>
@@ -33,46 +33,31 @@
         android:layout_height="fill_parent"
         android:layout_weight="1">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Na cilju"
+            android:id="@+id/textView2" />
+
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/contestantsOnFinish"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Prihodi na cilj"
+            android:id="@+id/textView3" />
+
+        <ListView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Na cilju"
-                android:id="@+id/textView2" />
-
-            <ListView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/listView"
-                android:layout_gravity="left|center_vertical"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Prihodi na cilj"
-                android:id="@+id/textView3" />
-
-            <ListView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/listView3"
-                android:layout_weight="1" />
-        </LinearLayout>
+            android:id="@+id/sensorEvents"
+            android:layout_weight="1" />
     </LinearLayout>
 
 </LinearLayout>
