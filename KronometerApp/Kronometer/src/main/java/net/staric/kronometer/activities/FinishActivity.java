@@ -7,6 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import net.staric.kronometer.ContestantAdapter;
 import net.staric.kronometer.R;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 public class FinishActivity extends Activity {
 
     private ContestantAdapter contestantsAdapter;
+    private ContestantAdapter contestantsOnFinishAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +59,22 @@ public class FinishActivity extends Activity {
                             @Override
                             public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    contestantsAdapter.remove(contestantsAdapter.getItem(position));
+                                    Contestant contestant = contestantsAdapter.getItem(position);
+                                    contestantsAdapter.remove(contestant);
+                                    contestantsOnFinishAdapter.add(contestant);
+
                                 }
                                 contestantsAdapter.notifyDataSetChanged();
+                                contestantsOnFinishAdapter.notifyDataSetChanged();
                             }
                         });
         contestants.setOnTouchListener(touchListener);
         contestants.setOnScrollListener(touchListener.makeScrollListener());
 
-
-
+        Spinner contestantsOnFinish = (Spinner)findViewById(R.id.contestantsOnFinish);
+        contestantsOnFinishAdapter = new ContestantAdapter(this,
+                R.layout.listitem_contestant,
+                new ArrayList<Contestant>(contestantsAdapter.getCount()));
+        contestantsOnFinish.setAdapter(contestantsOnFinishAdapter);
     }
 }
