@@ -1,26 +1,40 @@
 package net.staric.kronometer.activities;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
 import net.staric.kronometer.ContestantAdapter;
 import net.staric.kronometer.R;
+import net.staric.kronometer.backend.BluetoothListenerService;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.utils.SwipeDismissListViewTouchListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class FinishActivity extends Activity {
-
+    private int REQUEST_ENABLE_BT = 42;
     private ContestantAdapter contestantsAdapter;
     private ContestantAdapter contestantsOnFinishAdapter;
+    private ArrayAdapter<String> sensorEventsAdapter;
+    private ListView sensorEvents;
+    private ArrayList<String> events;
+    private BluetoothListenerService bluetoothListenerService;
+    private boolean bound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +46,7 @@ public class FinishActivity extends Activity {
         }
         setContentView(R.layout.activity_finish);
 
-        ListView contestants = (ListView)findViewById(R.id.contestants);
+        ListView contestants = (ListView) findViewById(R.id.contestants);
         contestantsAdapter = new ContestantAdapter(this,
                 R.layout.listitem_contestant,
                 new ArrayList<Contestant>(Arrays.asList(new Contestant[]{
@@ -76,5 +90,54 @@ public class FinishActivity extends Activity {
                 R.layout.listitem_contestant,
                 new ArrayList<Contestant>(contestantsAdapter.getCount()));
         contestantsOnFinish.setAdapter(contestantsOnFinishAdapter);
+
+        sensorEvents = (ListView) findViewById(R.id.sensorEvents);
+        sensorEvents.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        events = new ArrayList<String>();
+        sensorEventsAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                events);
+        sensorEvents.setAdapter(sensorEventsAdapter);
+
+        Intent intent = new Intent(this, BluetoothListenerService.class);
+        startService(intent);
+        bindService(new Intent(this, BluetoothListenerService.class), connection, Context.BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+
+            BluetoothListenerService.LocalBinder binder = (BluetoothListenerService.LocalBinder) service;
+            bluetoothListenerService = binder.getService();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            bound = false;
+        }
+    };
+
+    public void generateEvent(View view) {
+        sensorEventsAdapter.add(new Date().toString());
+        sensorEventsAdapter.notifyDataSetChanged();
+    }
+
+    public void addEvent(String event) {
+        sensorEventsAdapter.add(event.toString());
+        sensorEventsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (bound) {
+            unbindService(connection);
+            bound = false;
+        }
     }
 }

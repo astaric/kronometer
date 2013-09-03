@@ -7,5 +7,11 @@
     </string>
     <string name="hello_world" >Hello world!
     </string>
+    <string name="ticker_text" >Bluetooth sensor connected.
+    </string>
+    <string name="notification_title" >Bluetooth sensor
+    </string>
+    <string name="notification_message" >Connected
+    </string>
 
 </resources>

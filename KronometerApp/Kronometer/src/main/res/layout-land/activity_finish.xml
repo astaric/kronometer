@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Tekmovalci"
-            android:id="@+id/textView" />
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal" />
 
         <ListView
             android:layout_width="fill_parent"
@@ -37,8 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Na cilju"
-            android:id="@+id/textView2" />
+            android:text="Cilj"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal" />
 
         <Spinner
             android:layout_width="fill_parent"
@@ -46,18 +48,19 @@
             android:id="@+id/contestantsOnFinish"
             android:layout_gravity="center" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Prihodi na cilj"
-            android:id="@+id/textView3" />
-
         <ListView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/sensorEvents"
             android:layout_weight="1" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Generate event"
+            android:id="@+id/generateEvent"
+            android:singleLine="false"
+            android:onClick="generateEvent" />
     </LinearLayout>
 
 </LinearLayout>

@@ -16,7 +16,8 @@
     <Spinner
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/contestantsOnFinish" />
+        android:id="@+id/contestantsOnFinish"
+        android:background="@android:color/holo_blue_light" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -24,4 +25,12 @@
         android:id="@+id/sensorEvents"
         android:layout_gravity="center"
         android:layout_weight="1" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Generate event"
+        android:id="@+id/generateEvent"
+        android:layout_gravity="center"
+        android:onClick="generateEvent" />
 </LinearLayout>
