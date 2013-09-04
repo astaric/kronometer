@@ -2,6 +2,7 @@ package net.staric.kronometer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,11 +65,17 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
             holder.txtName.setText("");
             holder.txtStartTime.setText("");
         } else {
+            Resources resources = context.getResources();
             if (contestant.getStartTime() != null) {
-                holder.frame.setBackgroundColor(0xffffffff);
-                holder.txtId.setTextColor(0xff000000);
-                holder.txtName.setTextColor(0xff000000);
-                holder.txtStartTime.setTextColor(0xff000000);
+                holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_light));
+                holder.txtId.setTextColor(resources.getColor(android.R.color.primary_text_light));
+                holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_light));
+                holder.txtStartTime.setTextColor(resources.getColor(android.R.color.primary_text_light));
+            } else {
+                holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_dark));
+                holder.txtId.setTextColor(resources.getColor(android.R.color.primary_text_dark));
+                holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_dark));
+                holder.txtStartTime.setTextColor(resources.getColor(android.R.color.primary_text_dark));
             }
 
             holder.txtId.setText(((Integer) contestant.id).toString());
