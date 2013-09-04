@@ -22,7 +22,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class BluetoothListenerService extends Service {
+public class KronometerService extends Service {
+    public static final String BROADCAST_ACTION = "net.staric.kronometer.data_changed_broadcast";
+    Intent intent;
+
     private final IBinder binder = new LocalBinder();
     private ArrayList<String> events = new ArrayList<String>();
     private ArrayList<String> log = new ArrayList<String>();
@@ -33,8 +36,8 @@ public class BluetoothListenerService extends Service {
     int foregroundNotificationId = 47;
 
     public class LocalBinder extends Binder {
-        public BluetoothListenerService getService() {
-            return BluetoothListenerService.this;
+        public KronometerService getService() {
+            return KronometerService.this;
         }
     }
 
@@ -46,6 +49,8 @@ public class BluetoothListenerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        intent = new Intent(BROADCAST_ACTION);
 
         moveToForeground();
 
@@ -94,6 +99,7 @@ public class BluetoothListenerService extends Service {
                 }
 
                 while (!this.isInterrupted()) {
+                    boolean dataChanged = false;
                     try
                     {
                         int bytesAvailable = inStream.available();
@@ -103,13 +109,18 @@ public class BluetoothListenerService extends Service {
                             inStream.read(packetBytes);
                             for(int i=0;i<bytesAvailable;i++)
                             {
-                                if (packetBytes[i] == 'E')
+                                if (packetBytes[i] == 'E') {
                                     events.add(new Date().toString());
+                                    dataChanged = true;
+                                }
                             }
                         }
                     }
                     catch (IOException ex) {
-                        break;
+                        this.interrupt();
+                    }
+                    if (dataChanged) {
+                        notifyDataChanged();
                     }
                 }
 
@@ -121,7 +132,7 @@ public class BluetoothListenerService extends Service {
                     btSocket.close();
                 } catch (IOException e) {}
 
-                //BluetoothListenerService.this.stopSelf();
+                //KronometerService.this.stopSelf();
             }
         };
 
@@ -131,6 +142,10 @@ public class BluetoothListenerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
+    }
+
+    protected void notifyDataChanged() {
+        sendBroadcast(intent);
     }
 
     private void moveToForeground() {

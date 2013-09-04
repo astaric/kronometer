@@ -18,7 +18,7 @@ import android.widget.Spinner;
 
 import net.staric.kronometer.ContestantAdapter;
 import net.staric.kronometer.R;
-import net.staric.kronometer.backend.BluetoothListenerService;
+import net.staric.kronometer.backend.KronometerService;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.utils.SwipeDismissListViewTouchListener;
 
@@ -33,7 +33,7 @@ public class FinishActivity extends Activity {
     private ArrayAdapter<String> sensorEventsAdapter;
     private ListView sensorEvents;
     private ArrayList<String> events;
-    private BluetoothListenerService bluetoothListenerService;
+    private KronometerService kronometerService;
     private boolean bound = false;
 
     @Override
@@ -100,9 +100,9 @@ public class FinishActivity extends Activity {
                 events);
         sensorEvents.setAdapter(sensorEventsAdapter);
 
-        Intent intent = new Intent(this, BluetoothListenerService.class);
+        Intent intent = new Intent(this, KronometerService.class);
         startService(intent);
-        bindService(new Intent(this, BluetoothListenerService.class), connection, Context.BIND_AUTO_CREATE);
+        bindService(new Intent(this, KronometerService.class), connection, Context.BIND_AUTO_CREATE);
     }
 
     private ServiceConnection connection = new ServiceConnection() {
@@ -111,9 +111,9 @@ public class FinishActivity extends Activity {
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
 
-            BluetoothListenerService.LocalBinder binder = (BluetoothListenerService.LocalBinder) service;
-            bluetoothListenerService = binder.getService();
-            events.addAll(bluetoothListenerService.getEvents());
+            KronometerService.LocalBinder binder = (KronometerService.LocalBinder) service;
+            kronometerService = binder.getService();
+            events.addAll(kronometerService.getEvents());
             sensorEventsAdapter.notifyDataSetChanged();
             bound = true;
         }
