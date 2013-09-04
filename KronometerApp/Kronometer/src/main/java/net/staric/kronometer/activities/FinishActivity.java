@@ -1,9 +1,11 @@
 package net.staric.kronometer.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -129,10 +131,31 @@ public class FinishActivity extends Activity {
         sensorEventsAdapter.notifyDataSetChanged();
     }
 
-    public void addEvent(String event) {
-        sensorEventsAdapter.add(event.toString());
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateUI(intent);
+        }
+    };
+
+    private void updateUI(Intent intent) {
+        events.clear();
+        events.addAll(kronometerService.getEvents());
         sensorEventsAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver(broadcastReceiver, new IntentFilter(KronometerService.BROADCAST_ACTION));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
+
 
     @Override
     protected void onStop() {
