@@ -30,14 +30,27 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class FinishActivity extends Activity {
-    private int REQUEST_ENABLE_BT = 42;
+    private KronometerService kronometerService;
+    private void setKronometerService(KronometerService service) {
+        if (service == null)
+            bound = false;
+        kronometerService = service;
+    }
+    private Intent kronometerServiceIntent;
+    private boolean bound = false;
+
+    private ArrayList<Contestant> contestants;
+    private ArrayList<Contestant> contestantsOnFinish;
+    private ArrayList<Event> events;
+
+    private ListView contestantsListView;
+    private ListView sensorEventsListView;
+
     private ContestantAdapter contestantsAdapter;
     private ContestantAdapter contestantsOnFinishAdapter;
     private ArrayAdapter<Event> sensorEventsAdapter;
-    private ListView sensorEvents;
-    private ArrayList<Event> events;
-    private KronometerService kronometerService;
-    private boolean bound = false;
+    private Spinner contestantsOnFinishListView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,63 +62,41 @@ public class FinishActivity extends Activity {
         }
         setContentView(R.layout.activity_finish);
 
-        ListView contestants = (ListView) findViewById(R.id.contestants);
-        contestantsAdapter = new ContestantAdapter(this,
-                R.layout.listitem_contestant,
-                new ArrayList<Contestant>(Arrays.asList(new Contestant[]{
-                        new Contestant(1, "Janez", "Novak"),
-                        new Contestant(2, "France", "Prešeren"),
-                        new Contestant(3, "France2", "Prešeren"),
-                        new Contestant(4, "France3", "Prešeren"),
-                        new Contestant(5, "France4", "Prešeren"),
-                        new Contestant(6, "France5", "Prešeren"),
-                        new Contestant(7, "France6", "Prešeren"),
-                        new Contestant(8, "France7", "Prešeren"),
-                })));
-        contestants.setAdapter(contestantsAdapter);
+
+        contestantsListView = (ListView) findViewById(R.id.contestants);
+        contestantsOnFinishListView = (Spinner)findViewById(R.id.contestantsOnFinish);
+        sensorEventsListView = (ListView) findViewById(R.id.sensorEvents);
 
         SwipeDismissListViewTouchListener touchListener =
-                new SwipeDismissListViewTouchListener(
-                        contestants,
-                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
-                            @Override
-                            public boolean canDismiss(int position) {
-                                return true;
-                            }
+                new SwipeDismissListViewTouchListener(contestantsListView, getCallbacks());
+        contestantsListView.setOnTouchListener(touchListener);
+        contestantsListView.setOnScrollListener(touchListener.makeScrollListener());
 
-                            @Override
-                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-                                for (int position : reverseSortedPositions) {
-                                    Contestant contestant = contestantsAdapter.getItem(position);
-                                    contestantsAdapter.remove(contestant);
-                                    contestantsOnFinishAdapter.add(contestant);
+        sensorEventsListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 
-                                }
-                                contestantsAdapter.notifyDataSetChanged();
-                                contestantsOnFinishAdapter.notifyDataSetChanged();
-                            }
-                        });
-        contestants.setOnTouchListener(touchListener);
-        contestants.setOnScrollListener(touchListener.makeScrollListener());
+        kronometerServiceIntent = new Intent(this, KronometerService.class);
+        startService(kronometerServiceIntent);
+    }
 
-        Spinner contestantsOnFinish = (Spinner)findViewById(R.id.contestantsOnFinish);
-        contestantsOnFinishAdapter = new ContestantAdapter(this,
-                R.layout.listitem_contestant,
-                new ArrayList<Contestant>(contestantsAdapter.getCount()));
-        contestantsOnFinish.setAdapter(contestantsOnFinishAdapter);
+    private SwipeDismissListViewTouchListener.DismissCallbacks getCallbacks() {
+        return new SwipeDismissListViewTouchListener.DismissCallbacks() {
+            @Override
+            public boolean canDismiss(int position) {
+                return true;
+            }
 
-        sensorEvents = (ListView) findViewById(R.id.sensorEvents);
-        sensorEvents.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        events = new ArrayList<Event>();
-        sensorEventsAdapter = new ArrayAdapter<Event>(
-                this,
-                android.R.layout.simple_list_item_1,
-                events);
-        sensorEvents.setAdapter(sensorEventsAdapter);
+            @Override
+            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                for (int position : reverseSortedPositions) {
+                    Contestant contestant = contestantsAdapter.getItem(position);
+                    contestantsAdapter.remove(contestant);
+                    contestantsOnFinishAdapter.add(contestant);
 
-        Intent intent = new Intent(this, KronometerService.class);
-        startService(intent);
-        bindService(new Intent(this, KronometerService.class), connection, Context.BIND_AUTO_CREATE);
+                }
+                contestantsAdapter.notifyDataSetChanged();
+                contestantsOnFinishAdapter.notifyDataSetChanged();
+            }
+        };
     }
 
     private ServiceConnection connection = new ServiceConnection() {
@@ -115,39 +106,67 @@ public class FinishActivity extends Activity {
                                        IBinder service) {
 
             KronometerService.LocalBinder binder = (KronometerService.LocalBinder) service;
-            kronometerService = binder.getService();
-            events.addAll(kronometerService.getEvents());
-            sensorEventsAdapter.notifyDataSetChanged();
-            bound = true;
+            setKronometerService(binder.getService());
+            setUpAdapters();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            bound = false;
+            setKronometerService(null);
         }
     };
 
+    private void setUpAdapters() {
+        if (kronometerService == null)
+            return;
+        contestants = new ArrayList<Contestant>();
+        Contestant janez = new Contestant(1, "Janez", "Novak");
+        janez.setStartTime(new Date());
+        contestantsAdapter = new ContestantAdapter(this,
+                R.layout.listitem_contestant,
+                new ArrayList<Contestant>(Arrays.asList(new Contestant[]{
+                        janez,
+                        new Contestant(2, "France", "Prešeren"),
+                        new Contestant(3, "France2", "Prešeren"),
+                })));
+        this.contestantsListView.setAdapter(contestantsAdapter);
+
+        contestantsOnFinishAdapter = new ContestantAdapter(this,
+                R.layout.listitem_contestant,
+                new ArrayList<Contestant>(contestantsAdapter.getCount()));
+        contestantsOnFinishListView.setAdapter(contestantsOnFinishAdapter);
+
+        sensorEventsAdapter = new ArrayAdapter<Event>(
+                this,
+                android.R.layout.simple_list_item_1,
+                kronometerService.getEvents());
+        sensorEventsListView.setAdapter(sensorEventsAdapter);
+
+        bound = true;
+    }
+
     public void generateEvent(View view) {
-        sensorEventsAdapter.add(new Event(new Date()));
-        sensorEventsAdapter.notifyDataSetChanged();
+        if (kronometerService != null)
+            kronometerService.addEvent(new Event(new Date()));
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            updateUI(intent);
+            if (bound) {
+                updateUI(intent);
+            };
         }
     };
 
     private void updateUI(Intent intent) {
-        events.clear();
-        events.addAll(kronometerService.getEvents());
         sensorEventsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        bindService(kronometerServiceIntent, connection, Context.BIND_AUTO_CREATE);
         registerReceiver(broadcastReceiver, new IntentFilter(KronometerService.BROADCAST_ACTION));
     }
 
@@ -155,15 +174,9 @@ public class FinishActivity extends Activity {
     public void onPause() {
         super.onPause();
         unregisterReceiver(broadcastReceiver);
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (bound) {
+        if (kronometerService != null) {
             unbindService(connection);
-            bound = false;
+            setKronometerService(null);
         }
     }
 }
