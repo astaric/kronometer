@@ -28,11 +28,15 @@ public class KronometerService extends Service {
 
     private final IBinder binder = new LocalBinder();
     private ArrayList<String> events = new ArrayList<String>();
-    private ArrayList<String> log = new ArrayList<String>();
-    private String status = "";
-    private Thread listenerThread;
 
-    boolean runningInForeground = false;
+    private String bluetoothStatus = "";
+    private void setBluetoothStatus(String status) {
+        this.bluetoothStatus = status;
+        updateNotification();
+    }
+
+    private Thread bluetoothListenerThread;
+
     int foregroundNotificationId = 47;
 
     public class LocalBinder extends Binder {
@@ -56,18 +60,16 @@ public class KronometerService extends Service {
 
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
-            status = "Device does not support bluetooth.";
-            updateNotification();
+            setBluetoothStatus("This device does not support bluetooth");
             return;
         }
 
         if (!bluetoothAdapter.isEnabled()) {
-            status = "Bluetooth is not enabled.";
-            updateNotification();
+            setBluetoothStatus("Bluetooth is not enabled");
             return;
         }
 
-        listenerThread = new Thread() {
+        bluetoothListenerThread = new Thread() {
             @Override
             public void run() {
                 BluetoothDevice device = bluetoothAdapter.getRemoteDevice("20:13:08:01:04:98");
@@ -81,8 +83,7 @@ public class KronometerService extends Service {
                         if (btSocket != null)
                             btSocket.close();
                     } catch (IOException e1) {}
-                    status = "Could not discover to sensor";
-                    updateNotification();
+                    setBluetoothStatus("Sensor is not available");
                     return;
                 }
 
@@ -93,10 +94,11 @@ public class KronometerService extends Service {
                     try {
                         btSocket.close();
                     } catch (IOException e1) {}
-                    status = "Could not connect to sensor";
-                    updateNotification();
+                    setBluetoothStatus("Error connecting to sensor");
                     return;
                 }
+
+                setBluetoothStatus("Sensor connected");
 
                 while (!this.isInterrupted()) {
                     boolean dataChanged = false;
@@ -132,11 +134,11 @@ public class KronometerService extends Service {
                     btSocket.close();
                 } catch (IOException e) {}
 
-                //KronometerService.this.stopSelf();
+                setBluetoothStatus("Sensor disconnected");
             }
         };
 
-        listenerThread.start();
+        bluetoothListenerThread.start();
     }
 
     @Override
@@ -164,15 +166,13 @@ public class KronometerService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(android.R.drawable.btn_star)
                 .setContentTitle("Bluetooth sensor")
-                .setContentText(status)
+                .setContentText(bluetoothStatus)
                 .setContentIntent(pendingIntent);
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
-        inboxStyle.setBigContentTitle("Event tracker details:");
-        for (String line : log) {
-            inboxStyle.addLine(line);
-        }
-        //mBuilder.setStyle(inboxStyle);
+        inboxStyle.setBigContentTitle("Kronometer");
+        inboxStyle.addLine(bluetoothStatus);
+        mBuilder.setStyle(inboxStyle);
         return mBuilder.build();
     }
 
