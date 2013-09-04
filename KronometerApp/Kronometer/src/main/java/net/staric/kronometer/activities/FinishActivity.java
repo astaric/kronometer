@@ -22,6 +22,7 @@ import net.staric.kronometer.ContestantAdapter;
 import net.staric.kronometer.R;
 import net.staric.kronometer.backend.KronometerService;
 import net.staric.kronometer.models.Contestant;
+import net.staric.kronometer.models.Event;
 import net.staric.kronometer.utils.SwipeDismissListViewTouchListener;
 
 import java.util.ArrayList;
@@ -32,9 +33,9 @@ public class FinishActivity extends Activity {
     private int REQUEST_ENABLE_BT = 42;
     private ContestantAdapter contestantsAdapter;
     private ContestantAdapter contestantsOnFinishAdapter;
-    private ArrayAdapter<String> sensorEventsAdapter;
+    private ArrayAdapter<Event> sensorEventsAdapter;
     private ListView sensorEvents;
-    private ArrayList<String> events;
+    private ArrayList<Event> events;
     private KronometerService kronometerService;
     private boolean bound = false;
 
@@ -95,8 +96,8 @@ public class FinishActivity extends Activity {
 
         sensorEvents = (ListView) findViewById(R.id.sensorEvents);
         sensorEvents.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        events = new ArrayList<String>();
-        sensorEventsAdapter = new ArrayAdapter<String>(
+        events = new ArrayList<Event>();
+        sensorEventsAdapter = new ArrayAdapter<Event>(
                 this,
                 android.R.layout.simple_list_item_1,
                 events);
@@ -127,7 +128,7 @@ public class FinishActivity extends Activity {
     };
 
     public void generateEvent(View view) {
-        sensorEventsAdapter.add(new Date().toString());
+        sensorEventsAdapter.add(new Event(new Date()));
         sensorEventsAdapter.notifyDataSetChanged();
     }
 

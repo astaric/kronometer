@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import net.staric.kronometer.activities.FinishActivity;
+import net.staric.kronometer.models.Event;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +28,7 @@ public class KronometerService extends Service {
     Intent intent;
 
     private final IBinder binder = new LocalBinder();
-    private ArrayList<String> events = new ArrayList<String>();
+    private ArrayList<Event> events = new ArrayList<Event>();
 
     private String bluetoothStatus = "";
     private void setBluetoothStatus(String status) {
@@ -112,7 +113,7 @@ public class KronometerService extends Service {
                             for(int i=0;i<bytesAvailable;i++)
                             {
                                 if (packetBytes[i] == 'E') {
-                                    events.add(new Date().toString());
+                                    events.add(new Event(new Date()));
                                     dataChanged = true;
                                 }
                             }
@@ -176,7 +177,7 @@ public class KronometerService extends Service {
         return mBuilder.build();
     }
 
-    public List<String> getEvents() {
+    public List<Event> getEvents() {
         return events;
     }
 }
