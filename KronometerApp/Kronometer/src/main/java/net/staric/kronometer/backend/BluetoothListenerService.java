@@ -1,16 +1,18 @@
 package net.staric.kronometer.backend;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 
-import net.staric.kronometer.R;
 import net.staric.kronometer.activities.FinishActivity;
 
 import java.io.IOException;
@@ -23,7 +25,12 @@ import java.util.UUID;
 public class BluetoothListenerService extends Service {
     private final IBinder binder = new LocalBinder();
     private ArrayList<String> events = new ArrayList<String>();
+    private ArrayList<String> log = new ArrayList<String>();
+    private String status = "";
     private Thread listenerThread;
+
+    boolean runningInForeground = false;
+    int foregroundNotificationId = 47;
 
     public class LocalBinder extends Binder {
         public BluetoothListenerService getService() {
@@ -40,12 +47,18 @@ public class BluetoothListenerService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        moveToForeground();
+
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
+            status = "Device does not support bluetooth.";
+            updateNotification();
             return;
         }
 
         if (!bluetoothAdapter.isEnabled()) {
+            status = "Bluetooth is not enabled.";
+            updateNotification();
             return;
         }
 
@@ -63,6 +76,8 @@ public class BluetoothListenerService extends Service {
                         if (btSocket != null)
                             btSocket.close();
                     } catch (IOException e1) {}
+                    status = "Could not discover to sensor";
+                    updateNotification();
                     return;
                 }
 
@@ -73,10 +88,10 @@ public class BluetoothListenerService extends Service {
                     try {
                         btSocket.close();
                     } catch (IOException e1) {}
+                    status = "Could not connect to sensor";
+                    updateNotification();
                     return;
                 }
-
-                BluetoothListenerService.this.moveToForeground();
 
                 while (!this.isInterrupted()) {
                     try
@@ -119,13 +134,31 @@ public class BluetoothListenerService extends Service {
     }
 
     private void moveToForeground() {
-        Notification notification = new Notification(android.R.drawable.btn_star, getText(R.string.ticker_text),
-                System.currentTimeMillis());
+        startForeground(foregroundNotificationId, createNotification());
+    }
+
+    private void updateNotification() {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(foregroundNotificationId, createNotification());
+    }
+
+    private Notification createNotification() {
         Intent notificationIntent = new Intent(this, FinishActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        notification.setLatestEventInfo(this, getText(R.string.notification_title),
-                getText(R.string.notification_message), pendingIntent);
-        startForeground(47, notification);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.btn_star)
+                .setContentTitle("Bluetooth sensor")
+                .setContentText(status)
+                .setContentIntent(pendingIntent);
+        NotificationCompat.InboxStyle inboxStyle =
+                new NotificationCompat.InboxStyle();
+        inboxStyle.setBigContentTitle("Event tracker details:");
+        for (String line : log) {
+            inboxStyle.addLine(line);
+        }
+        //mBuilder.setStyle(inboxStyle);
+        return mBuilder.build();
     }
 
     public List<String> getEvents() {

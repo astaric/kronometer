@@ -113,6 +113,8 @@ public class FinishActivity extends Activity {
 
             BluetoothListenerService.LocalBinder binder = (BluetoothListenerService.LocalBinder) service;
             bluetoothListenerService = binder.getService();
+            events.addAll(bluetoothListenerService.getEvents());
+            sensorEventsAdapter.notifyDataSetChanged();
             bound = true;
         }
 
