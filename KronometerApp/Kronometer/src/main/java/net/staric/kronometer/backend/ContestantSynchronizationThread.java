@@ -52,6 +52,7 @@ class ContestantSynchronizationThread extends Thread {
             return;
         while (!isInterrupted()) {
             try {
+                kronometerService.setSyncStatus("Synchronizing contestants");
                 ArrayList<Contestant> contestants = new Deserializer<Contestant>() {
                     @Override
                     Contestant fromJson(JSONObject jsonObject) {
@@ -68,15 +69,16 @@ class ContestantSynchronizationThread extends Thread {
 
                 kronometerService.updateContestants(contestants);
                 kronometerService.updateCategories(categories);
+
+                kronometerService.setSyncStatus("Contestants synchronized");
             } catch (IOException e) {
                 kronometerService.setSyncStatus("Could not access server");
             } catch (JSONException e) {
                 kronometerService.setSyncStatus("Server returned invalid JSON");
             }
 
-            kronometerService.setSyncStatus("Contestants synchronized");
             try {
-                sleep(10000);
+                sleep(60000);
             } catch (InterruptedException e) {
                 return;
             }

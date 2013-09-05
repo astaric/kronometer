@@ -33,6 +33,8 @@ class BluetoothSensorThread extends Thread {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         while (!isInterrupted()) {
+            kronometerService.setBluetoothStatus("Looking for sensor");
+
             if (bluetoothAdapter == null) {
                 kronometerService.setBluetoothStatus("This device does not support bluetooth");
                 return;
@@ -41,7 +43,7 @@ class BluetoothSensorThread extends Thread {
                 kronometerService.setBluetoothStatus("Bluetooth is not enabled");
                 //TODO: Ask for bluetooth
             } else if (!openSocket()) {
-                kronometerService.setBluetoothStatus("Sensor is not available");
+                kronometerService.setBluetoothStatus("No sensor found");
             } else if (!openStream()) {
                 kronometerService.setBluetoothStatus("Error connecting to sensor");
             } else {
