@@ -77,7 +77,6 @@ public class FinishActivity extends Activity {
         sensorEventsListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 
         kronometerServiceIntent = new Intent(this, KronometerService.class);
-        startService(kronometerServiceIntent);
     }
 
     @Override
@@ -129,6 +128,7 @@ public class FinishActivity extends Activity {
             KronometerService.LocalBinder binder = (KronometerService.LocalBinder) service;
             setKronometerService(binder.getService());
             setUpAdapters();
+            broadcastReceiver.onReceive(null, null);
         }
 
         @Override
@@ -188,7 +188,7 @@ public class FinishActivity extends Activity {
     public void onResume() {
         super.onResume();
         bindService(kronometerServiceIntent, connection, Context.BIND_AUTO_CREATE);
-        registerReceiver(broadcastReceiver, new IntentFilter(KronometerService.BROADCAST_ACTION));
+        registerReceiver(broadcastReceiver, new IntentFilter(KronometerService.DATA_CHANGED_ACTION));
     }
 
     @Override

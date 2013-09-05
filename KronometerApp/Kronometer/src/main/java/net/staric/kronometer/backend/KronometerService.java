@@ -4,39 +4,41 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import net.staric.kronometer.activities.FinishActivity;
+import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class KronometerService extends Service {
-    public static final String BROADCAST_ACTION = "net.staric.kronometer.data_changed_broadcast";
-    Intent intent;
+    public static final String DATA_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
+    public static final String STATUS_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
+
+    private Intent notifyDataChangedIntent;
 
     private final IBinder binder = new LocalBinder();
+
+    private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
     private ArrayList<Event> events = new ArrayList<Event>();
 
     private String bluetoothStatus = "";
+    private boolean started = false;
+
     private void setBluetoothStatus(String status) {
         this.bluetoothStatus = status;
         updateNotification();
     }
 
-    private Thread bluetoothListenerThread;
+    private Thread bluetoothSensorThread;
 
     int foregroundNotificationId = 47;
 
@@ -47,112 +49,44 @@ public class KronometerService extends Service {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
-    }
-
-    @Override
     public void onCreate() {
         super.onCreate();
 
-        intent = new Intent(BROADCAST_ACTION);
+        notifyDataChangedIntent = new Intent(DATA_CHANGED_ACTION);
 
-        moveToForeground();
+        startForeground(foregroundNotificationId, createNotification());
 
-        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            setBluetoothStatus("This device does not support bluetooth");
-            return;
-        }
+        registerReceiver(statusReceiver, new IntentFilter(KronometerService.STATUS_CHANGED_ACTION));
 
-        if (!bluetoothAdapter.isEnabled()) {
-            setBluetoothStatus("Bluetooth is not enabled");
-            return;
-        }
-
-        bluetoothListenerThread = new Thread() {
-            @Override
-            public void run() {
-                BluetoothDevice device = bluetoothAdapter.getRemoteDevice("20:13:08:01:04:98");
-
-                BluetoothSocket btSocket = null;
-                try {
-                    btSocket = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
-                    btSocket.connect();
-                } catch (IOException e) {
-                    try {
-                        if (btSocket != null)
-                            btSocket.close();
-                    } catch (IOException e1) {}
-                    setBluetoothStatus("Sensor is not available");
-                    return;
-                }
-
-                InputStream inStream;
-                try {
-                    inStream = btSocket.getInputStream();
-                } catch (IOException e) {
-                    try {
-                        btSocket.close();
-                    } catch (IOException e1) {}
-                    setBluetoothStatus("Error connecting to sensor");
-                    return;
-                }
-
-                setBluetoothStatus("Sensor connected");
-
-                while (!this.isInterrupted()) {
-                    boolean dataChanged = false;
-                    try
-                    {
-                        int bytesAvailable = inStream.available();
-                        if(bytesAvailable > 0)
-                        {
-                            byte[] packetBytes = new byte[bytesAvailable];
-                            inStream.read(packetBytes);
-                            for(int i=0;i<bytesAvailable;i++)
-                            {
-                                if (packetBytes[i] == 'E') {
-                                    events.add(new Event(new Date()));
-                                    dataChanged = true;
-                                }
-                            }
-                        }
-                    }
-                    catch (IOException ex) {
-                        this.interrupt();
-                    }
-                    if (dataChanged) {
-                        notifyDataChanged();
-                    }
-                }
-
-                try {
-                    inStream.close();
-                } catch (IOException e) {}
-
-                try {
-                    btSocket.close();
-                } catch (IOException e) {}
-
-                setBluetoothStatus("Sensor disconnected");
-            }
-        };
-
-        bluetoothListenerThread.start();
+        bluetoothSensorThread = new BluetoothSensorThread("20:13:08:01:04:98", this);
+        bluetoothSensorThread.start();
     }
 
     @Override
+    public IBinder onBind(Intent intent) {
+        if (!this.started) {
+            startService(new Intent(this, KronometerService.class));
+        }
+        return binder;
+    }
+
+    private BroadcastReceiver statusReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra("bluetoothStatus")) {
+                setBluetoothStatus(intent.getStringExtra("bluetoothStatus"));
+            }
+        }
+    };
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        started = true;
         return START_STICKY;
     }
 
     protected void notifyDataChanged() {
-        sendBroadcast(intent);
-    }
-
-    private void moveToForeground() {
-        startForeground(foregroundNotificationId, createNotification());
+        sendBroadcast(notifyDataChangedIntent);
     }
 
     private void updateNotification() {
@@ -177,6 +111,8 @@ public class KronometerService extends Service {
         return mBuilder.build();
     }
 
+
+
     public List<Event> getEvents() {
         return events;
     }
@@ -185,4 +121,19 @@ public class KronometerService extends Service {
         events.add(event);
         notifyDataChanged();
     }
+
+    public List<Contestant> getContestants() {
+        return contestants;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(statusReceiver);
+
+        if (bluetoothSensorThread != null)
+            bluetoothSensorThread.interrupt();
+    }
+
 }
