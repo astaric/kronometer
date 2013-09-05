@@ -1,6 +1,8 @@
 package net.staric.kronometer.models;
 
 import net.staric.kronometer.backend.ContestantBackend;
+import net.staric.kronometer.backend.EndTimeUpdate;
+import net.staric.kronometer.backend.KronometerService;
 import net.staric.kronometer.backend.StartTimeUpdate;
 import net.staric.kronometer.backend.Update;
 
@@ -20,6 +22,7 @@ public class Contestant implements Comparable<Contestant> {
     public Category category;
     public boolean domestic;
     private Date startTime;
+    private Date endTime;
 
     public String syncStatus;
 
@@ -58,6 +61,15 @@ public class Contestant implements Comparable<Contestant> {
         Update update = new StartTimeUpdate(this);
         ContestantBackend.getInstance().addUpdate(update);
         return update;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public Update setEndTime(Date endTime) {
+        this.endTime = endTime;
+        return new EndTimeUpdate(this);
     }
 
     @Override

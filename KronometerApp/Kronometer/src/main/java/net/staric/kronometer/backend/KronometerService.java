@@ -20,6 +20,7 @@ import net.staric.kronometer.models.Event;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -131,7 +132,6 @@ public class KronometerService extends Service {
         notifyDataChanged();
     }
 
-
     private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
     private SparseArray<Contestant> contestantMap = new SparseArray<Contestant>();
     public List<Contestant> getContestants() {
@@ -155,6 +155,24 @@ public class KronometerService extends Service {
         }
         if (modified) {
             notifyDataChanged();
+        }
+    }
+
+    public void setEndTime(Contestant contestant, Event event) {
+        if (contestant == null || contestant.dummy)
+            return;
+        if (event == null)
+            return;
+
+        Date endTime = event.getTime();
+        Update update = contestant.setEndTime(endTime);
+        addUpdate(update);
+
+        event.setContestant(contestant);
+        for (Event event1 : events) {
+            event1.setOld(true);
+            if (event == event1)
+                break;
         }
     }
 

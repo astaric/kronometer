@@ -16,11 +16,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
 import net.staric.kronometer.ContestantAdapter;
+import net.staric.kronometer.EventAdapter;
 import net.staric.kronometer.R;
 import net.staric.kronometer.backend.KronometerService;
 import net.staric.kronometer.models.Contestant;
@@ -28,7 +30,6 @@ import net.staric.kronometer.models.Event;
 import net.staric.kronometer.utils.SwipeDismissListViewTouchListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class FinishActivity extends Activity {
@@ -51,7 +52,7 @@ public class FinishActivity extends Activity {
     private ContestantAdapter contestantsAdapter;
     private ContestantAdapter contestantsOnFinishAdapter;
     private ArrayAdapter<Event> sensorEventsAdapter;
-    private Spinner contestantsOnFinishListView;
+    private Spinner contestantsOnFinishSpinner;
 
 
     @Override
@@ -66,7 +67,7 @@ public class FinishActivity extends Activity {
 
 
         contestantsListView = (ListView) findViewById(R.id.contestants);
-        contestantsOnFinishListView = (Spinner)findViewById(R.id.contestantsOnFinish);
+        contestantsOnFinishSpinner = (Spinner)findViewById(R.id.contestantsOnFinish);
         sensorEventsListView = (ListView) findViewById(R.id.sensorEvents);
 
         SwipeDismissListViewTouchListener touchListener =
@@ -74,7 +75,13 @@ public class FinishActivity extends Activity {
         contestantsListView.setOnTouchListener(touchListener);
         contestantsListView.setOnScrollListener(touchListener.makeScrollListener());
 
-        sensorEventsListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        sensorEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                toggleSelected(sensorEventsAdapter.getItem(i), i);
+                sensorEventsAdapter.notifyDataSetChanged();
+            }
+        });
 
         kronometerServiceIntent = new Intent(this, KronometerService.class);
     }
@@ -110,8 +117,7 @@ public class FinishActivity extends Activity {
                 for (int position : reverseSortedPositions) {
                     Contestant contestant = contestantsAdapter.getItem(position);
                     contestantsAdapter.remove(contestant);
-                    contestantsOnFinishAdapter.add(contestant);
-
+                    contestantsOnFinishAdapter.insert(contestant, contestantsOnFinishAdapter.getCount()-1);
                 }
                 contestantsAdapter.notifyDataSetChanged();
                 contestantsOnFinishAdapter.notifyDataSetChanged();
@@ -151,11 +157,12 @@ public class FinishActivity extends Activity {
                 this,
                 R.layout.listitem_contestant,
                 new ArrayList<Contestant>(contestantsAdapter.getCount()));
-        contestantsOnFinishListView.setAdapter(contestantsOnFinishAdapter);
+        contestantsOnFinishAdapter.add(new Contestant());
+        contestantsOnFinishSpinner.setAdapter(contestantsOnFinishAdapter);
 
-        sensorEventsAdapter = new ArrayAdapter<Event>(
+        sensorEventsAdapter = new EventAdapter(
                 this,
-                android.R.layout.simple_list_item_1,
+                R.layout.listitem_event,
                 kronometerService.getEvents());
         sensorEventsListView.setAdapter(sensorEventsAdapter);
 
@@ -196,5 +203,34 @@ public class FinishActivity extends Activity {
             unbindService(connection);
             setKronometerService(null);
         }
+    }
+
+    Event selectedEvent = null;
+    int selectedEventIdx = -1;
+    private void toggleSelected(Event event, int idx) {
+        if (event == null)
+            return;
+        if (selectedEvent != null)
+            selectedEvent.setSelected(false);
+        if (event != selectedEvent) {
+            event.setSelected(true);
+            selectedEvent = event;
+            selectedEventIdx = idx;
+        } else {
+            selectedEvent = null;
+        }
+    }
+
+
+    public void addStopTime(View view) {
+        kronometerService.setEndTime(
+                (Contestant)contestantsOnFinishSpinner.getSelectedItem(),
+                selectedEvent);
+        toggleSelected(selectedEvent, -1);
+        sensorEventsAdapter.notifyDataSetChanged();
+
+        if (selectedEventIdx > 0)
+            sensorEventsListView.setSelection(selectedEventIdx);
+        contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
     }
 }

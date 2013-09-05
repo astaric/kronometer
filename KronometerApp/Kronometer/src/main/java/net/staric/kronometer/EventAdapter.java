@@ -1,0 +1,101 @@
+package net.staric.kronometer;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import net.staric.kronometer.models.Contestant;
+import net.staric.kronometer.models.Event;
+
+import java.util.List;
+
+public class EventAdapter extends ArrayAdapter<Event> {
+
+    Context context;
+    int layoutResourceId;
+    List<Event> data = null;
+
+    public EventAdapter(Context context, int layoutResourceId, List<Event> data) {
+        super(context, layoutResourceId, data);
+        this.layoutResourceId = layoutResourceId;
+        this.context = context;
+        this.data = data;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        return getCustomView(position, convertView, parent);
+    }
+
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        return getCustomView(position, convertView, parent);
+    }
+
+    public View getCustomView(int position, View convertView, ViewGroup parent) {
+        View row = convertView;
+        ContestantHolder holder = null;
+
+        if(row == null)
+        {
+            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+            row = inflater.inflate(layoutResourceId, parent, false);
+
+            holder = new ContestantHolder();
+            holder.frame = (LinearLayout)row.findViewById(R.id.frame);
+            holder.txtName = (TextView)row.findViewById(R.id.name);
+            holder.txtEndTime = (TextView)row.findViewById(R.id.endTime);
+            holder.btnMerge = (Button)row.findViewById(R.id.btnMerge);
+
+            row.setTag(holder);
+        }
+        else
+        {
+            holder = (ContestantHolder)row.getTag();
+        }
+
+        Event event = data.get(position);
+        Resources resources = context.getResources();
+        if (event.isOld()) {
+            holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_light));
+            holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_light));
+            holder.txtEndTime.setTextColor(resources.getColor(android.R.color.primary_text_light));
+        } else {
+            holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_dark));
+            holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_dark));
+            holder.txtEndTime.setTextColor(resources.getColor(android.R.color.primary_text_dark));
+        }
+
+        if (event.getContestant() != null) {
+            holder.txtName.setText(event.getContestant().toString());
+            holder.txtName.setVisibility(View.VISIBLE);
+        } else {
+            holder.txtName.setVisibility(View.GONE);
+        }
+        holder.txtEndTime.setText(event.getTime().toString());
+
+        if (event.isSelected()) {
+            holder.btnMerge.setVisibility(View.VISIBLE);
+        } else {
+            holder.btnMerge.setVisibility(View.INVISIBLE);
+        }
+
+        return row;
+    }
+
+    static class ContestantHolder
+    {
+        LinearLayout frame;
+        TextView txtName;
+        TextView txtEndTime;
+        Button btnMerge;
+    }
+}

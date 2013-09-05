@@ -72,6 +72,7 @@ class ContestantSynchronizationThread extends Thread {
 
                 kronometerService.setSyncStatus("Contestants synchronized");
             } catch (IOException e) {
+                e.printStackTrace();
                 kronometerService.setSyncStatus("Could not access server");
             } catch (JSONException e) {
                 kronometerService.setSyncStatus("Server returned invalid JSON");

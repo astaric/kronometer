@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:clickable="false"
+    android:id="@+id/frame"
+    android:orientation="horizontal"
+    android:minHeight="20sp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="9">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:clickable="false"
+            android:focusable="false"
+            android:singleLine="true"
+            android:text="Anze Staric"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/endTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="16:15:20.000"
+            android:textSize="15sp"
+            android:clickable="false"
+            android:focusable="false"
+            android:singleLine="true"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:id="@+id/btnMerge"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:onClick="addStopTime" />
+
+</LinearLayout>
