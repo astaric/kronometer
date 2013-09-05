@@ -11,13 +11,17 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.SparseArray;
 
 import net.staric.kronometer.activities.FinishActivity;
+import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class KronometerService extends Service {
     public static final String DATA_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
@@ -27,18 +31,21 @@ public class KronometerService extends Service {
 
     private final IBinder binder = new LocalBinder();
 
-    private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
-    private ArrayList<Event> events = new ArrayList<Event>();
-
+    private Thread bluetoothSensorThread;
     private String bluetoothStatus = "";
-    private boolean started = false;
-
-    private void setBluetoothStatus(String status) {
+    protected void setBluetoothStatus(String status) {
         this.bluetoothStatus = status;
         updateNotification();
     }
 
-    private Thread bluetoothSensorThread;
+    private Thread contestantSyncThread;
+    private String syncStatus = "";
+    protected void setSyncStatus(String status) {
+        this.syncStatus = status;
+        updateNotification();
+    }
+
+    private boolean started = false;
 
     int foregroundNotificationId = 47;
 
@@ -60,6 +67,8 @@ public class KronometerService extends Service {
 
         bluetoothSensorThread = new BluetoothSensorThread("20:13:08:01:04:98", this);
         bluetoothSensorThread.start();
+        contestantSyncThread = new ContestantSynchronizationThread("https://kronometer.herokuapp.com/", this);
+        contestantSyncThread.start();
     }
 
     @Override
@@ -107,12 +116,12 @@ public class KronometerService extends Service {
                 new NotificationCompat.InboxStyle();
         inboxStyle.setBigContentTitle("Kronometer");
         inboxStyle.addLine(bluetoothStatus);
+        inboxStyle.addLine(syncStatus);
         mBuilder.setStyle(inboxStyle);
         return mBuilder.build();
     }
 
-
-
+    private ArrayList<Event> events = new ArrayList<Event>();
     public List<Event> getEvents() {
         return events;
     }
@@ -122,8 +131,64 @@ public class KronometerService extends Service {
         notifyDataChanged();
     }
 
+
+    private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
+    private SparseArray<Contestant> contestantMap = new SparseArray<Contestant>();
     public List<Contestant> getContestants() {
         return contestants;
+    }
+
+    protected void updateContestants(ArrayList<Contestant> newContestants) {
+        boolean modified = false;
+        Collections.sort(newContestants);
+        for (Contestant contestant : newContestants) {
+            Contestant existingContestant = contestantMap.get(contestant.id);
+            if (existingContestant == null) {
+                contestants.add(contestant);
+                contestantMap.put(contestant.id, contestant);
+                modified = true;
+            } else {
+                if (existingContestant.update(contestant)) {
+                    modified = true;
+                }
+            }
+        }
+        if (modified) {
+            notifyDataChanged();
+        }
+    }
+
+    private ArrayList<Category> categories = new ArrayList<Category>();
+    private SparseArray<Category> categoryMap = new SparseArray<Category>();
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void updateCategories(ArrayList<Category> newCategories) {
+        boolean modified = false;
+        Collections.sort(newCategories);
+        for (Category category : newCategories) {
+            Category existingCategory = categoryMap.get(category.id);
+            if (existingCategory == null) {
+                categories.add(category);
+                categoryMap.put(category.id, category);
+                modified = true;
+            } else {
+                if (existingCategory.update(category)) {
+                    modified = true;
+                }
+            }
+        }
+        if (modified) {
+            notifyDataChanged();
+        }
+    }
+
+    LinkedBlockingQueue<Update> pendingUpdates = new LinkedBlockingQueue<Update>();
+    private void addUpdate(Update update) {
+        try {
+            pendingUpdates.put(update);
+        } catch (InterruptedException e) {}
     }
 
     @Override
@@ -134,6 +199,7 @@ public class KronometerService extends Service {
 
         if (bluetoothSensorThread != null)
             bluetoothSensorThread.interrupt();
+        if (contestantSyncThread != null)
+            contestantSyncThread.interrupt();
     }
-
 }

@@ -9,15 +9,11 @@ import net.staric.kronometer.models.Event;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
 class BluetoothSensorThread extends Thread {
     private final UUID BLUETOOTH_SERIAL = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
-    private final Intent notifyDataChangedIntent;
-    private final Intent notifyStatusChangedIntent;
 
     private String deviceAddress;
     private final KronometerService kronometerService;
@@ -30,9 +26,6 @@ class BluetoothSensorThread extends Thread {
     public BluetoothSensorThread(String deviceAddress, KronometerService kronometerService) {
         this.deviceAddress = deviceAddress;
         this.kronometerService = kronometerService;
-
-        notifyStatusChangedIntent = new Intent(KronometerService.STATUS_CHANGED_ACTION);
-        notifyDataChangedIntent = new Intent(KronometerService.DATA_CHANGED_ACTION);
     }
 
     @Override
@@ -41,21 +34,20 @@ class BluetoothSensorThread extends Thread {
 
         while (!isInterrupted()) {
             if (bluetoothAdapter == null) {
-                changeBluetoothStatus("This device does not support bluetooth");
+                kronometerService.setBluetoothStatus("This device does not support bluetooth");
                 return;
             }
             else if (!bluetoothAdapter.isEnabled()) {
-                changeBluetoothStatus("Bluetooth is not enabled");
+                kronometerService.setBluetoothStatus("Bluetooth is not enabled");
                 //TODO: Ask for bluetooth
-
             } else if (!openSocket()) {
-                changeBluetoothStatus("Sensor is not available");
+                kronometerService.setBluetoothStatus("Sensor is not available");
             } else if (!openStream()) {
-                changeBluetoothStatus("Error connecting to sensor");
+                kronometerService.setBluetoothStatus("Error connecting to sensor");
             } else {
-                changeBluetoothStatus("Sensor connected");
+                kronometerService.setBluetoothStatus("Sensor connected");
                 listenForData();
-                changeBluetoothStatus("Sensor disconnected");
+                kronometerService.setBluetoothStatus("Sensor disconnected");
             }
 
             try {
@@ -117,19 +109,5 @@ class BluetoothSensorThread extends Thread {
         inStream.read(data);
         if (data[0] == 'E')
             kronometerService.addEvent(new Event(new Date()));
-            notifyDataChanged();
-    }
-
-    private void changeBluetoothStatus(String status) {
-        notifyBluetoothStatusChanged(status);
-    }
-
-    protected void notifyBluetoothStatusChanged(String status) {
-        notifyStatusChangedIntent.putExtra("bluetoothStatus", status);
-        kronometerService.sendBroadcast(notifyStatusChangedIntent);
-    }
-
-    protected void notifyDataChanged() {
-        kronometerService.sendBroadcast(notifyDataChangedIntent);
     }
 }

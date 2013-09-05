@@ -3,7 +3,7 @@ package net.staric.kronometer.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Category {
+public class Category implements Comparable<Category> {
     public int id;
     public String name;
 
@@ -27,5 +27,14 @@ public class Category {
 
     public String toString() {
         return this.name;
+    }
+
+    public boolean update(Category category) {
+        return false;
+    }
+
+    @Override
+    public int compareTo(Category other) {
+        return ((Integer)this.id).compareTo(other.id);
     }
 }

@@ -141,18 +141,14 @@ public class FinishActivity extends Activity {
         if (kronometerService == null)
             return;
         contestants = new ArrayList<Contestant>();
-        Contestant janez = new Contestant(1, "Janez", "Novak");
-        janez.setStartTime(new Date());
-        contestantsAdapter = new ContestantAdapter(this,
+        contestantsAdapter = new ContestantAdapter(
+                this,
                 R.layout.listitem_contestant,
-                new ArrayList<Contestant>(Arrays.asList(new Contestant[]{
-                        janez,
-                        new Contestant(2, "France", "Prešeren"),
-                        new Contestant(3, "France2", "Prešeren"),
-                })));
+                kronometerService.getContestants());
         this.contestantsListView.setAdapter(contestantsAdapter);
 
-        contestantsOnFinishAdapter = new ContestantAdapter(this,
+        contestantsOnFinishAdapter = new ContestantAdapter(
+                this,
                 R.layout.listitem_contestant,
                 new ArrayList<Contestant>(contestantsAdapter.getCount()));
         contestantsOnFinishListView.setAdapter(contestantsOnFinishAdapter);
@@ -182,6 +178,7 @@ public class FinishActivity extends Activity {
 
     private void updateUI(Intent intent) {
         sensorEventsAdapter.notifyDataSetChanged();
+        contestantsAdapter.notifyDataSetChanged();
     }
 
     @Override

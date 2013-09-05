@@ -81,6 +81,10 @@ public class Contestant implements Comparable<Contestant> {
     public int compareTo(Contestant other) {
         return ((Integer)this.id).compareTo(other.id);
     }
+
+    public boolean update(Contestant contestant) {
+        return false;
+    }
 }
 
 
