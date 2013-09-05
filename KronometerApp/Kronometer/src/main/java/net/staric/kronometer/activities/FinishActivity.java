@@ -10,6 +10,8 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -76,6 +78,25 @@ public class FinishActivity extends Activity {
 
         kronometerServiceIntent = new Intent(this, KronometerService.class);
         startService(kronometerServiceIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_exit:
+                stopService(kronometerServiceIntent);
+                System.exit(0);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private SwipeDismissListViewTouchListener.DismissCallbacks getCallbacks() {
@@ -155,7 +176,7 @@ public class FinishActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             if (bound) {
                 updateUI(intent);
-            };
+            }
         }
     };
 
