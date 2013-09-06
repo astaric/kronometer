@@ -14,15 +14,6 @@ public class Event {
         return time;
     }
 
-    private boolean old;
-    public boolean isOld() {
-        return old;
-    }
-
-    public void setOld(boolean old) {
-        this.old = old;
-    }
-
     private Contestant contestant;
     public Contestant getContestant() {
         return contestant;

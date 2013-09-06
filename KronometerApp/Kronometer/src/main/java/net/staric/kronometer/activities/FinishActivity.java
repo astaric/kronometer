@@ -189,6 +189,7 @@ public class FinishActivity extends Activity {
     };
 
     private static HashSet<Integer> knownContestants = new HashSet<Integer>();
+    private static int lastCopiedEventIdx = 0;
     private void updateUI(Intent intent) {
         for (Contestant contestant : kronometerService.getContestants()) {
             if (!knownContestants.contains(contestant.id)) {
@@ -198,8 +199,12 @@ public class FinishActivity extends Activity {
         }
 
         List<Event> serviceEvents = kronometerService.getEvents();
-        for (int i = sensorEventsAdapter.getCount(); i < serviceEvents.size(); i++) {
-            sensorEventsAdapter.add(serviceEvents.get(i));
+        int serviceEventCount = serviceEvents.size();
+        if (serviceEventCount > lastCopiedEventIdx) {
+            for (int i=lastCopiedEventIdx; i<serviceEventCount; i++) {
+                sensorEventsAdapter.add(serviceEvents.get(i));
+            }
+            lastCopiedEventIdx = serviceEventCount;
         }
         sensorEventsAdapter.notifyDataSetChanged();
         contestantsAdapter.notifyDataSetChanged();
@@ -222,34 +227,35 @@ public class FinishActivity extends Activity {
         }
     }
 
-    Event selectedEvent = null;
     int selectedEventIdx = -1;
 
     private void toggleSelected(Event event, int idx) {
         if (event == null)
             return;
-        if (selectedEvent != null)
-            selectedEvent.setSelected(false);
-        if (event != selectedEvent) {
-            event.setSelected(true);
-            selectedEvent = event;
+        if (selectedEventIdx != -1)
+            events.get(selectedEventIdx).setSelected(false);
+        if (idx != selectedEventIdx) {
             selectedEventIdx = idx;
+            events.get(selectedEventIdx).setSelected(true);
         } else {
-            selectedEvent = null;
+            selectedEventIdx = -1;
         }
     }
 
 
     public void addStopTime(View view) {
-        kronometerService.setEndTime(
-                (Contestant) contestantsOnFinishSpinner.getSelectedItem(),
-                selectedEvent);
-        toggleSelected(selectedEvent, -1);
-        sensorEventsAdapter.notifyDataSetChanged();
-
-        if (selectedEventIdx > 0)
-            sensorEventsListView.setSelection(selectedEventIdx);
-        if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
-            contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
+        try {
+            if (selectedEventIdx != -1) {
+                Contestant selectedContestant = (Contestant)contestantsOnFinishSpinner.getSelectedItem();
+                Event selectedEvent = events.get(selectedEventIdx);
+                kronometerService.setEndTime(selectedContestant, selectedEvent);
+                events.subList(0, selectedEventIdx + 1).clear();
+                sensorEventsAdapter.notifyDataSetChanged();
+            }
+            if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
+                contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
+        } catch (IllegalArgumentException ex) {
+            //TODO display some kind of message
+        }
     }
 }

@@ -63,15 +63,6 @@ public class EventAdapter extends ArrayAdapter<Event> {
         }
 
         Event event = data.get(position);
-        Resources resources = context.getResources();
-        if (event.isOld()) {
-            holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_light));
-            holder.txtEndTime.setTextColor(resources.getColor(android.R.color.primary_text_light));
-        } else {
-            holder.frame.setBackgroundColor(resources.getColor(android.R.color.transparent));
-            holder.txtEndTime.setTextColor(resources.getColor(android.R.color.primary_text_dark));
-        }
-
         SimpleDateFormat outFmt = new SimpleDateFormat("HH:mm:ss.SSS");
         holder.txtEndTime.setText(outFmt.format(event.getTime()));
 

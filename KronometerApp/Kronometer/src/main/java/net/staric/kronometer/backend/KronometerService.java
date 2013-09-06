@@ -169,11 +169,6 @@ public class KronometerService extends Service {
         addUpdate(update);
 
         event.setContestant(contestant);
-        for (Event event1 : events) {
-            event1.setOld(true);
-            if (event == event1)
-                break;
-        }
     }
 
     private ArrayList<Category> categories = new ArrayList<Category>();
