@@ -68,13 +68,13 @@ public class FinishActivity extends Activity {
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         setContentView(R.layout.activity_finish);
 
 
         contestantsListView = (ListView) findViewById(R.id.contestants);
-        contestantsOnFinishSpinner = (Spinner)findViewById(R.id.contestantsOnFinish);
+        contestantsOnFinishSpinner = (Spinner) findViewById(R.id.contestantsOnFinish);
         sensorEventsListView = (ListView) findViewById(R.id.sensorEvents);
 
         SwipeDismissListViewTouchListener touchListener =
@@ -124,7 +124,7 @@ public class FinishActivity extends Activity {
                 for (int position : reverseSortedPositions) {
                     Contestant contestant = contestantsAdapter.getItem(position);
                     contestantsAdapter.remove(contestant);
-                    contestantsOnFinishAdapter.insert(contestant, contestantsOnFinishAdapter.getCount()-1);
+                    contestantsOnFinishAdapter.insert(contestant, contestantsOnFinishAdapter.getCount() - 1);
                 }
                 contestantsAdapter.notifyDataSetChanged();
                 contestantsOnFinishAdapter.notifyDataSetChanged();
@@ -224,6 +224,7 @@ public class FinishActivity extends Activity {
 
     Event selectedEvent = null;
     int selectedEventIdx = -1;
+
     private void toggleSelected(Event event, int idx) {
         if (event == null)
             return;
@@ -241,7 +242,7 @@ public class FinishActivity extends Activity {
 
     public void addStopTime(View view) {
         kronometerService.setEndTime(
-                (Contestant)contestantsOnFinishSpinner.getSelectedItem(),
+                (Contestant) contestantsOnFinishSpinner.getSelectedItem(),
                 selectedEvent);
         toggleSelected(selectedEvent, -1);
         sensorEventsAdapter.notifyDataSetChanged();
