@@ -16,6 +16,8 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 class ContestantSynchronizationThread extends Thread {
     private final KronometerService kronometerService;
@@ -52,7 +54,19 @@ class ContestantSynchronizationThread extends Thread {
             return;
         while (!isInterrupted()) {
             try {
-                kronometerService.setSyncStatus("Synchronizing contestants");
+                List<Update> failedUpdates = new ArrayList<Update>();
+                BlockingQueue<Update> updateQueue = kronometerService.getUpdates();
+                Update update;
+                while ((update = updateQueue.poll()) != null) {
+                    kronometerService.setSyncStatus(String.format("Uploading (%d)", updateQueue.size() + 1));
+                    if (!update.push())
+                        failedUpdates.add(update);
+                }
+                for (Update update2: failedUpdates) {
+                    kronometerService.addUpdate(update2);
+                }
+
+                kronometerService.setSyncStatus("Synchronizing");
                 ArrayList<Contestant> contestants = new Deserializer<Contestant>() {
                     @Override
                     Contestant fromJson(JSONObject jsonObject) {
@@ -70,7 +84,11 @@ class ContestantSynchronizationThread extends Thread {
                 kronometerService.updateContestants(contestants);
                 kronometerService.updateCategories(categories);
 
-                kronometerService.setSyncStatus("Contestants synchronized");
+                if (updateQueue.size() > 0) {
+                    kronometerService.setSyncStatus(String.format("%d updates pending", updateQueue.size()));
+                } else {
+                    kronometerService.setSyncStatus("Synchronized");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 kronometerService.setSyncStatus("Could not access server");

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class KronometerService extends Service {
@@ -216,11 +217,16 @@ public class KronometerService extends Service {
         }
     }
 
-    LinkedBlockingQueue<Update> pendingUpdates = new LinkedBlockingQueue<Update>();
-    private void addUpdate(Update update) {
+    BlockingQueue<Update> pendingUpdates = new LinkedBlockingQueue<Update>();
+    public void addUpdate(Update update) {
         try {
             pendingUpdates.put(update);
         } catch (InterruptedException e) {}
+        setSyncStatus(String.format("%d updates pending", pendingUpdates.size()));
+    }
+
+    public BlockingQueue<Update> getUpdates() {
+        return pendingUpdates;
     }
 
     @Override

@@ -20,13 +20,13 @@ public class EndTimeUpdate extends Update {
 
 
     protected String getUpdateUrl() {
-        return "https://kronometer.herokuapp.com/biker/set_start_time";
+        return "https://kronometer.herokuapp.com/biker/set_end_time";
     }
 
     protected List<NameValuePair> getUpdateParameters() {
         List<NameValuePair> params = new ArrayList<NameValuePair>(2);
         params.add(new BasicNameValuePair("number", "" + number));
-        params.add(new BasicNameValuePair("start_time", "" + endTime.getTime()));
+        params.add(new BasicNameValuePair("end_time", "" + endTime.getTime()));
         return params;
     }
 }
