@@ -1,9 +1,11 @@
 package net.staric.kronometer.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -85,7 +87,7 @@ public class FinishActivity extends Activity {
         sensorEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                toggleSelected(sensorEventsAdapter.getItem(i), i);
+                toggleSelected(i);
                 sensorEventsAdapter.notifyDataSetChanged();
             }
         });
@@ -229,9 +231,7 @@ public class FinishActivity extends Activity {
 
     int selectedEventIdx = -1;
 
-    private void toggleSelected(Event event, int idx) {
-        if (event == null)
-            return;
+    private void toggleSelected(int idx) {
         if (selectedEventIdx != -1)
             events.get(selectedEventIdx).setSelected(false);
         if (idx != selectedEventIdx) {
@@ -246,16 +246,63 @@ public class FinishActivity extends Activity {
     public void addStopTime(View view) {
         try {
             if (selectedEventIdx != -1) {
-                Contestant selectedContestant = (Contestant)contestantsOnFinishSpinner.getSelectedItem();
                 Event selectedEvent = events.get(selectedEventIdx);
-                kronometerService.setEndTime(selectedContestant, selectedEvent);
-                events.subList(0, selectedEventIdx + 1).clear();
-                sensorEventsAdapter.notifyDataSetChanged();
+                Contestant selectedContestant = (Contestant)contestantsOnFinishSpinner.getSelectedItem();
+                if (selectedEvent.getContestant() != null) {
+                    askForConfirmationForDuplicatingEvent(selectedContestant, selectedEvent);
+                } else if (selectedContestant.getEndTime() != null) {
+                    askForConfirmationForChangingEndTime(selectedContestant, selectedEvent);
+                } else {
+                    setEndTime(selectedContestant, selectedEvent);
+                }
             }
-            if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
-                contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
         } catch (IllegalArgumentException ex) {
             //TODO display some kind of message
         }
+    }
+
+    private void askForConfirmationForDuplicatingEvent(final Contestant contestant, final Event event) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(String.format("Sensor event is already associated with contestant %s\nDo you want to continue?", contestant))
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Event newEvent = kronometerService.duplicateEvent(event);
+                        setEndTime(contestant, newEvent);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        toggleSelected(selectedEventIdx);
+                        sensorEventsAdapter.notifyDataSetChanged();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void askForConfirmationForChangingEndTime(final Contestant contestant, final Event event) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(String.format("Contestant %s already has end time set. Do you want to change it?", contestant))
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        setEndTime(contestant, event);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        toggleSelected(selectedEventIdx);
+                        sensorEventsAdapter.notifyDataSetChanged();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void setEndTime(Contestant contestant, Event event) {
+        kronometerService.setEndTime(contestant, event);
+        events.subList(0, selectedEventIdx + 1).clear();
+        sensorEventsAdapter.notifyDataSetChanged();
+        if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
+            contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
     }
 }

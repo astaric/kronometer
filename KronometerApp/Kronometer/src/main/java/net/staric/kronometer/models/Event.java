@@ -20,8 +20,8 @@ public class Event {
     }
 
     public void setContestant(Contestant contestant) {
-        if (this.contestant != null)
-            throw new IllegalArgumentException("Event is already connected to a contestant.");
+        if (this.contestant != null && contestant != null)
+            throw new IllegalArgumentException("Event is already associated with a contestant.");
         this.contestant = contestant;
     }
 

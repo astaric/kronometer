@@ -50,6 +50,17 @@ public class KronometerService extends Service {
 
     int foregroundNotificationId = 47;
 
+    public Event duplicateEvent(Event event) {
+        Event newEvent = new Event(event.getTime());
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i) == event) {
+                events.add(i+1, newEvent);
+                break;
+            }
+        }
+        return newEvent;
+    }
+
     public class LocalBinder extends Binder {
         public KronometerService getService() {
             return KronometerService.this;
@@ -163,6 +174,14 @@ public class KronometerService extends Service {
             return;
         if (event == null)
             return;
+
+        if (contestant.getEndTime() != null) {
+            for (Event event1 : events) {
+                if (event1.getContestant() == contestant) {
+                    event1.setContestant(null);
+                }
+            }
+        }
 
         Date endTime = event.getTime();
         Update update = contestant.setEndTime(endTime);
