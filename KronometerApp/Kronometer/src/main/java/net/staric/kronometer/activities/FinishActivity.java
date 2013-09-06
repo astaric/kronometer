@@ -30,22 +30,28 @@ import net.staric.kronometer.models.Event;
 import net.staric.kronometer.utils.SwipeDismissListViewTouchListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FinishActivity extends Activity {
     private KronometerService kronometerService;
+
     private void setKronometerService(KronometerService service) {
         if (service == null)
             bound = false;
         kronometerService = service;
     }
+
     private Intent kronometerServiceIntent;
     private boolean bound = false;
 
-    private ArrayList<Contestant> contestants;
-    private ArrayList<Contestant> contestantsOnFinish;
-    private ArrayList<Event> events;
+    private static ArrayList<Contestant> contestants = new ArrayList<Contestant>();
+    private static ArrayList<Contestant> contestantsOnFinish =
+            new ArrayList<Contestant>(Arrays.asList(new Contestant[]{new Contestant()}));
+    private static ArrayList<Event> events = new ArrayList<Event>();
 
     private ListView contestantsListView;
     private ListView sensorEventsListView;
@@ -147,24 +153,22 @@ public class FinishActivity extends Activity {
     private void setUpAdapters() {
         if (kronometerService == null)
             return;
-        contestants = new ArrayList<Contestant>();
         contestantsAdapter = new ContestantAdapter(
                 this,
                 R.layout.listitem_contestant,
-                kronometerService.getContestants());
+                contestants);
         this.contestantsListView.setAdapter(contestantsAdapter);
 
         contestantsOnFinishAdapter = new ContestantAdapter(
                 this,
                 R.layout.listitem_contestant,
-                new ArrayList<Contestant>(contestantsAdapter.getCount()));
-        contestantsOnFinishAdapter.add(new Contestant());
+                contestantsOnFinish);
         contestantsOnFinishSpinner.setAdapter(contestantsOnFinishAdapter);
 
         sensorEventsAdapter = new EventAdapter(
                 this,
                 R.layout.listitem_event,
-                new ArrayList<Event>(kronometerService.getEvents()));
+                events);
         sensorEventsListView.setAdapter(sensorEventsAdapter);
 
         bound = true;
@@ -184,9 +188,17 @@ public class FinishActivity extends Activity {
         }
     };
 
+    private static HashSet<Integer> knownContestants = new HashSet<Integer>();
     private void updateUI(Intent intent) {
+        for (Contestant contestant : kronometerService.getContestants()) {
+            if (!knownContestants.contains(contestant.id)) {
+                contestantsAdapter.add(contestant);
+                knownContestants.add(contestant.id);
+            }
+        }
+
         List<Event> serviceEvents = kronometerService.getEvents();
-        for (int i=sensorEventsAdapter.getCount(); i<serviceEvents.size(); i++) {
+        for (int i = sensorEventsAdapter.getCount(); i < serviceEvents.size(); i++) {
             sensorEventsAdapter.add(serviceEvents.get(i));
         }
         sensorEventsAdapter.notifyDataSetChanged();
