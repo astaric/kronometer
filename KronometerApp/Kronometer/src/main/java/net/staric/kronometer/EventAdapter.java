@@ -51,8 +51,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new ContestantHolder();
-            holder.frame = (LinearLayout)row.findViewById(R.id.frame);
-            holder.txtName = (TextView)row.findViewById(R.id.name);
+            holder.frame = (RelativeLayout)row.findViewById(R.id.frame);
             holder.txtEndTime = (TextView)row.findViewById(R.id.endTime);
             holder.btnMerge = (Button)row.findViewById(R.id.btnMerge);
 
@@ -67,20 +66,12 @@ public class EventAdapter extends ArrayAdapter<Event> {
         Resources resources = context.getResources();
         if (event.isOld()) {
             holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_light));
-            holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_light));
             holder.txtEndTime.setTextColor(resources.getColor(android.R.color.primary_text_light));
         } else {
-            holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_dark));
-            holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_dark));
+            holder.frame.setBackgroundColor(resources.getColor(android.R.color.transparent));
             holder.txtEndTime.setTextColor(resources.getColor(android.R.color.primary_text_dark));
         }
 
-        if (event.getContestant() != null) {
-            holder.txtName.setText(event.getContestant().toString());
-            holder.txtName.setVisibility(View.VISIBLE);
-        } else {
-            holder.txtName.setVisibility(View.GONE);
-        }
         SimpleDateFormat outFmt = new SimpleDateFormat("HH:mm:ss.SSS");
         holder.txtEndTime.setText(outFmt.format(event.getTime()));
 
@@ -95,8 +86,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
     static class ContestantHolder
     {
-        LinearLayout frame;
-        TextView txtName;
+        RelativeLayout frame;
         TextView txtEndTime;
         Button btnMerge;
     }

@@ -72,7 +72,7 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
                 holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_light));
                 holder.txtStartTime.setTextColor(resources.getColor(android.R.color.primary_text_light));
             } else {
-                holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_dark));
+                holder.frame.setBackgroundColor(resources.getColor(android.R.color.transparent));
                 holder.txtId.setTextColor(resources.getColor(android.R.color.primary_text_dark));
                 holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_dark));
                 holder.txtStartTime.setTextColor(resources.getColor(android.R.color.primary_text_dark));
@@ -92,6 +92,5 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
         TextView txtId;
         TextView txtName;
         TextView txtStartTime;
-        TextView txtSyncStatus;
     }
 }
