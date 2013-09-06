@@ -244,22 +244,20 @@ public class FinishActivity extends Activity {
         }
     }
 
-
     public void addStopTime(View view) {
-        try {
-            if (selectedEventIdx != -1) {
-                Event selectedEvent = events.get(selectedEventIdx);
-                Contestant selectedContestant = (Contestant)contestantsOnFinishSpinner.getSelectedItem();
-                if (selectedEvent.getContestant() != null) {
-                    askForConfirmationForDuplicatingEvent(selectedContestant, selectedEvent);
-                } else if (selectedContestant.getEndTime() != null) {
-                    askForConfirmationForChangingEndTime(selectedContestant, selectedEvent);
-                } else {
-                    setEndTime(selectedContestant, selectedEvent);
-                }
-            }
-        } catch (IllegalArgumentException ex) {
-            //TODO display some kind of message
+        Contestant selectedContestant = (Contestant)contestantsOnFinishSpinner.getSelectedItem();
+        if (selectedContestant == null)
+            return;
+        if (selectedEventIdx < 0 || selectedEventIdx >= events.size())
+            return;
+        Event selectedEvent = events.get(selectedEventIdx);
+
+        if (selectedEvent.getContestant() != null) {
+            askForConfirmationForDuplicatingEvent(selectedContestant, selectedEvent);
+        } else if (selectedContestant.getEndTime() != null) {
+            askForConfirmationForChangingEndTime(selectedContestant, selectedEvent);
+        } else {
+            setEndTime(selectedContestant, selectedEvent);
         }
     }
 
