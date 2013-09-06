@@ -50,10 +50,10 @@ public class FinishActivity extends Activity {
     private Intent kronometerServiceIntent;
     private boolean bound = false;
 
-    private static ArrayList<Contestant> contestants = new ArrayList<Contestant>();
-    private static ArrayList<Contestant> contestantsOnFinish =
+    private static List<Contestant> contestants = new ArrayList<Contestant>();
+    private static List<Contestant> contestantsOnFinish =
             new ArrayList<Contestant>(Arrays.asList(new Contestant[]{new Contestant()}));
-    private static ArrayList<Event> events = new ArrayList<Event>();
+    private static List<Event> events = new ArrayList<Event>();
 
     private ListView contestantsListView;
     private ListView sensorEventsListView;
