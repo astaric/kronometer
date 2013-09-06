@@ -263,14 +263,14 @@ public class FinishActivity extends Activity {
 
     private void askForConfirmationForDuplicatingEvent(final Contestant contestant, final Event event) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(String.format("Sensor event is already associated with contestant %s\nDo you want to continue?", contestant))
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setMessage(String.format(getString(R.string.duplicateEventConfirmation), contestant))
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Event newEvent = kronometerService.duplicateEvent(event);
                         setEndTime(contestant, newEvent);
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         toggleSelected(selectedEventIdx);
                         sensorEventsAdapter.notifyDataSetChanged();
@@ -282,13 +282,13 @@ public class FinishActivity extends Activity {
 
     private void askForConfirmationForChangingEndTime(final Contestant contestant, final Event event) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(String.format("Contestant %s already has end time set. Do you want to change it?", contestant))
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setMessage(String.format(getString(R.string.endTimeChangeConfirmation), contestant))
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         setEndTime(contestant, event);
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         toggleSelected(selectedEventIdx);
                         sensorEventsAdapter.notifyDataSetChanged();

@@ -13,5 +13,13 @@
     </string>
     <string name="notification_message" >Connected
     </string>
+    <string name="duplicateEventConfirmation">Sensor event is already associated with contestant %s
+        Do you want to continue?
+    </string>
+    <string name="endTimeChangeConfirmation">Contestant %s already has end time set. Do you want to
+        change it?
+    </string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>
