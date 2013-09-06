@@ -232,6 +232,8 @@ public class FinishActivity extends Activity {
     int selectedEventIdx = -1;
 
     private void toggleSelected(int idx) {
+        if (idx < -1 || idx >= events.size())
+            return;
         if (selectedEventIdx != -1)
             events.get(selectedEventIdx).setSelected(false);
         if (idx != selectedEventIdx) {
