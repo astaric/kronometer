@@ -236,6 +236,7 @@ public class FinishActivity extends Activity {
 
         if (selectedEventIdx > 0)
             sensorEventsListView.setSelection(selectedEventIdx);
-        contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
+        if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
+            contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
     }
 }
