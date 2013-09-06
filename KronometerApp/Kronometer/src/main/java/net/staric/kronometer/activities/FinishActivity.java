@@ -31,6 +31,7 @@ import net.staric.kronometer.utils.SwipeDismissListViewTouchListener;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class FinishActivity extends Activity {
     private KronometerService kronometerService;
@@ -163,7 +164,7 @@ public class FinishActivity extends Activity {
         sensorEventsAdapter = new EventAdapter(
                 this,
                 R.layout.listitem_event,
-                kronometerService.getEvents());
+                new ArrayList<Event>(kronometerService.getEvents()));
         sensorEventsListView.setAdapter(sensorEventsAdapter);
 
         bound = true;
@@ -184,6 +185,10 @@ public class FinishActivity extends Activity {
     };
 
     private void updateUI(Intent intent) {
+        List<Event> serviceEvents = kronometerService.getEvents();
+        for (int i=sensorEventsAdapter.getCount(); i<serviceEvents.size(); i++) {
+            sensorEventsAdapter.add(serviceEvents.get(i));
+        }
         sensorEventsAdapter.notifyDataSetChanged();
         contestantsAdapter.notifyDataSetChanged();
     }
