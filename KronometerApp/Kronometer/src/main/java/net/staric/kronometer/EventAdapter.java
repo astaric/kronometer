@@ -15,6 +15,7 @@ import android.widget.TextView;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class EventAdapter extends ArrayAdapter<Event> {
@@ -80,7 +81,8 @@ public class EventAdapter extends ArrayAdapter<Event> {
         } else {
             holder.txtName.setVisibility(View.GONE);
         }
-        holder.txtEndTime.setText(event.getTime().toString());
+        SimpleDateFormat outFmt = new SimpleDateFormat("HH:mm:ss.SSS");
+        holder.txtEndTime.setText(outFmt.format(event.getTime()));
 
         if (event.isSelected()) {
             holder.btnMerge.setVisibility(View.VISIBLE);
