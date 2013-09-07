@@ -110,6 +110,13 @@ public class FinishActivity extends Activity {
                 finish();
                 System.exit(0);
                 return true;
+            case R.id.action_show_all_events:
+                lastCopiedEventIdx = 0;
+                events.clear();
+                if (bound) {
+                    updateUI(null);
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
