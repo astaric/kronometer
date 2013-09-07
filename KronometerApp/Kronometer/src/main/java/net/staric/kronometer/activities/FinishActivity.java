@@ -222,6 +222,9 @@ public class FinishActivity extends Activity {
         super.onResume();
         bindService(kronometerServiceIntent, connection, Context.BIND_AUTO_CREATE);
         registerReceiver(broadcastReceiver, new IntentFilter(KronometerService.DATA_CHANGED_ACTION));
+        selectedContestantId = contestantsOnFinishSpinner.getSelectedItemPosition();
+        if (selectedContestantId > contestantsOnFinishSpinner.getCount())
+            contestantsOnFinishSpinner.setSelection(selectedContestantId);
     }
 
     @Override
@@ -232,6 +235,7 @@ public class FinishActivity extends Activity {
             unbindService(connection);
             setKronometerService(null);
         }
+        selectedContestantId = contestantsOnFinishSpinner.getSelectedItemPosition();
     }
 
     Event selectedEvent = null;
@@ -242,6 +246,8 @@ public class FinishActivity extends Activity {
             event.setSelected(!event.isSelected());
         selectedEvent = event;
     }
+
+    static int selectedContestantId = 0;
 
     public void addStopTime(View view) {
         Contestant selectedContestant = (Contestant)contestantsOnFinishSpinner.getSelectedItem();
