@@ -88,7 +88,7 @@ class ContestantSynchronizationThread extends Thread {
         List<Update> failedUpdates = new ArrayList<Update>();
         BlockingQueue<Update> updateQueue = kronometerService.getUpdates();
         Update update;
-        int timeout = blocking ? 60 : 0;
+        int timeout = blocking ? 5 : 0;
         while ((update = updateQueue.poll(timeout, TimeUnit.SECONDS)) != null) {
             kronometerService.setSyncStatus(String.format("Uploading (%d)", updateQueue.size() + 1));
             if (!update.push())
