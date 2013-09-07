@@ -115,11 +115,11 @@ public class Contestant implements Comparable<Contestant> {
 
     public boolean update(Contestant contestant) {
         boolean modified = false;
-        if (contestant.name != this.name) {
+        if (!contestant.name.equals(this.name)) {
             this.name = contestant.name;
             modified = true;
         }
-        if (contestant.surname != this.surname) {
+        if (!contestant.surname.equals(this.surname)) {
             this.surname = contestant.surname;
             modified = true;
         }
