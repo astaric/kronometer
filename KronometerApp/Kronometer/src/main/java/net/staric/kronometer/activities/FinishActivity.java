@@ -107,6 +107,7 @@ public class FinishActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.action_exit:
                 stopService(kronometerServiceIntent);
+                finish();
                 System.exit(0);
                 return true;
             default:
