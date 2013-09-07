@@ -11,9 +11,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class Contestant implements Comparable<Contestant> {
     public int id;
@@ -24,8 +28,6 @@ public class Contestant implements Comparable<Contestant> {
     private Date startTime;
     private Date endTime;
 
-    public String syncStatus;
-
     public boolean dummy=false;
 
     public Contestant() {
@@ -34,16 +36,21 @@ public class Contestant implements Comparable<Contestant> {
     }
 
     public Contestant(int id, String name, String surname) {
-        this(id, name, surname, null, false);
+        this(id, name, surname, null, false, null, null);
     }
 
     public Contestant(int id, String name, String surname, Category category, boolean domestic) {
+        this(id, name, surname, category, domestic, null, null);
+    }
+
+    private Contestant(int id, String name, String surname, Category category, boolean domestic, Date startTime, Date endTime) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.category = category;
         this.domestic = domestic;
-        this.syncStatus = "";
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public String getFullName() {
@@ -83,9 +90,21 @@ public class Contestant implements Comparable<Contestant> {
             int id = fields.getInt("number");
             String name = fields.getString("name");
             String surname = fields.getString("surname");
+            Date startTime = parseDate(fields.getString("start_time"));
+            Date endTime = parseDate(fields.getString("end_time"));
 
-            return new Contestant(id, name, surname);
+            return new Contestant(id, name, surname, null, false, startTime, endTime);
         } catch (JSONException exc) {
+            return null;
+        }
+    }
+
+    private static Date parseDate(String dateString) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss.SSS'Z'");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            return format.parse(dateString);
+        } catch (ParseException e) {
             return null;
         }
     }

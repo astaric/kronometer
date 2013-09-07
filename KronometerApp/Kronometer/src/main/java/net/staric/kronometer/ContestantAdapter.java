@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import net.staric.kronometer.models.Contestant;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ContestantAdapter extends ArrayAdapter<Contestant> {
 
@@ -50,7 +53,7 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
             holder.frame = (RelativeLayout)row.findViewById(R.id.frame);
             holder.txtId = (TextView)row.findViewById(R.id.cid);
             holder.txtName = (TextView)row.findViewById(R.id.name);
-            holder.txtStartTime = (TextView)row.findViewById(R.id.startTime);
+            holder.txtTime = (TextView)row.findViewById(R.id.startTime);
 
             row.setTag(holder);
         }
@@ -63,27 +66,43 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
         if (contestant.dummy) {
             holder.txtId.setText("");
             holder.txtName.setText("");
-            holder.txtStartTime.setText("");
+            holder.txtTime.setText("");
         } else {
             Resources resources = context.getResources();
             if (contestant.getStartTime() != null) {
                 holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_light));
                 holder.txtId.setTextColor(resources.getColor(android.R.color.primary_text_light));
                 holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_light));
-                holder.txtStartTime.setTextColor(resources.getColor(android.R.color.primary_text_light));
+                holder.txtTime.setTextColor(resources.getColor(android.R.color.primary_text_light));
             } else {
                 holder.frame.setBackgroundColor(resources.getColor(android.R.color.transparent));
                 holder.txtId.setTextColor(resources.getColor(android.R.color.primary_text_dark));
                 holder.txtName.setTextColor(resources.getColor(android.R.color.primary_text_dark));
-                holder.txtStartTime.setTextColor(resources.getColor(android.R.color.primary_text_dark));
+                holder.txtTime.setTextColor(resources.getColor(android.R.color.primary_text_dark));
             }
 
             holder.txtId.setText(((Integer) contestant.id).toString());
             holder.txtName.setText(contestant.getFullName());
-            holder.txtStartTime.setText((contestant.getStartTime() == null) ? "" : contestant.getStartTime().toString());
+            holder.txtTime.setText(formatTime(contestant));
         }
 
         return row;
+    }
+
+    private String formatTime(Contestant contestant) {
+        if (contestant.getStartTime() != null) {
+            if (contestant.getEndTime() != null) {
+                long duration = contestant.getEndTime().getTime() - contestant.getStartTime().getTime();
+                long seconds = duration / 1000 % 60;
+                long minutes = duration / 60000;
+                return String.format("%02d:%02d", minutes, seconds);
+            } else {
+                SimpleDateFormat format = new SimpleDateFormat("'started 'HH:mm:ss.SSS");
+                return format.format(contestant.getStartTime());
+            }
+        } else {
+            return "";
+        }
     }
 
     static class ContestantHolder
@@ -91,6 +110,6 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
         RelativeLayout frame;
         TextView txtId;
         TextView txtName;
-        TextView txtStartTime;
+        TextView txtTime;
     }
 }
