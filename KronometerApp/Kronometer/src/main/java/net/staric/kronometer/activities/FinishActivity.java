@@ -87,7 +87,7 @@ public class FinishActivity extends Activity {
         sensorEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                toggleSelected(i);
+                toggleSelected(events.get(i));
                 sensorEventsAdapter.notifyDataSetChanged();
             }
         });
@@ -230,28 +230,21 @@ public class FinishActivity extends Activity {
         }
     }
 
-    int selectedEventIdx = -1;
-
-    private void toggleSelected(int idx) {
-        if (idx < -1 || idx >= events.size())
-            return;
-        if (selectedEventIdx != -1)
-            events.get(selectedEventIdx).setSelected(false);
-        if (idx != selectedEventIdx) {
-            selectedEventIdx = idx;
-            events.get(selectedEventIdx).setSelected(true);
-        } else {
-            selectedEventIdx = -1;
-        }
+    Event selectedEvent = null;
+    private void toggleSelected(Event event) {
+        if (selectedEvent != null)
+            selectedEvent.setSelected(false);
+        if (event != null)
+            event.setSelected(!event.isSelected());
+        selectedEvent = event;
     }
 
     public void addStopTime(View view) {
         Contestant selectedContestant = (Contestant)contestantsOnFinishSpinner.getSelectedItem();
         if (selectedContestant == null)
             return;
-        if (selectedEventIdx < 0 || selectedEventIdx >= events.size())
+        if (selectedEvent == null)
             return;
-        Event selectedEvent = events.get(selectedEventIdx);
 
         if (selectedEvent.getContestant() != null) {
             askForConfirmationForDuplicatingEvent(selectedContestant, selectedEvent);
@@ -273,8 +266,11 @@ public class FinishActivity extends Activity {
                 })
                 .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        toggleSelected(selectedEventIdx);
-                        sensorEventsAdapter.notifyDataSetChanged();
+                        if (selectedEvent != null) {
+                            selectedEvent.setSelected(false);
+                            selectedEvent = null;
+                            sensorEventsAdapter.notifyDataSetChanged();
+                        }
                     }
                 })
                 .create()
@@ -291,8 +287,11 @@ public class FinishActivity extends Activity {
                 })
                 .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        toggleSelected(selectedEventIdx);
-                        sensorEventsAdapter.notifyDataSetChanged();
+                        if (selectedEvent != null) {
+                            selectedEvent.setSelected(false);
+                            selectedEvent = null;
+                            sensorEventsAdapter.notifyDataSetChanged();
+                        }
                     }
                 })
                 .create()
@@ -301,7 +300,12 @@ public class FinishActivity extends Activity {
 
     private void setEndTime(Contestant contestant, Event event) {
         kronometerService.setEndTime(contestant, event);
-        events.subList(0, selectedEventIdx + 1).clear();
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i) == selectedEvent) {
+                events.subList(0, i + 1).clear();
+                break;
+            }
+        }
         sensorEventsAdapter.notifyDataSetChanged();
         if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
             contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
