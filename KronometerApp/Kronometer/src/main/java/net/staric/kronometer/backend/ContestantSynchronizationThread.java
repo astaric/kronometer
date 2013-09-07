@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 class ContestantSynchronizationThread extends Thread {
     private final KronometerService kronometerService;
@@ -52,56 +53,71 @@ class ContestantSynchronizationThread extends Thread {
     public void run() {
         if (contestantListRequest == null || categoryListRequest == null)
             return;
-        while (!isInterrupted()) {
-            try {
-                List<Update> failedUpdates = new ArrayList<Update>();
-                BlockingQueue<Update> updateQueue = kronometerService.getUpdates();
-                Update update;
-                while ((update = updateQueue.poll()) != null) {
-                    kronometerService.setSyncStatus(String.format("Uploading (%d)", updateQueue.size() + 1));
-                    if (!update.push())
-                        failedUpdates.add(update);
+
+        try {
+            pushUpdates(false);
+            while (!isInterrupted()) {
+                try {
+                    pullContestants();
+                    //pullCategories();
+                    updateServiceStatus();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    kronometerService.setSyncStatus("Could not access server");
+                } catch (JSONException e) {
+                    kronometerService.setSyncStatus("Server returned invalid JSON");
                 }
-                for (Update update2: failedUpdates) {
-                    kronometerService.addUpdate(update2);
-                }
 
-                kronometerService.setSyncStatus("Synchronizing");
-                ArrayList<Contestant> contestants = new Deserializer<Contestant>() {
-                    @Override
-                    Contestant fromJson(JSONObject jsonObject) {
-                        return Contestant.fromJson(jsonObject);
-                    }
-                }.deserialize(download(contestantListRequest));
-
-                ArrayList<Category> categories = new Deserializer<Category>() {
-                    @Override
-                    Category fromJson(JSONObject jsonObject) {
-                        return Category.fromJson(jsonObject);
-                    }
-                }.deserialize(download(categoryListRequest));
-
-                kronometerService.updateContestants(contestants);
-                kronometerService.updateCategories(categories);
-
-                if (updateQueue.size() > 0) {
-                    kronometerService.setSyncStatus(String.format("%d updates pending", updateQueue.size()));
-                } else {
-                    kronometerService.setSyncStatus("Synchronized");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                kronometerService.setSyncStatus("Could not access server");
-            } catch (JSONException e) {
-                kronometerService.setSyncStatus("Server returned invalid JSON");
+                pushUpdates(true);
+                updateServiceStatus();
             }
-
-            try {
-                sleep(60000);
-            } catch (InterruptedException e) {
-                return;
-            }
+        } catch (InterruptedException e) {
+            return;
         }
+    }
+
+    private void updateServiceStatus() {
+        if (kronometerService.getUpdates().size() > 0) {
+            kronometerService.setSyncStatus(String.format("%d updates pending", kronometerService.getUpdates().size()));
+        } else {
+            kronometerService.setSyncStatus("Synchronized");
+        }
+    }
+
+    private void pushUpdates(boolean blocking) throws InterruptedException {
+        List<Update> failedUpdates = new ArrayList<Update>();
+        BlockingQueue<Update> updateQueue = kronometerService.getUpdates();
+        Update update;
+        int timeout = blocking ? 60 : 0;
+        while ((update = updateQueue.poll(timeout, TimeUnit.SECONDS)) != null) {
+            kronometerService.setSyncStatus(String.format("Uploading (%d)", updateQueue.size() + 1));
+            if (!update.push())
+                failedUpdates.add(update);
+        }
+        for (Update update2 : failedUpdates) {
+            kronometerService.addUpdate(update2);
+        }
+    }
+
+    private void pullCategories() throws JSONException, IOException {
+        ArrayList<Category> categories = new Deserializer<Category>() {
+            @Override
+            Category fromJson(JSONObject jsonObject) {
+                return Category.fromJson(jsonObject);
+            }
+        }.deserialize(download(categoryListRequest));
+        kronometerService.updateCategories(categories);
+    }
+
+    private void pullContestants() throws JSONException, IOException {
+        kronometerService.setSyncStatus("Synchronizing");
+        ArrayList<Contestant> contestants = new Deserializer<Contestant>() {
+            @Override
+            Contestant fromJson(JSONObject jsonObject) {
+                return Contestant.fromJson(jsonObject);
+            }
+        }.deserialize(download(contestantListRequest));
+        kronometerService.updateContestants(contestants);
     }
 
     private String download(HttpGet request) throws IOException {
@@ -126,7 +142,8 @@ class ContestantSynchronizationThread extends Thread {
             if (in != null) {
                 try {
                     in.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
             }
         }
     }
