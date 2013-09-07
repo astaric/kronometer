@@ -93,6 +93,7 @@ public class FinishActivity extends Activity {
         });
 
         kronometerServiceIntent = new Intent(this, KronometerService.class);
+        setUpAdapters();
     }
 
     @Override
@@ -150,7 +151,7 @@ public class FinishActivity extends Activity {
 
             KronometerService.LocalBinder binder = (KronometerService.LocalBinder) service;
             setKronometerService(binder.getService());
-            setUpAdapters();
+            bound = true;
             broadcastReceiver.onReceive(null, null);
         }
 
@@ -161,8 +162,6 @@ public class FinishActivity extends Activity {
     };
 
     private void setUpAdapters() {
-        if (kronometerService == null)
-            return;
         contestantsAdapter = new ContestantAdapter(
                 this,
                 R.layout.listitem_contestant,
@@ -180,8 +179,6 @@ public class FinishActivity extends Activity {
                 R.layout.listitem_event,
                 events);
         sensorEventsListView.setAdapter(sensorEventsAdapter);
-
-        bound = true;
     }
 
     public void generateEvent(View view) {
