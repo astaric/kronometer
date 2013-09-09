@@ -1,0 +1,279 @@
+[
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "U\u010denci O\u0160"
+        },
+        "pk": 1
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "Mo\u0161ki do 40 let"
+        },
+        "pk": 2
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "Mo\u0161ki od 40 do 60 let"
+        },
+        "pk": 3
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "Mo\u0161ki 60 in ve\u010d"
+        },
+        "pk": 4
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "U\u010denke O\u0160"
+        },
+        "pk": 5
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "\u017denske do 35"
+        },
+        "pk": 6
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "\u017denske nad 35"
+        },
+        "pk": 7
+    },
+    {
+        "model": "biker.category",
+        "fields": {
+            "name": "Pred\u0161olski"
+        },
+        "pk": 8
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Marija",
+            "category": 7,
+            "end_time": "2013-09-08T13:29:02.168Z",
+            "surname": "Koren\u010d",
+            "domestic": false,
+            "start_time": "2013-09-08T13:01:56.549Z",
+            "number": 1
+        },
+        "pk": 111
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Primo\u017e",
+            "category": 2,
+            "end_time": "2013-09-08T13:19:41.278Z",
+            "surname": "\u017dagar",
+            "domestic": false,
+            "start_time": "2013-09-08T13:02:25.838Z",
+            "number": 2
+        },
+        "pk": 112
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Janez",
+            "category": 4,
+            "end_time": "2013-09-08T13:16:54.525Z",
+            "surname": "Dremelj",
+            "domestic": false,
+            "start_time": "2013-09-08T13:02:54.869Z",
+            "number": 3
+        },
+        "pk": 113
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Ivan",
+            "category": 4,
+            "end_time": "2013-09-08T13:17:53.651Z",
+            "surname": "Kastelic",
+            "domestic": false,
+            "start_time": "2013-09-08T13:03:29.919Z",
+            "number": 4
+        },
+        "pk": 114
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Nejc",
+            "category": 2,
+            "end_time": "2013-09-08T13:16:31.149Z",
+            "surname": "Peterlin",
+            "domestic": false,
+            "start_time": "2013-09-08T13:03:59.163Z",
+            "number": 5
+        },
+        "pk": 115
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Ludvik",
+            "category": 3,
+            "end_time": "2013-09-08T13:19:44.200Z",
+            "surname": "Peterlin",
+            "domestic": false,
+            "start_time": "2013-09-08T13:04:28.612Z",
+            "number": 6
+        },
+        "pk": 116
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Franc",
+            "category": 3,
+            "end_time": "2013-09-08T13:18:48.277Z",
+            "surname": "\u0160ilc",
+            "domestic": false,
+            "start_time": "2013-09-08T13:04:58.239Z",
+            "number": 7
+        },
+        "pk": 117
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Lojze",
+            "category": 3,
+            "end_time": "2013-09-08T13:24:12.736Z",
+            "surname": "Dejak",
+            "domestic": false,
+            "start_time": "2013-09-08T13:05:27.434Z",
+            "number": 8
+        },
+        "pk": 118
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Franci",
+            "category": 2,
+            "end_time": "2013-09-08T13:20:24Z",
+            "surname": "Perpar",
+            "domestic": false,
+            "start_time": "2013-09-08T13:05:57Z",
+            "number": 9
+        },
+        "pk": 119
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Toma\u017e",
+            "category": 2,
+            "end_time": "2013-09-08T13:24:08.786Z",
+            "surname": "Tanko",
+            "domestic": false,
+            "start_time": "2013-09-08T13:06:26.782Z",
+            "number": 10
+        },
+        "pk": 120
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Primo\u017e",
+            "category": 2,
+            "end_time": "2013-09-08T13:27:17.915Z",
+            "surname": "Stopar",
+            "domestic": false,
+            "start_time": "2013-09-08T13:06:56.193Z",
+            "number": 11
+        },
+        "pk": 121
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Andrej",
+            "category": 2,
+            "end_time": "2013-09-08T13:20:58.406Z",
+            "surname": "Kri\u010dka",
+            "domestic": false,
+            "start_time": "2013-09-08T13:07:25.816Z",
+            "number": 12
+        },
+        "pk": 122
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Borislav",
+            "category": 3,
+            "end_time": "2013-09-08T13:20:42.030Z",
+            "surname": "Skubic",
+            "domestic": false,
+            "start_time": "2013-09-08T13:07:55.112Z",
+            "number": 13
+        },
+        "pk": 123
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Bojan",
+            "category": 3,
+            "end_time": "2013-09-08T13:23:12.034Z",
+            "surname": "Indihar",
+            "domestic": false,
+            "start_time": "2013-09-08T13:08:24.242Z",
+            "number": 14
+        },
+        "pk": 124
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Cveta",
+            "category": 7,
+            "end_time": "2013-09-08T13:29:37.794Z",
+            "surname": "Buh",
+            "domestic": false,
+            "start_time": "2013-09-08T13:08:53.421Z",
+            "number": 15
+        },
+        "pk": 125
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Matja\u017e",
+            "category": 4,
+            "end_time": "2013-09-08T13:30:30.919Z",
+            "surname": "Virant1",
+            "domestic": false,
+            "start_time": "2013-09-08T13:09:23Z",
+            "number": 16
+        },
+        "pk": 126
+    },
+    {
+        "model": "biker.biker",
+        "fields": {
+            "name": "Jo\u017ee",
+            "category": 3,
+            "end_time": "2013-09-08T13:27:28.790Z",
+            "surname": "Stari\u010d",
+            "domestic": false,
+            "start_time": "2013-09-08T13:09:52.703Z",
+            "number": 18
+        },
+        "pk": 128
+    }
+]
