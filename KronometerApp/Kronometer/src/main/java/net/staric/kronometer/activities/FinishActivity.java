@@ -94,6 +94,8 @@ public class FinishActivity extends Activity {
 
         kronometerServiceIntent = new Intent(this, KronometerService.class);
         setUpAdapters();
+
+        findViewById(R.id.contestants).setKeepScreenOn(true);
     }
 
     @Override

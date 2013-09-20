@@ -54,6 +54,8 @@ public class MainActivity extends Activity{
         timer.schedule(new updateCountdown(), 0, 500);
 
         updateSyncStatus();
+
+        findViewById(R.id.contestants).setKeepScreenOn(true);
     }
 
     @Override
