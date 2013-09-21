@@ -1,9 +1,13 @@
 package net.staric.kronometer.backend;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.util.SparseArray;
 
 import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
+import net.staric.kronometer.sync.KronometerContract;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -62,19 +66,17 @@ public class ContestantBackend {
         return new ArrayList<Update>(pendingUpdates);
     }
 
-    public void pull() {
+    public void pull(Context context) {
+        ContentResolver contentResolver = context.getContentResolver();
+        contentResolver.delete(KronometerContract.Bikers.CONTENT_URI, null, null);
         try {
             JSONArray contestantList = new JSONArray(downloadContestantList());
             for(int i=0; i<contestantList.length(); i++) {
                 Contestant newContestant = Contestant.fromJson(contestantList.getJSONObject(i));
-                Contestant existingContestant;
-                if ((existingContestant = contestantMap.get(newContestant.id, null)) != null) {
-                    existingContestant.name = newContestant.name;
-                    existingContestant.surname = newContestant.surname;
-                } else {
-                    contestants.add(newContestant);
-                    contestantMap.put(newContestant.id, newContestant);
-                }
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(KronometerContract.Bikers._ID, newContestant.id);
+                contentValues.put(KronometerContract.Bikers.NAME, newContestant.getFullName());
+                contentResolver.insert(KronometerContract.Bikers.CONTENT_URI, contentValues);
             }
         } catch (JSONException exc) {
             System.out.println(exc.getMessage());

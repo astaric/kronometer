@@ -111,7 +111,7 @@ public class StartActivity extends Activity{
 
     public void syncContestants() {
         if (Utils.hasInternetConnection(this))
-            new SyncContestantListTask().execute();
+            new SyncContestantListTask(this).execute();
     }
 
     private class updateCountdown extends TimerTask {
@@ -129,6 +129,14 @@ public class StartActivity extends Activity{
     }
 
     private class SyncContestantListTask extends AsyncTask<Void, Void, Void> {
+        private final Context context;
+
+        public SyncContestantListTask(Context context) {
+            super();
+            this.context = context;
+        }
+
+
         @Override
         protected void onPreExecute() {
             syncStatus.setTitle("Downloading");
@@ -136,7 +144,7 @@ public class StartActivity extends Activity{
 
         @Override
         protected Void doInBackground(Void... voids) {
-            contestantBackend.pull();
+            contestantBackend.pull(context);
             for (Update update : contestantBackend.getPendingUpdates()) {
                 contestantBackend.push(update);
                 publishProgress();
@@ -152,7 +160,6 @@ public class StartActivity extends Activity{
 
         @Override
         protected void onPostExecute(Void voids) {
-            contestantsAdapter.notifyDataSetChanged();
             updateSyncStatus();
         }
     }
@@ -182,7 +189,6 @@ public class StartActivity extends Activity{
             new PushStartTime().execute(update);
         countdownBackend.resetCountdown();
 
-        contestantsAdapter.notifyDataSetChanged();
         if (index < contestants.getCount() - 1) {
             contestants.setSelection(index+1);
         }
