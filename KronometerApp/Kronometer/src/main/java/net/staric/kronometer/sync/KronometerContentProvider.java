@@ -46,9 +46,7 @@ public class KronometerContentProvider extends android.content.ContentProvider {
     private Uri getUriForId(long id, Uri uri) {
         if (id > 0) {
             Uri itemUri = ContentUris.withAppendedId(uri, id);
-            if (!isInBatchMode()) {
-                getContext().getContentResolver().notifyChange(itemUri, null);
-            }
+            getContext().getContentResolver().notifyChange(itemUri, null);
             return itemUri;
         } else {
             throw new SQLException("Problem while inserting into uri: " + uri);
@@ -136,12 +134,36 @@ public class KronometerContentProvider extends android.content.ContentProvider {
             return updateCount;
     }
 
-    /*
-     * delete() always returns "no rows affected" (0)
-     */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+            SQLiteDatabase db = helper.getWritableDatabase();
+            int delCount = 0;
+            switch (URI_MATCHER.match(uri)) {
+                case BIKER_LIST:
+                    delCount = db.delete(
+                            DbSchema.TBL_BIKERS,
+                            selection,
+                            selectionArgs);
+                    break;
+                case BIKER_ID:
+                    String idStr = uri.getLastPathSegment();
+                    String where = KronometerContract.Bikers._ID + " = " + idStr;
+                    if (!TextUtils.isEmpty(selection)) {
+                        where += " AND " + selection;
+                    }
+                    delCount = db.delete(
+                            DbSchema.TBL_BIKERS,
+                            where,
+                            selectionArgs);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported URI: " + uri);
+            }
+
+            if (delCount > 0) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
+            return delCount;
     }
 
     // helper constants for use with the UriMatcher
