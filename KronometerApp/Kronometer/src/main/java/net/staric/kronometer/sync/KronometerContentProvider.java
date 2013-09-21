@@ -13,12 +13,7 @@ import android.text.TextUtils;
 
 public class KronometerContentProvider extends android.content.ContentProvider {
     private SQLiteOpenHelper helper;
-    private final ThreadLocal<Boolean> mIsInBatchMode = new ThreadLocal<Boolean>();
 
-    /*
-         * Always return true, indicating that the
-         * provider loaded correctly.
-         */
     @Override
     public boolean onCreate() {
         helper = new KronometerOpenHelper(getContext());
@@ -46,6 +41,18 @@ public class KronometerContentProvider extends android.content.ContentProvider {
         SQLiteDatabase db = helper.getWritableDatabase();
         long id = db.insert(DbSchema.TBL_BIKERS, null, values);
         return getUriForId(id, uri);
+    }
+
+    private Uri getUriForId(long id, Uri uri) {
+        if (id > 0) {
+            Uri itemUri = ContentUris.withAppendedId(uri, id);
+            if (!isInBatchMode()) {
+                getContext().getContentResolver().notifyChange(itemUri, null);
+            }
+            return itemUri;
+        } else {
+            throw new SQLException("Problem while inserting into uri: " + uri);
+        }
     }
 
     @Override
@@ -91,16 +98,42 @@ public class KronometerContentProvider extends android.content.ContentProvider {
         return cursor;
     }
 
-    private Uri getUriForId(long id, Uri uri) {
-        if (id > 0) {
-            Uri itemUri = ContentUris.withAppendedId(uri, id);
-            if (!isInBatchMode()) {
-                getContext().getContentResolver().notifyChange(itemUri, null);
+    public int update(
+            Uri uri,
+            ContentValues values,
+            String selection,
+            String[] selectionArgs) {
+
+            SQLiteDatabase db = helper.getWritableDatabase();
+            int updateCount = 0;
+            switch (URI_MATCHER.match(uri)) {
+                case BIKER_LIST:
+                    updateCount = db.update(
+                            DbSchema.TBL_BIKERS,
+                            values,
+                            selection,
+                            selectionArgs);
+                    break;
+                case BIKER_ID:
+                    String idStr = uri.getLastPathSegment();
+                    String where = KronometerContract.Bikers._ID + " = " + idStr;
+                    if (!TextUtils.isEmpty(selection)) {
+                        where += " AND " + selection;
+                    }
+                    updateCount = db.update(
+                            DbSchema.TBL_BIKERS,
+                            values,
+                            where,
+                            selectionArgs);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported URI: " + uri);
             }
-            return itemUri;
-        } else {
-            throw new SQLException("Problem while inserting into uri: " + uri);
-        }
+
+            if (updateCount > 0) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
+            return updateCount;
     }
 
     /*
@@ -109,20 +142,6 @@ public class KronometerContentProvider extends android.content.ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         return 0;
-    }
-    /*
-     * update() always returns "no rows affected" (0)
-     */
-    public int update(
-            Uri uri,
-            ContentValues values,
-            String selection,
-            String[] selectionArgs) {
-        return 0;
-    }
-
-    private boolean isInBatchMode() {
-        return mIsInBatchMode.get() != null && mIsInBatchMode.get();
     }
 
     // helper constants for use with the UriMatcher
