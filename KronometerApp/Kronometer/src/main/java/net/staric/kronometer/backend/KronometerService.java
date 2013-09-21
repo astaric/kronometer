@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.SparseArray;
 
+import net.staric.kronometer.R;
 import net.staric.kronometer.activities.FinishActivity;
 import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
@@ -121,7 +122,7 @@ public class KronometerService extends Service {
         Intent notificationIntent = new Intent(this, FinishActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(android.R.drawable.btn_star)
+                .setSmallIcon(R.drawable.ic_stat_notify_biker)
                 .setContentTitle("Bluetooth sensor")
                 .setContentText(bluetoothStatus)
                 .setContentIntent(pendingIntent);
