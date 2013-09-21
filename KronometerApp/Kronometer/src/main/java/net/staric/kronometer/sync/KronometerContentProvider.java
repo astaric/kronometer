@@ -7,7 +7,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.text.TextUtils;
 
 public class KronometerContentProvider extends android.content.ContentProvider {
     private SQLiteOpenHelper helper;
@@ -34,19 +36,6 @@ public class KronometerContentProvider extends android.content.ContentProvider {
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
     }
-    /*
-     * query() always returns no results
-     *
-     */
-    @Override
-    public Cursor query(
-            Uri uri,
-            String[] projection,
-            String selection,
-            String[] selectionArgs,
-            String sortOrder) {
-        return null;
-    }
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
@@ -57,6 +46,49 @@ public class KronometerContentProvider extends android.content.ContentProvider {
         SQLiteDatabase db = helper.getWritableDatabase();
         long id = db.insert(DbSchema.TBL_BIKERS, null, values);
         return getUriForId(id, uri);
+    }
+
+    @Override
+    public Cursor query(
+            Uri uri,
+            String[] projection,
+            String selection,
+            String[] selectionArgs,
+            String sortOrder) {
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        switch (URI_MATCHER.match(uri)) {
+            case BIKER_LIST:
+                builder.setTables(DbSchema.TBL_BIKERS);
+                if (TextUtils.isEmpty(sortOrder)) {
+                    sortOrder = KronometerContract.Bikers.SORT_ORDER_DEFAULT;
+                }
+                break;
+            case BIKER_ID:
+                builder.setTables(DbSchema.TBL_BIKERS);
+                builder.appendWhere(KronometerContract.Bikers._ID + " = " +
+                        uri.getLastPathSegment());
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Unsupported URI: " + uri);
+        }
+        Cursor cursor =
+                builder.query(
+                        db,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+
+        // if we want to be notified of any changes:
+        cursor.setNotificationUri(
+                getContext().getContentResolver(),
+                uri);
+        return cursor;
     }
 
     private Uri getUriForId(long id, Uri uri) {
