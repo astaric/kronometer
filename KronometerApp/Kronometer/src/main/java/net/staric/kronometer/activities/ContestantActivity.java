@@ -51,7 +51,7 @@ public class ContestantActivity extends Activity {
     public void createNewContestant(View view) {
         Update update = createContestantUpdate();
         if (update != null) {
-            new PushUpdatedTask(MainActivity.class).execute(update);
+            new PushUpdatedTask(StartActivity.class).execute(update);
         }
     }
 

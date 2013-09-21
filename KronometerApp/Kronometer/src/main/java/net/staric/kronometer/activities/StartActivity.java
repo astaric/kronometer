@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends Activity{
+public class StartActivity extends Activity{
     ContestantAdapter contestantsAdapter;
 
     Timer timer;
@@ -96,7 +96,7 @@ public class MainActivity extends Activity{
     private class updateCountdown extends TimerTask {
         @Override
         public void run() {
-            MainActivity.this.runOnUiThread(new Runnable() {
+            StartActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     int countdownValue = countdownBackend.getCountdownValue();
