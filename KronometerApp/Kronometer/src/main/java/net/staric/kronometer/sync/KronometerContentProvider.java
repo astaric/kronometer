@@ -1,17 +1,25 @@
 package net.staric.kronometer.sync;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
 public class KronometerContentProvider extends android.content.ContentProvider {
+    private SQLiteOpenHelper helper;
+    private final ThreadLocal<Boolean> mIsInBatchMode = new ThreadLocal<Boolean>();
+
     /*
-     * Always return true, indicating that the
-     * provider loaded correctly.
-     */
+         * Always return true, indicating that the
+         * provider loaded correctly.
+         */
     @Override
     public boolean onCreate() {
+        helper = new KronometerOpenHelper(getContext());
         return true;
     }
 
@@ -39,13 +47,30 @@ public class KronometerContentProvider extends android.content.ContentProvider {
             String sortOrder) {
         return null;
     }
-    /*
-     * insert() always returns null (no URI)
-     */
+
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+        if (URI_MATCHER.match(uri) != BIKER_LIST) {
+            throw new IllegalArgumentException("Unsupported URI for insertion: " + uri);
+        }
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+        long id = db.insert(DbSchema.TBL_BIKERS, null, values);
+        return getUriForId(id, uri);
     }
+
+    private Uri getUriForId(long id, Uri uri) {
+        if (id > 0) {
+            Uri itemUri = ContentUris.withAppendedId(uri, id);
+            if (!isInBatchMode()) {
+                getContext().getContentResolver().notifyChange(itemUri, null);
+            }
+            return itemUri;
+        } else {
+            throw new SQLException("Problem while inserting into uri: " + uri);
+        }
+    }
+
     /*
      * delete() always returns "no rows affected" (0)
      */
@@ -62,6 +87,10 @@ public class KronometerContentProvider extends android.content.ContentProvider {
             String selection,
             String[] selectionArgs) {
         return 0;
+    }
+
+    private boolean isInBatchMode() {
+        return mIsInBatchMode.get() != null && mIsInBatchMode.get();
     }
 
     // helper constants for use with the UriMatcher
