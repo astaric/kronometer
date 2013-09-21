@@ -1,31 +1,28 @@
 package net.staric.kronometer.activities;
 
 import android.app.Activity;
-import android.content.ContentResolver;
+import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import net.staric.kronometer.backend.Update;
-import net.staric.kronometer.models.Contestant;
-import net.staric.kronometer.ContestantAdapter;
+import net.staric.kronometer.R;
 import net.staric.kronometer.backend.ContestantBackend;
 import net.staric.kronometer.backend.CountdownBackend;
-import net.staric.kronometer.R;
-import net.staric.kronometer.sync.KronometerContract;
+import net.staric.kronometer.backend.Update;
 import net.staric.kronometer.utils.PushUpdates;
 import net.staric.kronometer.utils.Utils;
 
@@ -33,9 +30,9 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class StartActivity extends Activity{
-    ContestantAdapter contestantsAdapter;
+import static net.staric.kronometer.sync.KronometerContract.Bikers;
 
+public class StartActivity extends Activity {
     Timer timer;
     Spinner contestants;
     TextView countdown;
@@ -54,21 +51,30 @@ public class StartActivity extends Activity{
         setContentView(R.layout.activity_main);
 
         contestants = (Spinner)findViewById(R.id.contestants);
-        Cursor contentCursor = this.getContentResolver().query(
-                KronometerContract.Bikers.CONTENT_URI, null, null, null, null);
-        contentCursor.setNotificationUri(
-                getContentResolver(),
-                KronometerContract.Bikers.CONTENT_URI);
-        SpinnerAdapter adapter = new SimpleCursorAdapter(
+        final SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(
                 this, R.layout.listitem_contestant,
-                contentCursor,
-                new String[] {
-                        KronometerContract.Bikers._ID,
-                        KronometerContract.Bikers.NAME
-                },
-                new int[] { R.id.cid, R.id.name }, 0);
+                null,
+                new String[] {Bikers._ID, Bikers.NAME, Bikers.START_TIME},
+                new int[] { R.id.cid, R.id.name, R.id.startTime },
+                0);
+        getLoaderManager().initLoader(0, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader onCreateLoader(int i, Bundle bundle) {
+                return new CursorLoader(StartActivity.this, Bikers.CONTENT_URI, null, null, null, null);
+            }
 
-        contestants.setAdapter(adapter);
+            @Override
+            public void onLoadFinished(Loader loader, Cursor data) {
+                cursorAdapter.swapCursor(data);
+            }
+
+            @Override
+            public void onLoaderReset(Loader loader) {
+                cursorAdapter.swapCursor(null);
+            }
+        });
+
+        contestants.setAdapter(cursorAdapter);
         countdown = (TextView)findViewById(R.id.countdown);
 
         timer = new Timer();
@@ -180,20 +186,33 @@ public class StartActivity extends Activity{
         if (contestants.getCount() == 0)
             return;
 
-        Date startTime = new Date();
-        int index = contestants.getSelectedItemPosition();
-        Contestant contestant = (Contestant)contestants.getSelectedItem();
+        try {
+            Date startTime = new Date();
 
-        Update update = contestant.setStartTime(startTime);
-        if (update != null && Utils.hasInternetConnection(this))
-            new PushStartTime().execute(update);
-        countdownBackend.resetCountdown();
+            Cursor selectedItem = (Cursor) contestants.getSelectedItem();
+            int contestantId = selectedItem.getInt(selectedItem.getColumnIndex(Bikers._ID));
+            setStartTime(contestantId, startTime);
 
-        if (index < contestants.getCount() - 1) {
-            contestants.setSelection(index+1);
+            countdownBackend.resetCountdown();
+
+            int index = contestants.getSelectedItemPosition();
+            if (index < contestants.getCount() - 1) {
+                contestants.setSelection(index+1);
+            }
+
+            updateSyncStatus();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+    }
 
-        updateSyncStatus();
+    private void setStartTime(int contestantId, Date startTime) {
+        Uri uri = ContentUris.withAppendedId(Bikers.CONTENT_URI, contestantId);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Bikers.START_TIME, startTime.getTime());
+
+        getContentResolver().update(uri, contentValues, null, null);
     }
 
     public void updateSyncStatus() {

@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-public class KronometerContentProvider extends android.content.ContentProvider {
+public class KronometerProvider extends android.content.ContentProvider {
     private SQLiteOpenHelper helper;
 
     @Override

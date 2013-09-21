@@ -9,18 +9,18 @@ import android.provider.BaseColumns;
     String TBL_BIKERS = "bikers";
 
     String COL_ID = BaseColumns._ID;
-    String COL_NAME = "name";
-    String COL_SURNAME = "surname";
-    String COL_START_TIME = "start_time";
-    String COL_END_TIME = "end_time";
+    String COL_NAME = KronometerContract.Bikers.NAME;
+    String COL_SURNAME = KronometerContract.Bikers.SURNAME;
+    String COL_START_TIME = KronometerContract.Bikers.START_TIME;
+    String COL_END_TIME = KronometerContract.Bikers.END_TIME;
 
     String DDL_CREATE_TBL_BIKERS =
             "CREATE TABLE bikers (" +
                     "_id          INTEGER  PRIMARY KEY AUTOINCREMENT, \n" +
                     "name         TEXT,\n" +
-                    "surname      TEXT \n" +
-                    "start_time   TEXT \n" +
-                    "end_time     TEXT \n" +
+                    "surname      TEXT, \n" +
+                    "start_time   INTEGER, \n" +
+                    "end_time     INTEGER \n" +
                     ")";
 
 
