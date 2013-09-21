@@ -1,0 +1,45 @@
+package net.staric.kronometer.sync;
+
+import android.content.ContentResolver;
+import android.net.Uri;
+import android.provider.BaseColumns;
+
+public final class KronometerContract {
+
+    public static final String AUTHORITY = "net.staric.kronometer";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+
+    public static final class Bikers implements BaseColumns {
+        static final String NAME = "name";
+        static final String SURNAME = "surname";
+        static final String START_TIME = "start_time";
+        static final String END_TIME = "end_time";
+
+        public static final Uri CONTENT_URI =
+                Uri.withAppendedPath(KronometerContract.CONTENT_URI, "bikers");
+
+        /**
+         * The mime type of a directory of items.
+         */
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.net.staric.kronometer_bikers";
+        /**
+         * The mime type of a single item.
+         */
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.net.staric.kronometer_bikers";
+
+        /**
+         * A projection of all columns
+         * in the items table.
+         */
+        public static final String[] PROJECTION_ALL =
+                {_ID, NAME, SURNAME, START_TIME, END_TIME};
+        /**
+         * The default sort order for
+         * queries containing _ID fields.
+         */
+        public static final String SORT_ORDER_DEFAULT =
+                _ID + " ASC";
+    }
+}

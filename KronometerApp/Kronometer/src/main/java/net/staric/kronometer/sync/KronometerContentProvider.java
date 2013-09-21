@@ -1,11 +1,11 @@
 package net.staric.kronometer.sync;
 
-import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
-public class StubProvider extends ContentProvider {
+public class KronometerContentProvider extends android.content.ContentProvider {
     /*
      * Always return true, indicating that the
      * provider loaded correctly.
@@ -14,12 +14,17 @@ public class StubProvider extends ContentProvider {
     public boolean onCreate() {
         return true;
     }
-    /*
-     * Return an empty String for MIME type
-     */
+
     @Override
     public String getType(Uri uri) {
-        return "";
+        switch (URI_MATCHER.match(uri)) {
+            case BIKER_LIST:
+                return KronometerContract.Bikers.CONTENT_TYPE;
+            case BIKER_ID:
+                return KronometerContract.Bikers.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalArgumentException("Unsupported URI: " + uri);
+        }
     }
     /*
      * query() always returns no results
@@ -57,5 +62,20 @@ public class StubProvider extends ContentProvider {
             String selection,
             String[] selectionArgs) {
         return 0;
+    }
+
+    // helper constants for use with the UriMatcher
+    private static final int BIKER_LIST = 1;
+    private static final int BIKER_ID = 2;
+    private static final UriMatcher URI_MATCHER;
+
+    static {
+        URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
+        URI_MATCHER.addURI(KronometerContract.AUTHORITY,
+                "bikers",
+                BIKER_LIST);
+        URI_MATCHER.addURI(KronometerContract.AUTHORITY,
+                "bikers/#",
+                BIKER_ID);
     }
 }
