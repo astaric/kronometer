@@ -15,7 +15,7 @@ import android.provider.BaseColumns;
     String COL_END_TIME = "end_time";
 
     String DDL_CREATE_TBL_BIKERS =
-            "CREATE TABLE items (" +
+            "CREATE TABLE bikers (" +
                     "_id          INTEGER  PRIMARY KEY AUTOINCREMENT, \n" +
                     "name         TEXT,\n" +
                     "surname      TEXT \n" +
