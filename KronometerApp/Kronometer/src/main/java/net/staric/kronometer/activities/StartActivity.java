@@ -1,13 +1,22 @@
 package net.staric.kronometer.activities;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import net.staric.kronometer.backend.Update;
@@ -16,6 +25,7 @@ import net.staric.kronometer.ContestantAdapter;
 import net.staric.kronometer.backend.ContestantBackend;
 import net.staric.kronometer.backend.CountdownBackend;
 import net.staric.kronometer.R;
+import net.staric.kronometer.sync.KronometerContract;
 import net.staric.kronometer.utils.PushUpdates;
 import net.staric.kronometer.utils.Utils;
 
@@ -44,10 +54,21 @@ public class StartActivity extends Activity{
         setContentView(R.layout.activity_main);
 
         contestants = (Spinner)findViewById(R.id.contestants);
-        contestantsAdapter = new ContestantAdapter(this,
-                                                   R.layout.listitem_contestant,
-                                                   contestantBackend.getContestants());
-        contestants.setAdapter(contestantsAdapter);
+        Cursor contentCursor = this.getContentResolver().query(
+                KronometerContract.Bikers.CONTENT_URI, null, null, null, null);
+        contentCursor.setNotificationUri(
+                getContentResolver(),
+                KronometerContract.Bikers.CONTENT_URI);
+        SpinnerAdapter adapter = new SimpleCursorAdapter(
+                this, R.layout.listitem_contestant,
+                contentCursor,
+                new String[] {
+                        KronometerContract.Bikers._ID,
+                        KronometerContract.Bikers.NAME
+                },
+                new int[] { R.id.cid, R.id.name }, 0);
+
+        contestants.setAdapter(adapter);
         countdown = (TextView)findViewById(R.id.countdown);
 
         timer = new Timer();
