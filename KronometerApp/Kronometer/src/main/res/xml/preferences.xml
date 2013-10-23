@@ -2,8 +2,8 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference
-            android:key="countdown"
-            android:title="Countdown"
-            android:summary="Number of seconds between contestants"
+            android:key="pref_countdown"
+            android:title="@string/pref_countdown"
+            android:summary="@string/pref_countdown_summary"
             android:defaultValue="30"/>
 </PreferenceScreen>

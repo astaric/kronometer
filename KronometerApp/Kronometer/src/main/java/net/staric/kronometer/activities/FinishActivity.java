@@ -43,12 +43,6 @@ import java.util.Set;
 public class FinishActivity extends Activity {
     private KronometerService kronometerService;
 
-    public static final String AUTHORITY = "net.staric.kronometer.sync";
-    public static final String ACCOUNT_TYPE = "kronometer.staric.net";
-    public static final String ACCOUNT = "x";
-
-    Account account;
-
     private void setKronometerService(KronometerService service) {
         if (service == null)
             bound = false;
@@ -104,21 +98,6 @@ public class FinishActivity extends Activity {
         setUpAdapters();
 
         findViewById(R.id.contestants).setKeepScreenOn(true);
-
-        account = CreateSyncAccount(this);
-    }
-
-    public static Account CreateSyncAccount(Context context) {
-        Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
-
-        AccountManager accountManager =
-                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
-
-        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            return newAccount;
-        } else {
-            return null;
-        }
     }
 
     @Override

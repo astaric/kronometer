@@ -1,5 +1,7 @@
 package net.staric.kronometer.activities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentUris;
@@ -40,6 +42,9 @@ public class StartActivity extends Activity {
 
     ContestantBackend contestantBackend;
     CountdownBackend countdownBackend;
+
+    public static final String ACCOUNT_TYPE = "kronometer.staric.net";
+    public static final String ACCOUNT = "x";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,22 @@ public class StartActivity extends Activity {
         updateSyncStatus();
 
         findViewById(R.id.contestants).setKeepScreenOn(true);
+
+        Account account = CreateSyncAccount(this);
+
+    }
+
+    public static Account CreateSyncAccount(Context context) {
+        Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
+
+        AccountManager accountManager =
+                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            return newAccount;
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -96,14 +117,16 @@ public class StartActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_refresh_bikers:
                 syncContestants();
                 return true;
             case R.id.action_new_contestant:
-                Intent intent = new Intent(this, ContestantActivity.class);
+                intent = new Intent(this, ContestantActivity.class);
                 startActivities(new Intent[]{intent});
                 return true;
             case R.id.action_finish:

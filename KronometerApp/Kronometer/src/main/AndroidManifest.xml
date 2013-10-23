@@ -35,7 +35,7 @@
                 android:parentActivityName="net.staric.kronometer.MainActivity" >
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="net.staric.kronometer.MainActivity" />
+                    android:value="net.staric.kronometer.activities.StartActivity" />
         </activity>
         <activity
             android:name=".activities.FinishActivity"
@@ -44,6 +44,12 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="Settings">
+
+        </activity>
+
         <service android:name=".backend.KronometerService"></service>
         <service
             android:name="net.staric.kronometer.sync.AuthenticatorService">
@@ -67,7 +73,7 @@
         <provider
             android:name=".sync.KronometerProvider"
             android:authorities="net.staric.kronometer"
-            android:exported="false"
+            android:exported="true"
             android:syncable="true"/>
     </application>
 </manifest>
