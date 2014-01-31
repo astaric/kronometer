@@ -1,4 +1,4 @@
-package net.staric.kronometer.sync;
+package net.staric.kronometer;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

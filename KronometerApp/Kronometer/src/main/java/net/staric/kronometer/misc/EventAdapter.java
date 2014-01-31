@@ -1,4 +1,4 @@
-package net.staric.kronometer;
+package net.staric.kronometer.misc;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.staric.kronometer.R;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
 

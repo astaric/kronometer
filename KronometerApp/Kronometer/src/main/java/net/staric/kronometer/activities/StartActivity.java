@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import net.staric.kronometer.R;
 import net.staric.kronometer.backend.ContestantBackend;
-import net.staric.kronometer.backend.CountdownBackend;
 import net.staric.kronometer.backend.Update;
 import net.staric.kronometer.utils.PushUpdates;
 import net.staric.kronometer.utils.Utils;
@@ -34,7 +33,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static net.staric.kronometer.sync.KronometerContract.Bikers;
+import static net.staric.kronometer.KronometerContract.Bikers;
 
 public class StartActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
     static final String NEXT_START_TIME = "next_start";
@@ -230,17 +229,11 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
 
         try {
             Date startTime = new Date();
-
-            Cursor selectedItem = (Cursor) contestants.getSelectedItem();
-            int contestantId = selectedItem.getInt(selectedItem.getColumnIndex(Bikers._ID));
+            int contestantId = getSelectedContestantId();
             setStartTime(contestantId, startTime);
-
             resetCountdown();
 
-            int index = contestants.getSelectedItemPosition();
-            if (index < contestants.getCount() - 1) {
-                contestants.setSelection(index + 1);
-            }
+            selectNextContestant();
 
             updateSyncStatus();
         } catch (Exception ex) {
@@ -248,13 +241,27 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
         }
     }
 
+
+
+    private int getSelectedContestantId() {
+        Cursor selectedItem = (Cursor) contestants.getSelectedItem();
+        return selectedItem.getInt(selectedItem.getColumnIndex(Bikers._ID));
+    }
+
     private void setStartTime(int contestantId, Date startTime) {
         Uri uri = ContentUris.withAppendedId(Bikers.CONTENT_URI, contestantId);
 
-        ContentValues contentValues = new ContentValues();
+        ContentValues contentValues = new ContentValues(1);
         contentValues.put(Bikers.START_TIME, startTime.getTime());
 
         getContentResolver().update(uri, contentValues, null, null);
+    }
+
+    private void selectNextContestant() {
+        int index = contestants.getSelectedItemPosition();
+        if (index < contestants.getCount() - 1) {
+            contestants.setSelection(index + 1);
+        }
     }
 
     public void updateSyncStatus() {

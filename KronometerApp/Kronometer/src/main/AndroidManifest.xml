@@ -71,7 +71,7 @@
                 android:resource="@xml/syncadapter" />
         </service>
         <provider
-            android:name=".sync.KronometerProvider"
+            android:name=".KronometerProvider"
             android:authorities="net.staric.kronometer"
             android:exported="true"
             android:syncable="true"/>

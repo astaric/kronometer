@@ -1,7 +1,5 @@
 package net.staric.kronometer.activities;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -19,14 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import net.staric.kronometer.ContestantAdapter;
-import net.staric.kronometer.EventAdapter;
+import net.staric.kronometer.misc.ContestantAdapter;
+import net.staric.kronometer.misc.EventAdapter;
 import net.staric.kronometer.R;
 import net.staric.kronometer.backend.KronometerService;
 import net.staric.kronometer.models.Contestant;
@@ -38,7 +35,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class FinishActivity extends Activity {
     private KronometerService kronometerService;

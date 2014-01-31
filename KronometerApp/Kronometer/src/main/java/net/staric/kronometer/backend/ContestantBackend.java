@@ -7,7 +7,7 @@ import android.util.SparseArray;
 
 import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
-import net.staric.kronometer.sync.KronometerContract;
+import net.staric.kronometer.KronometerContract;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
