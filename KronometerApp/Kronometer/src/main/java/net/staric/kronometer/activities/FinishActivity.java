@@ -2,14 +2,18 @@ package net.staric.kronometer.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.Loader;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
@@ -20,8 +24,11 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import net.staric.kronometer.KronometerContract;
 import net.staric.kronometer.misc.ContestantAdapter;
 import net.staric.kronometer.misc.EventAdapter;
 import net.staric.kronometer.R;
@@ -30,13 +37,15 @@ import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
 import net.staric.kronometer.utils.SwipeDismissListViewTouchListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-public class FinishActivity extends Activity {
+public class FinishActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>  {
     private KronometerService kronometerService;
 
     private void setKronometerService(KronometerService service) {
@@ -58,7 +67,7 @@ public class FinishActivity extends Activity {
 
     private ContestantAdapter contestantsAdapter;
     private ContestantAdapter contestantsOnFinishAdapter;
-    private ArrayAdapter<Event> sensorEventsAdapter;
+    private SimpleCursorAdapter sensorEventsAdapter;
     private Spinner contestantsOnFinishSpinner;
 
 
@@ -94,6 +103,7 @@ public class FinishActivity extends Activity {
         setUpAdapters();
 
         findViewById(R.id.contestants).setKeepScreenOn(true);
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -174,10 +184,25 @@ public class FinishActivity extends Activity {
                 contestantsOnFinish);
         contestantsOnFinishSpinner.setAdapter(contestantsOnFinishAdapter);
 
-        sensorEventsAdapter = new EventAdapter(
-                this,
-                R.layout.listitem_event,
-                events);
+        String[] fields = new String[]{KronometerContract.SensorEvent._ID, KronometerContract.SensorEvent.TIMESTAMP};
+        int[] views = new int[]{R.id.cid, R.id.endTime};
+        sensorEventsAdapter = new SimpleCursorAdapter(this, R.layout.listitem_event, null, fields, views, 0) {
+            @Override
+            public void setViewText(TextView v, String text) {
+                switch (v.getId()) {
+                    case R.id.endTime:
+                        if (!text.isEmpty()) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+                            Long time = Long.parseLong(text);
+                            final Calendar cal = Calendar.getInstance();
+                            cal.setTimeInMillis(time);
+                            text = sdf.format(cal.getTime());
+                        }
+                        break;
+                }
+                super.setViewText(v, text);
+            }
+        };
         sensorEventsListView.setAdapter(sensorEventsAdapter);
     }
 
@@ -197,6 +222,7 @@ public class FinishActivity extends Activity {
 
     private static HashSet<Integer> knownContestants = new HashSet<Integer>();
     private static int lastCopiedEventIdx = 0;
+
     private void updateUI(Intent intent) {
         for (Contestant contestant : kronometerService.getContestants()) {
             if (!knownContestants.contains(contestant.id)) {
@@ -208,8 +234,8 @@ public class FinishActivity extends Activity {
         List<Event> serviceEvents = kronometerService.getEvents();
         int serviceEventCount = serviceEvents.size();
         if (serviceEventCount > lastCopiedEventIdx) {
-            for (int i=lastCopiedEventIdx; i<serviceEventCount; i++) {
-                sensorEventsAdapter.add(serviceEvents.get(i));
+            for (int i = lastCopiedEventIdx; i < serviceEventCount; i++) {
+                //sensorEventsAdapter.add(serviceEvents.get(i));
             }
             lastCopiedEventIdx = serviceEventCount;
         }
@@ -239,6 +265,7 @@ public class FinishActivity extends Activity {
     }
 
     Event selectedEvent = null;
+
     private void toggleSelected(Event event) {
         if (selectedEvent != null)
             selectedEvent.setSelected(false);
@@ -250,7 +277,7 @@ public class FinishActivity extends Activity {
     static int selectedContestantId = 0;
 
     public void addStopTime(View view) {
-        Contestant selectedContestant = (Contestant)contestantsOnFinishSpinner.getSelectedItem();
+        Contestant selectedContestant = (Contestant) contestantsOnFinishSpinner.getSelectedItem();
         if (selectedContestant == null)
             return;
         if (selectedEvent == null)
@@ -319,5 +346,21 @@ public class FinishActivity extends Activity {
         sensorEventsAdapter.notifyDataSetChanged();
         if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
             contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
+    }
+
+    // LoaderManager.LoaderCallbacks<Cursor> implementation
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(this, KronometerContract.SensorEvent.CONTENT_URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        sensorEventsAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        sensorEventsAdapter.swapCursor(null);
     }
 }

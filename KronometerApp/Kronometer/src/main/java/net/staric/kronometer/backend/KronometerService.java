@@ -4,7 +4,12 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,16 +18,20 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.SparseArray;
 
+import net.staric.kronometer.KronometerContract;
 import net.staric.kronometer.R;
 import net.staric.kronometer.activities.FinishActivity;
 import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -36,6 +45,7 @@ public class KronometerService extends Service {
 
     private Thread bluetoothSensorThread;
     private String bluetoothStatus = "";
+
     protected void setBluetoothStatus(String status) {
         this.bluetoothStatus = status;
         updateNotification();
@@ -43,6 +53,7 @@ public class KronometerService extends Service {
 
     private Thread contestantSyncThread;
     private String syncStatus = "";
+
     protected void setSyncStatus(String status) {
         this.syncStatus = status;
         updateNotification();
@@ -56,12 +67,13 @@ public class KronometerService extends Service {
         Event newEvent = new Event(event.getTime());
         for (int i = 0; i < events.size(); i++) {
             if (events.get(i) == event) {
-                events.add(i+1, newEvent);
+                events.add(i + 1, newEvent);
                 break;
             }
         }
         return newEvent;
     }
+
 
     public class LocalBinder extends Binder {
         public KronometerService getService() {
@@ -136,17 +148,24 @@ public class KronometerService extends Service {
     }
 
     private ArrayList<Event> events = new ArrayList<Event>();
+
     public List<Event> getEvents() {
         return events;
     }
 
     public void addEvent(Event event) {
+        ContentResolver contentResolver = getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KronometerContract.SensorEvent.TIMESTAMP, event.getTime().getTime());
+        contentResolver.insert(KronometerContract.SensorEvent.CONTENT_URI, contentValues);
+
         events.add(event);
         notifyDataChanged();
     }
 
     private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
     private SparseArray<Contestant> contestantMap = new SparseArray<Contestant>();
+
     public List<Contestant> getContestants() {
         return contestants;
     }
@@ -194,6 +213,7 @@ public class KronometerService extends Service {
 
     private ArrayList<Category> categories = new ArrayList<Category>();
     private SparseArray<Category> categoryMap = new SparseArray<Category>();
+
     public List<Category> getCategories() {
         return categories;
     }
@@ -219,10 +239,12 @@ public class KronometerService extends Service {
     }
 
     BlockingQueue<Update> pendingUpdates = new LinkedBlockingQueue<Update>();
+
     public void addUpdate(Update update) {
         try {
             pendingUpdates.put(update);
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+        }
         setSyncStatus(String.format("%d updates pending", pendingUpdates.size()));
     }
 
@@ -242,3 +264,109 @@ public class KronometerService extends Service {
             contestantSyncThread.interrupt();
     }
 }
+
+class BluetoothSensorThread extends Thread {
+
+    private final UUID BLUETOOTH_SERIAL = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    private String deviceAddress;
+    private final KronometerService kronometerService;
+
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothSocket btSocket;
+    private InputStream inStream;
+
+    public BluetoothSensorThread(String deviceAddress, KronometerService kronometerService) {
+        this.deviceAddress = deviceAddress;
+        this.kronometerService = kronometerService;
+    }
+
+    @Override
+    public void run() {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        while (!isInterrupted()) {
+            kronometerService.setBluetoothStatus("Looking for sensor");
+
+            if (bluetoothAdapter == null) {
+                kronometerService.setBluetoothStatus("This device does not support bluetooth");
+                return;
+            } else if (!bluetoothAdapter.isEnabled()) {
+                kronometerService.setBluetoothStatus("Bluetooth is not enabled");
+                //TODO: Ask for bluetooth
+            } else if (!openSocket()) {
+                kronometerService.setBluetoothStatus("No sensor found");
+            } else if (!openStream()) {
+                kronometerService.setBluetoothStatus("Error connecting to sensor");
+            } else {
+                kronometerService.setBluetoothStatus("Sensor connected");
+                listenForData();
+                kronometerService.setBluetoothStatus("Sensor disconnected");
+            }
+
+            try {
+                sleep(10000);
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
+
+    private boolean openSocket() {
+        BluetoothDevice btDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
+        btSocket = null;
+        try {
+            btSocket = btDevice.createRfcommSocketToServiceRecord(BLUETOOTH_SERIAL);
+            btSocket.connect();
+            return true;
+        } catch (IOException e) {
+            try {
+                if (btSocket != null)
+                    btSocket.close();
+            } catch (IOException e1) {
+            }
+            return false;
+        }
+    }
+
+    private boolean openStream() {
+        try {
+            inStream = btSocket.getInputStream();
+            return true;
+        } catch (IOException e) {
+            try {
+                btSocket.close();
+            } catch (IOException e1) {
+            }
+            return false;
+        }
+    }
+
+    private void listenForData() {
+        try {
+            while (!this.isInterrupted()) {
+                readData();
+            }
+        } catch (IOException ex) {
+        } finally {
+            try {
+                inStream.close();
+            } catch (IOException e) {
+            }
+
+            try {
+                btSocket.close();
+            } catch (IOException e) {
+            }
+        }
+    }
+
+    private void readData() throws IOException {
+        byte[] data = new byte[1];
+        inStream.read(data);
+        if (data[0] == 'E') {
+            kronometerService.addEvent(new Event(new Date()));
+        }
+    }
+}
+
