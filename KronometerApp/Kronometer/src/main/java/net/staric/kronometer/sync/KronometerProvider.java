@@ -12,6 +12,21 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 public class KronometerProvider extends android.content.ContentProvider {
+    // helper constants for use with the UriMatcher
+    private static final int BIKER_LIST = 1;
+    private static final int BIKER_ID = 2;
+    private static final UriMatcher URI_MATCHER;
+
+    static {
+        URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
+        URI_MATCHER.addURI(KronometerContract.AUTHORITY,
+                "bikers",
+                BIKER_LIST);
+        URI_MATCHER.addURI(KronometerContract.AUTHORITY,
+                "bikers/#",
+                BIKER_ID);
+    }
+
     private SQLiteOpenHelper helper;
 
     @Override
@@ -40,14 +55,15 @@ public class KronometerProvider extends android.content.ContentProvider {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         long id = db.insert(DbSchema.TBL_BIKERS, null, values);
-        return getUriForId(id, uri);
+        Uri itemUri = getUriForId(id, uri);
+
+        notifyUriChanged(itemUri);
+        return itemUri;
     }
 
     private Uri getUriForId(long id, Uri uri) {
         if (id > 0) {
-            Uri itemUri = ContentUris.withAppendedId(uri, id);
-            getContext().getContentResolver().notifyChange(itemUri, null);
-            return itemUri;
+            return ContentUris.withAppendedId(uri, id);
         } else {
             throw new SQLException("Problem while inserting into uri: " + uri);
         }
@@ -63,37 +79,36 @@ public class KronometerProvider extends android.content.ContentProvider {
 
         SQLiteDatabase db = helper.getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(DbSchema.TBL_BIKERS);
         switch (URI_MATCHER.match(uri)) {
-            case BIKER_LIST:
-                builder.setTables(DbSchema.TBL_BIKERS);
-                if (TextUtils.isEmpty(sortOrder)) {
-                    sortOrder = KronometerContract.Bikers.SORT_ORDER_DEFAULT;
-                }
-                break;
             case BIKER_ID:
-                builder.setTables(DbSchema.TBL_BIKERS);
-                builder.appendWhere(KronometerContract.Bikers._ID + " = " +
-                        uri.getLastPathSegment());
+                selection = addBikerIdToSelection(uri, selection);
+                break;
+            case BIKER_LIST:
+                if (TextUtils.isEmpty(sortOrder))
+                    sortOrder = KronometerContract.Bikers.SORT_ORDER_DEFAULT;
                 break;
             default:
                 throw new IllegalArgumentException(
                         "Unsupported URI: " + uri);
         }
-        Cursor cursor =
-                builder.query(
-                        db,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder);
+        Cursor cursor = builder.query(
+                db,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder);
 
-        // if we want to be notified of any changes:
+        subscribeToNotifications(cursor, uri);
+        return cursor;
+    }
+
+    private void subscribeToNotifications(Cursor cursor, Uri uri) {
         cursor.setNotificationUri(
                 getContext().getContentResolver(),
                 uri);
-        return cursor;
     }
 
     public int update(
@@ -105,6 +120,8 @@ public class KronometerProvider extends android.content.ContentProvider {
             SQLiteDatabase db = helper.getWritableDatabase();
             int updateCount = 0;
             switch (URI_MATCHER.match(uri)) {
+                case BIKER_ID:
+                    selection = addBikerIdToSelection(uri, selection);
                 case BIKER_LIST:
                     updateCount = db.update(
                             DbSchema.TBL_BIKERS,
@@ -112,24 +129,12 @@ public class KronometerProvider extends android.content.ContentProvider {
                             selection,
                             selectionArgs);
                     break;
-                case BIKER_ID:
-                    String idStr = uri.getLastPathSegment();
-                    String where = KronometerContract.Bikers._ID + " = " + idStr;
-                    if (!TextUtils.isEmpty(selection)) {
-                        where += " AND " + selection;
-                    }
-                    updateCount = db.update(
-                            DbSchema.TBL_BIKERS,
-                            values,
-                            where,
-                            selectionArgs);
-                    break;
                 default:
                     throw new IllegalArgumentException("Unsupported URI: " + uri);
             }
 
             if (updateCount > 0) {
-                getContext().getContentResolver().notifyChange(uri, null);
+                notifyUriChanged(uri);
             }
             return updateCount;
     }
@@ -139,45 +144,35 @@ public class KronometerProvider extends android.content.ContentProvider {
             SQLiteDatabase db = helper.getWritableDatabase();
             int delCount = 0;
             switch (URI_MATCHER.match(uri)) {
+                case BIKER_ID:
+                    selection = addBikerIdToSelection(uri, selection);
                 case BIKER_LIST:
                     delCount = db.delete(
                             DbSchema.TBL_BIKERS,
                             selection,
                             selectionArgs);
                     break;
-                case BIKER_ID:
-                    String idStr = uri.getLastPathSegment();
-                    String where = KronometerContract.Bikers._ID + " = " + idStr;
-                    if (!TextUtils.isEmpty(selection)) {
-                        where += " AND " + selection;
-                    }
-                    delCount = db.delete(
-                            DbSchema.TBL_BIKERS,
-                            where,
-                            selectionArgs);
-                    break;
+
                 default:
                     throw new IllegalArgumentException("Unsupported URI: " + uri);
             }
 
             if (delCount > 0) {
-                getContext().getContentResolver().notifyChange(uri, null);
+                notifyUriChanged(uri);
             }
             return delCount;
     }
 
-    // helper constants for use with the UriMatcher
-    private static final int BIKER_LIST = 1;
-    private static final int BIKER_ID = 2;
-    private static final UriMatcher URI_MATCHER;
+    private void notifyUriChanged(Uri uri) {
+        getContext().getContentResolver().notifyChange(uri, null);
+    }
 
-    static {
-        URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-        URI_MATCHER.addURI(KronometerContract.AUTHORITY,
-                "bikers",
-                BIKER_LIST);
-        URI_MATCHER.addURI(KronometerContract.AUTHORITY,
-                "bikers/#",
-                BIKER_ID);
+    private String addBikerIdToSelection(Uri uri, String selection) {
+        String idStr = uri.getLastPathSegment();
+        String where = KronometerContract.Bikers._ID + " = " + idStr;
+        if (!TextUtils.isEmpty(selection)) {
+            where += " AND " + selection;
+        }
+        return where;
     }
 }
