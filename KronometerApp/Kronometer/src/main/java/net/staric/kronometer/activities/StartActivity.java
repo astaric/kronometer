@@ -25,16 +25,19 @@ import net.staric.kronometer.R;
 import net.staric.kronometer.backend.ContestantBackend;
 import net.staric.kronometer.backend.CountdownBackend;
 import net.staric.kronometer.backend.Update;
+import net.staric.kronometer.sync.KronometerContract;
 import net.staric.kronometer.utils.PushUpdates;
 import net.staric.kronometer.utils.Utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static net.staric.kronometer.sync.KronometerContract.Bikers;
 
-public class StartActivity extends Activity {
+public class StartActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>  {
     Timer timer;
     Spinner contestants;
     TextView countdown;
@@ -45,6 +48,7 @@ public class StartActivity extends Activity {
 
     public static final String ACCOUNT_TYPE = "kronometer.staric.net";
     public static final String ACCOUNT = "x";
+    private SimpleCursorAdapter contestantsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,41 +60,47 @@ public class StartActivity extends Activity {
         setContentView(R.layout.activity_start);
 
         contestants = (Spinner)findViewById(R.id.contestants);
-        final SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(
-                this, R.layout.listitem_contestant,
-                null,
-                new String[] {Bikers._ID, Bikers.NAME, Bikers.START_TIME},
-                new int[] { R.id.cid, R.id.name, R.id.startTime },
-                0);
-        getLoaderManager().initLoader(0, null, new LoaderManager.LoaderCallbacks<Cursor>() {
-            @Override
-            public Loader onCreateLoader(int i, Bundle bundle) {
-                return new CursorLoader(StartActivity.this, Bikers.CONTENT_URI, null, null, null, null);
-            }
-
-            @Override
-            public void onLoadFinished(Loader loader, Cursor data) {
-                cursorAdapter.swapCursor(data);
-            }
-
-            @Override
-            public void onLoaderReset(Loader loader) {
-                cursorAdapter.swapCursor(null);
-            }
-        });
-
-        contestants.setAdapter(cursorAdapter);
         countdown = (TextView)findViewById(R.id.countdown);
+
+        contestantsAdapter = getContestantsAdapter();
+        contestants.setAdapter(contestantsAdapter);
+
 
         timer = new Timer();
         timer.schedule(new updateCountdown(), 0, 500);
 
         updateSyncStatus();
 
-        findViewById(R.id.contestants).setKeepScreenOn(true);
+        contestants.setKeepScreenOn(true);
 
         Account account = CreateSyncAccount(this);
 
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    private SimpleCursorAdapter getContestantsAdapter() {
+        String[] fields = new String[]{Bikers._ID, Bikers.NAME, Bikers.START_TIME};
+        int[] views = new int[] { R.id.cid, R.id.name, R.id.startTime };
+        return new SimpleCursorAdapter(this, R.layout.listitem_contestant, null, fields, views, 0)
+        {
+            @Override
+            public void setViewText(TextView v, String text) {
+                switch(v.getId())
+                {
+                    case R.id.startTime:
+                        if (!text.isEmpty()) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                            Long time = Long.parseLong(text);
+                            final Calendar cal = Calendar.getInstance();
+                            cal.setTimeInMillis(time);
+                            text = sdf.format(cal.getTime());
+
+                        }
+                        break;
+                }
+                super.setViewText(v, text);
+            }
+        };
     }
 
     public static Account CreateSyncAccount(Context context) {
@@ -246,5 +256,21 @@ public class StartActivity extends Activity {
             else
                 syncStatus.setTitle(String.format("Pending (%d)", pending));
         }
+    }
+
+    // LoaderManager.LoaderCallbacks<Cursor> implementation
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(StartActivity.this, Bikers.CONTENT_URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        contestantsAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        contestantsAdapter.swapCursor(null);
     }
 }
