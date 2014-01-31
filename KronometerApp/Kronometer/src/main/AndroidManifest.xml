@@ -32,7 +32,7 @@
         <activity
                 android:name=".activities.ContestantActivity"
                 android:label="New Contestant"
-                android:parentActivityName="net.staric.kronometer.MainActivity" >
+                android:parentActivityName="net.staric.kronometer.activities.StartActivity" >
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="net.staric.kronometer.activities.StartActivity" />
