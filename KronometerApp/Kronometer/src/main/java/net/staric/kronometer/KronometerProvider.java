@@ -9,12 +9,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 public class KronometerProvider extends android.content.ContentProvider {
     // helper constants for use with the UriMatcher
     private static final int BIKER_LIST = 1;
     private static final int BIKER_ID = 2;
+    private static final int SENSOR_EVENT_LIST = 3;
+    private static final int SENSOR_EVENT_ID = 4;
     private static final UriMatcher URI_MATCHER;
 
     static {
@@ -25,6 +28,12 @@ public class KronometerProvider extends android.content.ContentProvider {
         URI_MATCHER.addURI(KronometerContract.AUTHORITY,
                 "bikers/#",
                 BIKER_ID);
+        URI_MATCHER.addURI(KronometerContract.AUTHORITY,
+                "events",
+                SENSOR_EVENT_LIST);
+        URI_MATCHER.addURI(KronometerContract.AUTHORITY,
+                "events/#",
+                SENSOR_EVENT_ID);
     }
 
     private SQLiteOpenHelper helper;
@@ -42,6 +51,10 @@ public class KronometerProvider extends android.content.ContentProvider {
                 return KronometerContract.Bikers.CONTENT_TYPE;
             case BIKER_ID:
                 return KronometerContract.Bikers.CONTENT_ITEM_TYPE;
+            case SENSOR_EVENT_LIST:
+                return KronometerContract.SensorEvent.CONTENT_TYPE;
+            case SENSOR_EVENT_ID:
+                return KronometerContract.SensorEvent.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -49,12 +62,18 @@ public class KronometerProvider extends android.content.ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        if (URI_MATCHER.match(uri) != BIKER_LIST) {
-            throw new IllegalArgumentException("Unsupported URI for insertion: " + uri);
-        }
-
         SQLiteDatabase db = helper.getWritableDatabase();
-        long id = db.insert(DbSchema.TBL_BIKERS, null, values);
+        long id = 0;
+        switch (URI_MATCHER.match(uri)) {
+            case BIKER_LIST:
+                id = db.insert(DbSchema.TBL_BIKERS, null, values);
+                break;
+            case SENSOR_EVENT_LIST:
+                id = db.insert(DbSchema.TBL_SENSOR_EVENTS, null, values);
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported URI for insertion: " + uri);
+        }
         Uri itemUri = getUriForId(id, uri);
 
         notifyUriChanged(itemUri);
@@ -79,14 +98,24 @@ public class KronometerProvider extends android.content.ContentProvider {
 
         SQLiteDatabase db = helper.getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(DbSchema.TBL_BIKERS);
         switch (URI_MATCHER.match(uri)) {
             case BIKER_ID:
-                selection = addBikerIdToSelection(uri, selection);
+                builder.setTables(DbSchema.TBL_BIKERS);
+                selection = addIdToSelection(uri, selection);
                 break;
             case BIKER_LIST:
+                builder.setTables(DbSchema.TBL_BIKERS);
                 if (TextUtils.isEmpty(sortOrder))
                     sortOrder = KronometerContract.Bikers.SORT_ORDER_DEFAULT;
+                break;
+            case SENSOR_EVENT_ID:
+                builder.setTables(DbSchema.TBL_SENSOR_EVENTS);
+                selection = addIdToSelection(uri, selection);
+                break;
+            case SENSOR_EVENT_LIST:
+                builder.setTables(DbSchema.TBL_SENSOR_EVENTS);
+                if (TextUtils.isEmpty(sortOrder))
+                    sortOrder = KronometerContract.SensorEvent.SORT_ORDER_DEFAULT;
                 break;
             default:
                 throw new IllegalArgumentException(
@@ -117,59 +146,75 @@ public class KronometerProvider extends android.content.ContentProvider {
             String selection,
             String[] selectionArgs) {
 
-            SQLiteDatabase db = helper.getWritableDatabase();
-            int updateCount = 0;
-            switch (URI_MATCHER.match(uri)) {
-                case BIKER_ID:
-                    selection = addBikerIdToSelection(uri, selection);
-                case BIKER_LIST:
-                    updateCount = db.update(
-                            DbSchema.TBL_BIKERS,
-                            values,
-                            selection,
-                            selectionArgs);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported URI: " + uri);
-            }
+        SQLiteDatabase db = helper.getWritableDatabase();
+        int updateCount = 0;
+        switch (URI_MATCHER.match(uri)) {
+            case BIKER_ID:
+                selection = addIdToSelection(uri, selection);
+            case BIKER_LIST:
+                updateCount = db.update(
+                        DbSchema.TBL_BIKERS,
+                        values,
+                        selection,
+                        selectionArgs);
+                break;
+            case SENSOR_EVENT_ID:
+                selection = addIdToSelection(uri, selection);
+            case SENSOR_EVENT_LIST:
+                updateCount = db.update(
+                        DbSchema.TBL_SENSOR_EVENTS,
+                        values,
+                        selection,
+                        selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported URI: " + uri);
+        }
 
-            if (updateCount > 0) {
-                notifyUriChanged(uri);
-            }
-            return updateCount;
+        if (updateCount > 0) {
+            notifyUriChanged(uri);
+        }
+        return updateCount;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-            SQLiteDatabase db = helper.getWritableDatabase();
-            int delCount = 0;
-            switch (URI_MATCHER.match(uri)) {
-                case BIKER_ID:
-                    selection = addBikerIdToSelection(uri, selection);
-                case BIKER_LIST:
-                    delCount = db.delete(
-                            DbSchema.TBL_BIKERS,
-                            selection,
-                            selectionArgs);
-                    break;
+        SQLiteDatabase db = helper.getWritableDatabase();
+        int delCount = 0;
+        switch (URI_MATCHER.match(uri)) {
+            case BIKER_ID:
+                selection = addIdToSelection(uri, selection);
+            case BIKER_LIST:
+                delCount = db.delete(
+                        DbSchema.TBL_BIKERS,
+                        selection,
+                        selectionArgs);
+                break;
+            case SENSOR_EVENT_ID:
+                selection = addIdToSelection(uri, selection);
+            case SENSOR_EVENT_LIST:
+                delCount = db.delete(
+                        DbSchema.TBL_SENSOR_EVENTS,
+                        selection,
+                        selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported URI: " + uri);
+        }
 
-                default:
-                    throw new IllegalArgumentException("Unsupported URI: " + uri);
-            }
-
-            if (delCount > 0) {
-                notifyUriChanged(uri);
-            }
-            return delCount;
+        if (delCount > 0) {
+            notifyUriChanged(uri);
+        }
+        return delCount;
     }
 
     private void notifyUriChanged(Uri uri) {
         getContext().getContentResolver().notifyChange(uri, null);
     }
 
-    private String addBikerIdToSelection(Uri uri, String selection) {
+    private String addIdToSelection(Uri uri, String selection) {
         String idStr = uri.getLastPathSegment();
-        String where = KronometerContract.Bikers._ID + " = " + idStr;
+        String where = BaseColumns._ID + " = " + idStr;
         if (!TextUtils.isEmpty(selection)) {
             where += " AND " + selection;
         }

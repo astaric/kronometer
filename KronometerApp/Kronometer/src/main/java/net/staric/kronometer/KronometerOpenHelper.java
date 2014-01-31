@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class KronometerOpenHelper extends SQLiteOpenHelper {
     private static final String NAME = DbSchema.DB_NAME;
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
 
     public KronometerOpenHelper(Context context) {
@@ -17,11 +17,14 @@ public class KronometerOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DbSchema.DDL_CREATE_TBL_BIKERS);
+        db.execSQL(DbSchema.DDL_CREATE_TBL_SENSOR_EVENTS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DbSchema.DDL_DROP_TBL_BIKERS);
+        db.execSQL(DbSchema.DDL_DROP_TBL_SENSOR_EVENTS);
         db.execSQL(DbSchema.DDL_CREATE_TBL_BIKERS);
+        db.execSQL(DbSchema.DDL_CREATE_TBL_SENSOR_EVENTS);
     }
 }
