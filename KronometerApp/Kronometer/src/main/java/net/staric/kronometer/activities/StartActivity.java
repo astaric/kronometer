@@ -53,7 +53,7 @@ public class StartActivity extends Activity {
         contestantBackend = ContestantBackend.getInstance();
         countdownBackend = CountdownBackend.getInstance();
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_start);
 
         contestants = (Spinner)findViewById(R.id.contestants);
         final SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(
