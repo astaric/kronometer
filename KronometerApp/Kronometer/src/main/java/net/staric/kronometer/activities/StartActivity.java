@@ -25,7 +25,6 @@ import net.staric.kronometer.R;
 import net.staric.kronometer.backend.ContestantBackend;
 import net.staric.kronometer.backend.CountdownBackend;
 import net.staric.kronometer.backend.Update;
-import net.staric.kronometer.sync.KronometerContract;
 import net.staric.kronometer.utils.PushUpdates;
 import net.staric.kronometer.utils.Utils;
 
@@ -37,14 +36,16 @@ import java.util.TimerTask;
 
 import static net.staric.kronometer.sync.KronometerContract.Bikers;
 
-public class StartActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>  {
-    Timer timer;
+public class StartActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
+    static final String NEXT_START_TIME = "next_start";
+    Timer countdownRefreshTimer;
     Spinner contestants;
     TextView countdown;
     MenuItem syncStatus;
 
     ContestantBackend contestantBackend;
-    CountdownBackend countdownBackend;
+
+    Date nextStart = new Date();
 
     public static final String ACCOUNT_TYPE = "kronometer.staric.net";
     public static final String ACCOUNT = "x";
@@ -54,20 +55,19 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contestantBackend = ContestantBackend.getInstance();
-        countdownBackend = CountdownBackend.getInstance();
-
         setContentView(R.layout.activity_start);
 
-        contestants = (Spinner)findViewById(R.id.contestants);
-        countdown = (TextView)findViewById(R.id.countdown);
+        if (savedInstanceState != null) {
+            nextStart = new Date(savedInstanceState.getLong(NEXT_START_TIME));
+        }
+
+        contestantBackend = ContestantBackend.getInstance();
+
+        contestants = (Spinner) findViewById(R.id.contestants);
+        countdown = (TextView) findViewById(R.id.countdown);
 
         contestantsAdapter = getContestantsAdapter();
         contestants.setAdapter(contestantsAdapter);
-
-
-        timer = new Timer();
-        timer.schedule(new updateCountdown(), 0, 500);
 
         updateSyncStatus();
 
@@ -78,15 +78,28 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
         getLoaderManager().initLoader(0, null, this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        startRefreshingCountdown();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        stopRefreshingCountdown();
+    }
+
     private SimpleCursorAdapter getContestantsAdapter() {
         String[] fields = new String[]{Bikers._ID, Bikers.NAME, Bikers.START_TIME};
-        int[] views = new int[] { R.id.cid, R.id.name, R.id.startTime };
-        return new SimpleCursorAdapter(this, R.layout.listitem_contestant, null, fields, views, 0)
-        {
+        int[] views = new int[]{R.id.cid, R.id.name, R.id.startTime};
+        return new SimpleCursorAdapter(this, R.layout.listitem_contestant, null, fields, views, 0) {
             @Override
             public void setViewText(TextView v, String text) {
-                switch(v.getId())
-                {
+                switch (v.getId()) {
                     case R.id.startTime:
                         if (!text.isEmpty()) {
                             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -101,6 +114,13 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
                 super.setViewText(v, text);
             }
         };
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putLong(NEXT_START_TIME, nextStart.getTime());
+
+        super.onSaveInstanceState(outState);
     }
 
     public static Account CreateSyncAccount(Context context) {
@@ -153,19 +173,6 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
             new SyncContestantListTask(this).execute();
     }
 
-    private class updateCountdown extends TimerTask {
-        @Override
-        public void run() {
-            StartActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    int countdownValue = countdownBackend.getCountdownValue();
-                    countdown.setText(
-                            String.format("%02d:%02d", countdownValue / 60, countdownValue % 60));
-                }
-            });
-        }
-    }
 
     private class SyncContestantListTask extends AsyncTask<Void, Void, Void> {
         private final Context context;
@@ -217,7 +224,9 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
 
     public void clickStart(View view) {
         if (contestants.getCount() == 0)
+        {
             return;
+        }
 
         try {
             Date startTime = new Date();
@@ -226,11 +235,11 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
             int contestantId = selectedItem.getInt(selectedItem.getColumnIndex(Bikers._ID));
             setStartTime(contestantId, startTime);
 
-            countdownBackend.resetCountdown();
+            resetCountdown();
 
             int index = contestants.getSelectedItemPosition();
             if (index < contestants.getCount() - 1) {
-                contestants.setSelection(index+1);
+                contestants.setSelection(index + 1);
             }
 
             updateSyncStatus();
@@ -256,6 +265,42 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
             else
                 syncStatus.setTitle(String.format("Pending (%d)", pending));
         }
+    }
+
+
+    // countdown related stuff
+    private void startRefreshingCountdown() {
+        countdownRefreshTimer = new Timer();
+        countdownRefreshTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                StartActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateCountdown();
+                    }
+                });
+            }
+
+        }, 0, 500);
+    }
+
+    private void stopRefreshingCountdown() {
+        countdownRefreshTimer.cancel();
+    }
+
+    private void updateCountdown() {
+        int countdownValue = (int)(nextStart.getTime() - new Date().getTime()) / 1000;
+        if (countdownValue < 0)
+        {
+            countdownValue = 0;
+        }
+        countdown.setText(
+                String.format("%02d:%02d", countdownValue / 60, countdownValue % 60));
+    }
+
+    public void resetCountdown() {
+        nextStart = new Date(new Date().getTime() + 30000);
     }
 
     // LoaderManager.LoaderCallbacks<Cursor> implementation
