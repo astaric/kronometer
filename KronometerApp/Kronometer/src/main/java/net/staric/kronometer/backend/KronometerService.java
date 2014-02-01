@@ -131,6 +131,7 @@ public class KronometerService extends Service {
 
 
     protected void setBluetoothStatus(String status) {
+        Log.i(TAG, status);
         this.bluetoothStatus = status;
         updateNotification();
     }
@@ -316,6 +317,7 @@ public class KronometerService extends Service {
         private final UUID BLUETOOTH_SERIAL = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
         private String deviceAddress;
+        private InputStream inStream;
 
         public BluetoothSensorThread(String deviceAddress) {
             this.deviceAddress = deviceAddress;
@@ -331,7 +333,7 @@ public class KronometerService extends Service {
 
             BluetoothDevice btDevice = null;
             BluetoothSocket btSocket = null;
-            InputStream inStream = null;
+            inStream = null;
             while (!isInterrupted()) {
                 if (!bluetoothAdapter.isEnabled()) {
                     setBluetoothStatus("Bluetooth is disabled");
@@ -346,12 +348,18 @@ public class KronometerService extends Service {
                     setBluetoothStatus("Sensor connected");
 
                     byte[] data = new byte[1];
+                    readLoop:
                     while (!this.isInterrupted()) {
                         Log.d(TAG, "BT Waiting for data");
-                        inStream.read(data);
-                        if (data[0] == 'E') {
-                            Log.d(TAG, "BT received event");
-                            addEvent(new Date().getTime());
+                        switch(inStream.read()) {
+                            case 'E':
+                                Log.d(TAG, "BT received event");
+                                addEvent(new Date().getTime());
+                                break;
+                            case -1:
+                                break readLoop;
+                            default:
+                                Log.d(TAG, "BT Received unknown command");
                         }
                     }
                     setBluetoothStatus("Sensor disconnected");
@@ -379,9 +387,19 @@ public class KronometerService extends Service {
                 try {
                     sleep(10000);
                 } catch (InterruptedException e) {
-                    return;
+                    break;
                 }
             }
+        }
+
+        @Override
+        public void interrupt() {
+            try {
+                inStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            super.interrupt();
         }
     }
 }
