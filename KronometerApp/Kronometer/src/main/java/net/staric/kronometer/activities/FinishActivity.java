@@ -208,7 +208,7 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
 
     public void generateEvent(View view) {
         if (kronometerService != null)
-            kronometerService.addEvent(new Event(new Date()));
+            kronometerService.addEvent(new Date().getTime());
     }
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
