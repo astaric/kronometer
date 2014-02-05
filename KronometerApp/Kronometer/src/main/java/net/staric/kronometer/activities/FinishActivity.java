@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -22,54 +23,75 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import net.staric.kronometer.KronometerContract;
-import net.staric.kronometer.misc.ContestantAdapter;
-import net.staric.kronometer.misc.EventAdapter;
 import net.staric.kronometer.R;
 import net.staric.kronometer.backend.KronometerService;
+import net.staric.kronometer.misc.ContestantAdapter;
+import net.staric.kronometer.misc.EventAdapter;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
 import net.staric.kronometer.utils.SwipeDismissListViewTouchListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-public class FinishActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>  {
+import static net.staric.kronometer.KronometerContract.SensorEvent;
+
+public class FinishActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
+    static int selectedContestantId = 0;
+    private static List<Contestant> contestants = new ArrayList<Contestant>();
+    private static List<Contestant> contestantsOnFinish =
+            new ArrayList<Contestant>(Arrays.asList(new Contestant[]{new Contestant()}));
+    private static List<Event> events = new ArrayList<Event>();
+    private static HashSet<Integer> knownContestants = new HashSet<Integer>();
+    private static int lastCopiedEventIdx = 0;
+    Event selectedEvent = null;
     private KronometerService kronometerService;
+    private Intent kronometerServiceIntent;
+    private boolean bound = false;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (bound) {
+                updateUI(intent);
+            }
+        }
+    };
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+
+            KronometerService.LocalBinder binder = (KronometerService.LocalBinder) service;
+            setKronometerService(binder.getService());
+            bound = true;
+            broadcastReceiver.onReceive(null, null);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            setKronometerService(null);
+        }
+    };
+    private ListView contestantsListView;
+    private ListView sensorEventsListView;
+    private ContestantAdapter contestantsAdapter;
+    private ContestantAdapter contestantsOnFinishAdapter;
+    private EventAdapter sensorEventsAdapter;
+    private Spinner contestantsOnFinishSpinner;
 
     private void setKronometerService(KronometerService service) {
         if (service == null)
             bound = false;
         kronometerService = service;
     }
-
-    private Intent kronometerServiceIntent;
-    private boolean bound = false;
-
-    private static List<Contestant> contestants = new ArrayList<Contestant>();
-    private static List<Contestant> contestantsOnFinish =
-            new ArrayList<Contestant>(Arrays.asList(new Contestant[]{new Contestant()}));
-    private static List<Event> events = new ArrayList<Event>();
-
-    private ListView contestantsListView;
-    private ListView sensorEventsListView;
-
-    private ContestantAdapter contestantsAdapter;
-    private ContestantAdapter contestantsOnFinishAdapter;
-    private SimpleCursorAdapter sensorEventsAdapter;
-    private Spinner contestantsOnFinishSpinner;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +115,8 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
 
         sensorEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                toggleSelected(events.get(i));
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                sensorEventsAdapter.setSelectedId(id);
                 sensorEventsAdapter.notifyDataSetChanged();
             }
         });
@@ -153,24 +175,6 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         };
     }
 
-    private ServiceConnection connection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-
-            KronometerService.LocalBinder binder = (KronometerService.LocalBinder) service;
-            setKronometerService(binder.getService());
-            bound = true;
-            broadcastReceiver.onReceive(null, null);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            setKronometerService(null);
-        }
-    };
-
     private void setUpAdapters() {
         contestantsAdapter = new ContestantAdapter(
                 this,
@@ -184,44 +188,14 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
                 contestantsOnFinish);
         contestantsOnFinishSpinner.setAdapter(contestantsOnFinishAdapter);
 
-        String[] fields = new String[]{KronometerContract.SensorEvent._ID, KronometerContract.SensorEvent.TIMESTAMP};
-        int[] views = new int[]{R.id.cid, R.id.endTime};
-        sensorEventsAdapter = new SimpleCursorAdapter(this, R.layout.listitem_event, null, fields, views, 0) {
-            @Override
-            public void setViewText(TextView v, String text) {
-                switch (v.getId()) {
-                    case R.id.endTime:
-                        if (!text.isEmpty()) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
-                            Long time = Long.parseLong(text);
-                            final Calendar cal = Calendar.getInstance();
-                            cal.setTimeInMillis(time);
-                            text = sdf.format(cal.getTime());
-                        }
-                        break;
-                }
-                super.setViewText(v, text);
-            }
-        };
+        sensorEventsAdapter = new EventAdapter(this);
         sensorEventsListView.setAdapter(sensorEventsAdapter);
     }
 
     public void generateEvent(View view) {
         if (kronometerService != null)
-            kronometerService.addEvent(new Date().getTime());
+            kronometerService.storeEvent(new Date().getTime());
     }
-
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (bound) {
-                updateUI(intent);
-            }
-        }
-    };
-
-    private static HashSet<Integer> knownContestants = new HashSet<Integer>();
-    private static int lastCopiedEventIdx = 0;
 
     private void updateUI(Intent intent) {
         for (Contestant contestant : kronometerService.getContestants()) {
@@ -231,15 +205,6 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
             }
         }
 
-        List<Event> serviceEvents = kronometerService.getEvents();
-        int serviceEventCount = serviceEvents.size();
-        if (serviceEventCount > lastCopiedEventIdx) {
-            for (int i = lastCopiedEventIdx; i < serviceEventCount; i++) {
-                //sensorEventsAdapter.add(serviceEvents.get(i));
-            }
-            lastCopiedEventIdx = serviceEventCount;
-        }
-        sensorEventsAdapter.notifyDataSetChanged();
         contestantsAdapter.notifyDataSetChanged();
     }
 
@@ -264,8 +229,6 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         selectedContestantId = contestantsOnFinishSpinner.getSelectedItemPosition();
     }
 
-    Event selectedEvent = null;
-
     private void toggleSelected(Event event) {
         if (selectedEvent != null)
             selectedEvent.setSelected(false);
@@ -274,31 +237,44 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         selectedEvent = event;
     }
 
-    static int selectedContestantId = 0;
-
     public void addStopTime(View view) {
         Contestant selectedContestant = (Contestant) contestantsOnFinishSpinner.getSelectedItem();
-        if (selectedContestant == null)
+        if (selectedContestant == null) {
             return;
-        if (selectedEvent == null)
+        }
+        Long timestamp = getTimestamp();
+        if (timestamp == 0) {
             return;
-
-        if (selectedEvent.getContestant() != null) {
-            askForConfirmationForDuplicatingEvent(selectedContestant, selectedEvent);
-        } else if (selectedContestant.getEndTime() != null) {
-            askForConfirmationForChangingEndTime(selectedContestant, selectedEvent);
+        }
+        if (selectedContestant.getEndTime() != null) {
+            askForConfirmationForChangingEndTime(selectedContestant, timestamp);
         } else {
-            setEndTime(selectedContestant, selectedEvent);
+            setEndTime(selectedContestant, timestamp);
         }
     }
 
-    private void askForConfirmationForDuplicatingEvent(final Contestant contestant, final Event event) {
+    private Long getTimestamp() {
+        long selectedId = sensorEventsAdapter.getSelectedId();
+        if (selectedId == 0) {
+            return 0L;
+        }
+
+        Cursor cursor = getContentResolver().query(
+                ContentUris.withAppendedId(SensorEvent.CONTENT_URI, selectedId),
+                new String[]{SensorEvent.TIMESTAMP}, "", new String[]{}, "");
+        if (cursor != null && cursor.moveToFirst()) {
+            return cursor.getLong(cursor.getColumnIndex(SensorEvent.TIMESTAMP));
+        }
+        return 0L;
+    }
+
+    private void askForConfirmationForDuplicatingEvent(final Contestant contestant,
+                                                       final Long timestamp) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(String.format(getString(R.string.duplicateEventConfirmation), contestant))
                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Event newEvent = kronometerService.duplicateEvent(event);
-                        setEndTime(contestant, newEvent);
+                        setEndTime(contestant, timestamp);
                     }
                 })
                 .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -314,7 +290,8 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
                 .show();
     }
 
-    private void askForConfirmationForChangingEndTime(final Contestant contestant, final Event event) {
+    private void askForConfirmationForChangingEndTime(final Contestant contestant,
+                                                      final Long event) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(String.format(getString(R.string.endTimeChangeConfirmation), contestant))
                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
@@ -335,8 +312,8 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
                 .show();
     }
 
-    private void setEndTime(Contestant contestant, Event event) {
-        kronometerService.setEndTime(contestant, event);
+    private void setEndTime(Contestant contestant, Long timestamp) {
+        kronometerService.setEndTime(contestant, timestamp);
         for (int i = 0; i < events.size(); i++) {
             if (events.get(i) == selectedEvent) {
                 events.subList(0, i + 1).clear();
@@ -351,7 +328,7 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
     // LoaderManager.LoaderCallbacks<Cursor> implementation
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this, KronometerContract.SensorEvent.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(this, SensorEvent.CONTENT_URI, null, null, null, null);
     }
 
     @Override

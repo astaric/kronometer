@@ -2,34 +2,46 @@ package net.staric.kronometer.misc;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import net.staric.kronometer.R;
-import net.staric.kronometer.models.Contestant;
-import net.staric.kronometer.models.Event;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 
-public class EventAdapter extends ArrayAdapter<Event> {
+import static net.staric.kronometer.KronometerContract.SensorEvent;
 
-    Context context;
-    int layoutResourceId;
-    List<Event> data = null;
 
-    public EventAdapter(Context context, int layoutResourceId, List<Event> data) {
-        super(context, layoutResourceId, data);
-        this.layoutResourceId = layoutResourceId;
+public class EventAdapter extends SimpleCursorAdapter {
+
+    private Context context;
+    private int layoutResourceId;
+    private long selectedId = 0;
+
+    public long getSelectedId() {
+        return selectedId;
+    }
+
+    public void setSelectedId(long id) {
+        selectedId = id;
+    }
+
+    public EventAdapter(Context context) {
+        this(context, R.layout.listitem_event, null,
+                new String[]{SensorEvent._ID, SensorEvent.TIMESTAMP},
+                new int[]{R.id.cid, R.id.endTime}, 0);
+    }
+
+    private EventAdapter(Context context, int layoutResourceId, Cursor cursor, String[] fields, int[] views, int flags) {
+        super(context, layoutResourceId, cursor, fields, views, flags);
         this.context = context;
-        this.data = data;
+        this.layoutResourceId = layoutResourceId;
     }
 
     @Override
@@ -46,38 +58,39 @@ public class EventAdapter extends ArrayAdapter<Event> {
         View row = convertView;
         ContestantHolder holder = null;
 
-        if(row == null)
-        {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        if (row == null) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new ContestantHolder();
-            holder.frame = (RelativeLayout)row.findViewById(R.id.frame);
-            holder.txtEndTime = (TextView)row.findViewById(R.id.endTime);
-            holder.btnMerge = (Button)row.findViewById(R.id.btnMerge);
+            holder.frame = (RelativeLayout) row.findViewById(R.id.frame);
+            holder.txtEndTime = (TextView) row.findViewById(R.id.endTime);
+            holder.btnMerge = (Button) row.findViewById(R.id.btnMerge);
 
             row.setTag(holder);
-        }
-        else
-        {
-            holder = (ContestantHolder)row.getTag();
-        }
-
-        Event event = data.get(position);
-        SimpleDateFormat outFmt = new SimpleDateFormat("HH:mm:ss.SSS");
-        holder.txtEndTime.setText(outFmt.format(event.getTime()));
-
-        if (event.isSelected()) {
-            holder.btnMerge.setVisibility(View.VISIBLE);
         } else {
-            holder.btnMerge.setVisibility(View.INVISIBLE);
+            holder = (ContestantHolder) row.getTag();
+        }
+
+        Cursor cursor = getCursor();
+        if (cursor != null && cursor.moveToPosition(position)) {
+            long id = cursor.getLong(cursor.getColumnIndex(SensorEvent._ID));
+            long timestamp = cursor.getLong(cursor.getColumnIndex(SensorEvent.TIMESTAMP));
+
+            SimpleDateFormat outFmt = new SimpleDateFormat("HH:mm:ss.SSS");
+            holder.txtEndTime.setText(outFmt.format(timestamp));
+
+            if (id == selectedId) {
+                holder.btnMerge.setVisibility(View.VISIBLE);
+            } else {
+                holder.btnMerge.setVisibility(View.INVISIBLE);
+            }
         }
 
         return row;
     }
 
-    static class ContestantHolder
-    {
+    static class ContestantHolder {
         RelativeLayout frame;
         TextView txtEndTime;
         Button btnMerge;
