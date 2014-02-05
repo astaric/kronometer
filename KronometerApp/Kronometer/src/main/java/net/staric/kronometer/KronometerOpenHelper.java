@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class KronometerOpenHelper extends SQLiteOpenHelper {
     private static final String NAME = DbSchema.DB_NAME;
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
 
     public KronometerOpenHelper(Context context) {

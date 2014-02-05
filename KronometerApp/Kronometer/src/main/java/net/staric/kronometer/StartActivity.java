@@ -1,4 +1,4 @@
-package net.staric.kronometer.activities;
+package net.staric.kronometer;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -21,7 +21,8 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import net.staric.kronometer.R;
+import net.staric.kronometer.activities.ContestantActivity;
+import net.staric.kronometer.activities.SettingsActivity;
 import net.staric.kronometer.backend.ContestantBackend;
 import net.staric.kronometer.backend.Update;
 import net.staric.kronometer.utils.PushUpdates;
@@ -65,7 +66,7 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
         contestants = (Spinner) findViewById(R.id.contestants);
         countdown = (TextView) findViewById(R.id.countdown);
 
-        contestantsAdapter = getContestantsAdapter();
+        contestantsAdapter = new StartContestantAdapter(this, true, true);
         contestants.setAdapter(contestantsAdapter);
 
         updateSyncStatus();
@@ -94,12 +95,12 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
 
     private SimpleCursorAdapter getContestantsAdapter() {
         String[] fields = new String[]{Bikers._ID, Bikers.NAME, Bikers.START_TIME};
-        int[] views = new int[]{R.id.cid, R.id.name, R.id.startTime};
+        int[] views = new int[]{R.id.cid, R.id.name, R.id.extra};
         return new SimpleCursorAdapter(this, R.layout.listitem_contestant, null, fields, views, 0) {
             @Override
             public void setViewText(TextView v, String text) {
                 switch (v.getId()) {
-                    case R.id.startTime:
+                    case R.id.extra:
                         if (!text.isEmpty()) {
                             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                             Long time = Long.parseLong(text);

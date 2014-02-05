@@ -13,6 +13,7 @@ import android.provider.BaseColumns;
     String COL_NAME = KronometerContract.Bikers.NAME;
     String COL_SURNAME = KronometerContract.Bikers.SURNAME;
     String COL_START_TIME = KronometerContract.Bikers.START_TIME;
+    String COL_ON_FINISH = KronometerContract.Bikers.ON_FINISH;
     String COL_END_TIME = KronometerContract.Bikers.END_TIME;
     String COL_TIMESTAMP = KronometerContract.SensorEvent.TIMESTAMP;
 
@@ -22,6 +23,7 @@ import android.provider.BaseColumns;
                     "name         TEXT,\n" +
                     "surname      TEXT, \n" +
                     "start_time   INTEGER, \n" +
+                    "on_finish    INTEGER, \n" +
                     "end_time     INTEGER \n" +
                     ")";
     String DDL_CREATE_TBL_SENSOR_EVENTS =

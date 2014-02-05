@@ -27,7 +27,7 @@
           android:clickable="false"
           android:focusable="false"
           android:focusableInTouchMode="false"/>
-<TextView android:id="@+id/startTime"
+<TextView android:id="@+id/extra"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="test"

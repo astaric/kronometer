@@ -21,7 +21,7 @@ import android.util.SparseArray;
 
 import net.staric.kronometer.KronometerContract;
 import net.staric.kronometer.R;
-import net.staric.kronometer.activities.FinishActivity;
+import net.staric.kronometer.FinishActivity;
 import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;

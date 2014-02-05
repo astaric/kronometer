@@ -19,6 +19,7 @@ public final class KronometerContract {
         public static final String NAME = "name";
         public static final String SURNAME = "surname";
         public static final String START_TIME = "start_time";
+        public static final String ON_FINISH = "on_finish";
         public static final String END_TIME = "end_time";
 
         public static final Uri CONTENT_URI =
@@ -40,7 +41,7 @@ public final class KronometerContract {
          * in the items table.
          */
         public static final String[] PROJECTION_ALL =
-                {_ID, NAME, SURNAME, START_TIME, END_TIME};
+                {_ID, NAME, SURNAME, START_TIME, ON_FINISH, END_TIME};
         /**
          * The default sort order for
          * queries containing _ID fields.

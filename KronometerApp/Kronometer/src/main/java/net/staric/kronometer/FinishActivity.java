@@ -1,4 +1,4 @@
-package net.staric.kronometer.activities;
+package net.staric.kronometer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,6 +6,7 @@ import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -15,6 +16,7 @@ import android.content.Loader;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
@@ -26,36 +28,34 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import net.staric.kronometer.KronometerContract;
-import net.staric.kronometer.R;
 import net.staric.kronometer.backend.KronometerService;
-import net.staric.kronometer.misc.ContestantAdapter;
-import net.staric.kronometer.misc.EventAdapter;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
 import net.staric.kronometer.utils.SwipeDismissListViewTouchListener;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 
+import static net.staric.kronometer.KronometerContract.Bikers;
 import static net.staric.kronometer.KronometerContract.SensorEvent;
 
 public class FinishActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final String TAG = "Kronometer.FinishActivity";
     static int selectedContestantId = 0;
-    private static List<Contestant> contestants = new ArrayList<Contestant>();
-    private static List<Contestant> contestantsOnFinish =
-            new ArrayList<Contestant>(Arrays.asList(new Contestant[]{new Contestant()}));
-    private static List<Event> events = new ArrayList<Event>();
     private static HashSet<Integer> knownContestants = new HashSet<Integer>();
-    private static int lastCopiedEventIdx = 0;
     Event selectedEvent = null;
     Long displayFromId = null;
     private KronometerService kronometerService;
     private Intent kronometerServiceIntent;
     private boolean bound = false;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (bound) {
+                updateUI(intent);
+            }
+        }
+    };
     private ServiceConnection connection = new ServiceConnection() {
 
         @Override
@@ -71,14 +71,6 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             setKronometerService(null);
-        }
-    };
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (bound) {
-                updateUI(intent);
-            }
         }
     };
     private ListView contestantsListView;
@@ -123,10 +115,20 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         });
 
         kronometerServiceIntent = new Intent(this, KronometerService.class);
-        setUpAdapters();
+
+        contestantsAdapter = new StartContestantAdapter(this, false, false);
+        this.contestantsListView.setAdapter(contestantsAdapter);
+
+        contestantsOnFinishAdapter = new FinishContestantAdapter(this, true, true);
+        contestantsOnFinishSpinner.setAdapter(contestantsOnFinishAdapter);
+
+        sensorEventsAdapter = new EventAdapter(this);
+        sensorEventsListView.setAdapter(sensorEventsAdapter);
 
         findViewById(R.id.contestants).setKeepScreenOn(true);
         getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
+        getLoaderManager().initLoader(2, null, this);
     }
 
     @Override
@@ -166,31 +168,19 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
             @Override
             public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                 for (int position : reverseSortedPositions) {
-                    Contestant contestant = contestantsAdapter.getItem(position);
-                    contestantsAdapter.remove(contestant);
-                    contestantsOnFinishAdapter.insert(contestant, contestantsOnFinishAdapter.getCount() - 1);
+                    Cursor cursor = contestantsAdapter.getCursor();
+                    if (cursor != null && cursor.moveToPosition(position)) {
+                        long id = cursor.getLong(cursor.getColumnIndex(Bikers._ID));
+                        Uri uri = ContentUris.withAppendedId(Bikers.CONTENT_URI, id);
+
+                        ContentValues contentValues = new ContentValues(1);
+                        contentValues.put(Bikers.ON_FINISH, new Date().getTime());
+
+                        getContentResolver().update(uri, contentValues, null, null);
+                    }
                 }
-                contestantsAdapter.notifyDataSetChanged();
-                contestantsOnFinishAdapter.notifyDataSetChanged();
             }
         };
-    }
-
-    private void setUpAdapters() {
-        contestantsAdapter = new ContestantAdapter(
-                this,
-                R.layout.listitem_contestant,
-                contestants);
-        this.contestantsListView.setAdapter(contestantsAdapter);
-
-        contestantsOnFinishAdapter = new ContestantAdapter(
-                this,
-                R.layout.listitem_contestant,
-                contestantsOnFinish);
-        contestantsOnFinishSpinner.setAdapter(contestantsOnFinishAdapter);
-
-        sensorEventsAdapter = new EventAdapter(this);
-        sensorEventsListView.setAdapter(sensorEventsAdapter);
     }
 
     public void generateEvent(View view) {
@@ -201,7 +191,7 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
     private void updateUI(Intent intent) {
         for (Contestant contestant : kronometerService.getContestants()) {
             if (!knownContestants.contains(contestant.id)) {
-                contestantsAdapter.add(contestant);
+                //contestantsAdapter.add(contestant);
                 knownContestants.add(contestant.id);
             }
         }
@@ -239,24 +229,29 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
     }
 
     public void addStopTime(View view) {
-        Contestant selectedContestant = (Contestant) contestantsOnFinishSpinner.getSelectedItem();
-        if (selectedContestant == null || selectedContestant.dummy) {
-            return;
-        }
-        Long timestamp = getSelectedTimestamp();
-        if (timestamp == null) {
-            return;
-        }
-        if (selectedContestant.getEndTime() != null) {
-            askForConfirmationForChangingEndTime(selectedContestant, timestamp);
-        } else {
-            setEndTime(selectedContestant, timestamp);
+        Cursor cursor = (Cursor) contestantsOnFinishSpinner.getSelectedItem();
+        if (cursor != null) {
+            if (cursor.isNull(cursor.getColumnIndex(Bikers._ID))) {
+                return;
+            }
+            Long timestamp = getSelectedTimestamp();
+            if (timestamp == null) {
+                return;
+            }
+
+            long id = cursor.getLong(cursor.getColumnIndex(Bikers._ID));
+            if (!cursor.isNull(cursor.getColumnIndex(Bikers.END_TIME))) {
+                askForConfirmationForChangingEndTime(id, cursor.getString(cursor.getColumnIndex
+                        (Bikers.NAME)), timestamp);
+            } else {
+                setEndTime(id, timestamp);
+            }
         }
     }
 
     private Long getSelectedTimestamp() {
-        long selectedId = sensorEventsAdapter.getSelectedId();
-        if (selectedId == 0) {
+        Long selectedId = sensorEventsAdapter.getSelectedId();
+        if (selectedId == null) {
             return null;
         }
 
@@ -269,39 +264,20 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         return null;
     }
 
-    private void askForConfirmationForDuplicatingEvent(final Contestant contestant,
-                                                       final Long timestamp) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(String.format(getString(R.string.duplicateEventConfirmation), contestant))
-                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        setEndTime(contestant, timestamp);
-                    }
-                })
-                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (selectedEvent != null) {
-                            selectedEvent.setSelected(false);
-                            selectedEvent = null;
-                            sensorEventsAdapter.notifyDataSetChanged();
-                        }
-                    }
-                })
-                .create()
-                .show();
-    }
-
-    private void askForConfirmationForChangingEndTime(final Contestant contestant,
+    private void askForConfirmationForChangingEndTime(final Long contestantId,
+                                                      final String contestantName,
                                                       final Long event) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(String.format(getString(R.string.endTimeChangeConfirmation), contestant))
+        builder.setMessage(String.format(getString(R.string.endTimeChangeConfirmation),
+                contestantName))
                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        setEndTime(contestant, event);
+                        setEndTime(contestantId, event);
                     }
                 })
                 .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        sensorEventsAdapter.setSelectedId(null);
                         if (selectedEvent != null) {
                             selectedEvent.setSelected(false);
                             selectedEvent = null;
@@ -313,12 +289,15 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
                 .show();
     }
 
-    private void setEndTime(Contestant contestant, Long timestamp) {
-        kronometerService.setEndTime(contestant, timestamp);
+    private void setEndTime(long id, Long timestamp) {
+        Uri uri = ContentUris.withAppendedId(Bikers.CONTENT_URI, id);
+        ContentValues contentValues = new ContentValues(1);
+        contentValues.put(Bikers.END_TIME, timestamp);
+        getContentResolver().update(uri, contentValues, null, null);
+
         displayFromId = sensorEventsAdapter.getSelectedId();
         getLoaderManager().restartLoader(0, null, this);
 
-        sensorEventsAdapter.notifyDataSetChanged();
         if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
             contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
     }
@@ -328,21 +307,60 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String selection = "";
         String[] selectionArgs = new String[0];
-        if (displayFromId != null) {
-            selection = "(" + SensorEvent._ID + " > ?)";
-            selectionArgs = new String[]{displayFromId.toString()};
-        }
+        String ordering = "";
+        switch (i) {
+            case 0:
+                if (displayFromId != null) {
+                    selection = "(" + SensorEvent._ID + " > ?)";
+                    selectionArgs = new String[]{displayFromId.toString()};
+                }
+                return new CursorLoader(this, SensorEvent.CONTENT_URI, null, selection,
+                        selectionArgs, null);
 
-        return new CursorLoader(this, SensorEvent.CONTENT_URI, null, selection, selectionArgs, null);
+            case 1:
+                selection = "((" + Bikers.END_TIME + " IS NULL) AND" +
+                        "(" + Bikers.ON_FINISH + " IS NULL))";
+                return new CursorLoader(this, Bikers.CONTENT_URI, null, selection, selectionArgs,
+                        null);
+            case 2:
+                selection = "(" + Bikers.ON_FINISH + " IS NOT NULL)";
+                ordering = Bikers.ON_FINISH + " ASC, " + Bikers.END_TIME + " ASC";
+                return new CursorLoader(this, Bikers.CONTENT_URI, null, selection, selectionArgs,
+                        ordering);
+
+            default:
+                throw new UnsupportedOperationException("Invalid loader id");
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        sensorEventsAdapter.swapCursor(cursor);
+        switch (cursorLoader.getId()) {
+            case 0:
+                sensorEventsAdapter.swapCursor(cursor);
+                break;
+            case 1:
+                contestantsAdapter.swapCursor(cursor);
+                break;
+            case 2:
+                contestantsOnFinishAdapter.swapCursor(cursor);
+                break;
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        sensorEventsAdapter.swapCursor(null);
+        switch (cursorLoader.getId()) {
+            case 0:
+                sensorEventsAdapter.swapCursor(null);
+                break;
+            case 1:
+                contestantsAdapter.swapCursor(null);
+                break;
+            case 2:
+                contestantsOnFinishAdapter.swapCursor(null);
+                break;
+        }
+
     }
 }

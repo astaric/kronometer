@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import net.staric.kronometer.StartActivity;
 import net.staric.kronometer.backend.ContestantBackend;
 import net.staric.kronometer.R;
 import net.staric.kronometer.backend.Update;

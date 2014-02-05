@@ -1,4 +1,4 @@
-package net.staric.kronometer.misc;
+package net.staric.kronometer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,13 +22,13 @@ public class EventAdapter extends SimpleCursorAdapter {
 
     private Context context;
     private int layoutResourceId;
-    private long selectedId = 0;
+    private Long selectedId = null;
 
-    public long getSelectedId() {
+    public Long getSelectedId() {
         return selectedId;
     }
 
-    public void setSelectedId(long id) {
+    public void setSelectedId(Long id) {
         selectedId = id;
     }
 
@@ -74,8 +74,8 @@ public class EventAdapter extends SimpleCursorAdapter {
 
         Cursor cursor = getCursor();
         if (cursor != null && cursor.moveToPosition(position)) {
-            long id = cursor.getLong(cursor.getColumnIndex(SensorEvent._ID));
-            long timestamp = cursor.getLong(cursor.getColumnIndex(SensorEvent.TIMESTAMP));
+            Long id = cursor.getLong(cursor.getColumnIndex(SensorEvent._ID));
+            Long timestamp = cursor.getLong(cursor.getColumnIndex(SensorEvent.TIMESTAMP));
 
             SimpleDateFormat outFmt = new SimpleDateFormat("HH:mm:ss.SSS");
             holder.txtEndTime.setText(outFmt.format(timestamp));

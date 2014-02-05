@@ -14,9 +14,7 @@ import net.staric.kronometer.R;
 import net.staric.kronometer.models.Contestant;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class ContestantAdapter extends ArrayAdapter<Contestant> {
 
@@ -54,7 +52,7 @@ public class ContestantAdapter extends ArrayAdapter<Contestant> {
             holder.frame = (RelativeLayout)row.findViewById(R.id.frame);
             holder.txtId = (TextView)row.findViewById(R.id.cid);
             holder.txtName = (TextView)row.findViewById(R.id.name);
-            holder.txtTime = (TextView)row.findViewById(R.id.startTime);
+            holder.txtTime = (TextView)row.findViewById(R.id.extra);
 
             row.setTag(holder);
         }
