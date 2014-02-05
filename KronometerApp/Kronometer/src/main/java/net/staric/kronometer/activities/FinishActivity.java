@@ -26,7 +26,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import net.staric.kronometer.KronometerContract;
 import net.staric.kronometer.R;
 import net.staric.kronometer.backend.KronometerService;
 import net.staric.kronometer.misc.ContestantAdapter;
@@ -242,8 +241,8 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         if (selectedContestant == null) {
             return;
         }
-        Long timestamp = getTimestamp();
-        if (timestamp == 0) {
+        Long timestamp = getSelectedTimestamp();
+        if (timestamp == null) {
             return;
         }
         if (selectedContestant.getEndTime() != null) {
@@ -253,10 +252,10 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         }
     }
 
-    private Long getTimestamp() {
+    private Long getSelectedTimestamp() {
         long selectedId = sensorEventsAdapter.getSelectedId();
         if (selectedId == 0) {
-            return 0L;
+            return null;
         }
 
         Cursor cursor = getContentResolver().query(
@@ -265,7 +264,7 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         if (cursor != null && cursor.moveToFirst()) {
             return cursor.getLong(cursor.getColumnIndex(SensorEvent.TIMESTAMP));
         }
-        return 0L;
+        return null;
     }
 
     private void askForConfirmationForDuplicatingEvent(final Contestant contestant,
