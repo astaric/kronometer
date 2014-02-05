@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import net.staric.kronometer.KronometerContract;
 import net.staric.kronometer.R;
 import net.staric.kronometer.backend.KronometerService;
 import net.staric.kronometer.misc.ContestantAdapter;
@@ -51,17 +52,10 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
     private static HashSet<Integer> knownContestants = new HashSet<Integer>();
     private static int lastCopiedEventIdx = 0;
     Event selectedEvent = null;
+    Long displayFromId = null;
     private KronometerService kronometerService;
     private Intent kronometerServiceIntent;
     private boolean bound = false;
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (bound) {
-                updateUI(intent);
-            }
-        }
-    };
     private ServiceConnection connection = new ServiceConnection() {
 
         @Override
@@ -77,6 +71,14 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             setKronometerService(null);
+        }
+    };
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (bound) {
+                updateUI(intent);
+            }
         }
     };
     private ListView contestantsListView;
@@ -143,8 +145,8 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
                 System.exit(0);
                 return true;
             case R.id.action_show_all_events:
-                lastCopiedEventIdx = 0;
-                events.clear();
+                displayFromId = null;
+                getLoaderManager().restartLoader(0, null, this);
                 if (bound) {
                     updateUI(null);
                 }
@@ -238,7 +240,7 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
 
     public void addStopTime(View view) {
         Contestant selectedContestant = (Contestant) contestantsOnFinishSpinner.getSelectedItem();
-        if (selectedContestant == null) {
+        if (selectedContestant == null || selectedContestant.dummy) {
             return;
         }
         Long timestamp = getSelectedTimestamp();
@@ -313,12 +315,9 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
 
     private void setEndTime(Contestant contestant, Long timestamp) {
         kronometerService.setEndTime(contestant, timestamp);
-        for (int i = 0; i < events.size(); i++) {
-            if (events.get(i) == selectedEvent) {
-                events.subList(0, i + 1).clear();
-                break;
-            }
-        }
+        displayFromId = sensorEventsAdapter.getSelectedId();
+        getLoaderManager().restartLoader(0, null, this);
+
         sensorEventsAdapter.notifyDataSetChanged();
         if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
             contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
@@ -327,7 +326,14 @@ public class FinishActivity extends Activity implements LoaderManager.LoaderCall
     // LoaderManager.LoaderCallbacks<Cursor> implementation
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this, SensorEvent.CONTENT_URI, null, null, null, null);
+        String selection = "";
+        String[] selectionArgs = new String[0];
+        if (displayFromId != null) {
+            selection = "(" + SensorEvent._ID + " > ?)";
+            selectionArgs = new String[]{displayFromId.toString()};
+        }
+
+        return new CursorLoader(this, SensorEvent.CONTENT_URI, null, selection, selectionArgs, null);
     }
 
     @Override
