@@ -19,6 +19,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.SparseArray;
 
+import net.staric.kronometer.KronometerContract;
 import net.staric.kronometer.R;
 import net.staric.kronometer.activities.FinishActivity;
 import net.staric.kronometer.models.Category;
@@ -40,35 +41,57 @@ import static net.staric.kronometer.KronometerContract.*;
 
 public class KronometerService extends Service {
     public static final String TAG = "KronometerService";
+
+    private boolean started = false;
     int foregroundNotificationId = 47;
+
+    public class LocalBinder extends Binder {
+        public KronometerService getService() {
+            return KronometerService.this;
+        }
+    }
 
     private final IBinder binder = new LocalBinder();
 
-    ArrayBlockingQueue<Long> eventQueue;
-    private Thread eventProcessingThread;
     private Thread bluetoothSensorThread;
-    private String bluetoothStatus = "";
+    private String sensorStatus = "";
+    private BroadcastReceiver statusUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra(KronometerContract.SENSOR_STATUS)) {
+                setSensorStatus(intent.getStringExtra(KronometerContract.SENSOR_STATUS));
+            }
+        }
+    };
+
+    private BroadcastReceiver sensorEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra(SensorEvent.TIMESTAMP)) {
+                storeEvent(intent.getLongExtra(SensorEvent.TIMESTAMP, 0));
+            }
+        }
+    };
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         startForeground(foregroundNotificationId, createNotification());
-        eventQueue = new ArrayBlockingQueue<Long>(100);
 
         // Android sensor
-        //bluetoothSensorThread = new BluetoothSensorThread("20:13:08:01:04:98", this);
+        //bluetoothSensorThread = new BluetoothSensorThread(this, "20:13:08:01:04:98", this);
         // iBall
-        bluetoothSensorThread = new BluetoothSensorThread("14:10:9F:D7:9A:74");
+        bluetoothSensorThread = new BluetoothSensorThread(this, "14:10:9F:D7:9A:74");
+        bluetoothSensorThread.setPriority(Thread.MAX_PRIORITY);
         bluetoothSensorThread.start();
 
-        eventProcessingThread = new EventProcessingThread(eventQueue);
-        eventProcessingThread.start();
+        registerReceiver(statusUpdateReceiver, new IntentFilter(KronometerContract.SENSOR_STATUS_CHANGED_ACTION));
+        registerReceiver(sensorEventReceiver, new IntentFilter(KronometerContract.SENSOR_EVENT_ACTION));
+
 
         // TODO: Get rid of these
         notifyDataChangedIntent = new Intent(DATA_CHANGED_ACTION);
-
-        registerReceiver(statusReceiver, new IntentFilter(KronometerService.STATUS_CHANGED_ACTION));
 
         contestantSyncThread = new ContestantSynchronizationThread("https://kronometer.herokuapp.com/", this);
         contestantSyncThread.start();
@@ -88,6 +111,11 @@ public class KronometerService extends Service {
         return binder;
     }
 
+    protected void setSensorStatus(String status) {
+        this.sensorStatus = status;
+        updateNotification();
+    }
+
     private void updateNotification() {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -100,41 +128,44 @@ public class KronometerService extends Service {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_stat_notify_biker)
                 .setContentTitle("Bluetooth sensor")
-                .setContentText(bluetoothStatus)
+                .setContentText(sensorStatus)
                 .setContentIntent(pendingIntent);
         NotificationCompat.InboxStyle inboxStyle =
                 new NotificationCompat.InboxStyle();
         inboxStyle.setBigContentTitle("Kronometer");
-        inboxStyle.addLine(bluetoothStatus);
+        inboxStyle.addLine(sensorStatus);
         inboxStyle.addLine(syncStatus);
         mBuilder.setStyle(inboxStyle);
         return mBuilder.build();
     }
 
+    public void storeEvent(long timestamp) {
+        Log.i(TAG, "Store event");
+        ContentResolver contentResolver = getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SensorEvent.TIMESTAMP, timestamp);
+        contentResolver.insert(SensorEvent.CONTENT_URI, contentValues);
+    }
 
-    private BroadcastReceiver statusReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.hasExtra("bluetoothStatus")) {
-                setBluetoothStatus(intent.getStringExtra("bluetoothStatus"));
-            }
-        }
-    };
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(statusUpdateReceiver);
+
+        if (bluetoothSensorThread != null)
+            bluetoothSensorThread.interrupt();
+        if (contestantSyncThread != null)
+            contestantSyncThread.interrupt();
+    }
+
+    // Get rid of this
 
     public static final String DATA_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
     public static final String STATUS_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
 
     private Intent notifyDataChangedIntent;
 
-
-
-
-
-    protected void setBluetoothStatus(String status) {
-        Log.i(TAG, status);
-        this.bluetoothStatus = status;
-        updateNotification();
-    }
 
     private Thread contestantSyncThread;
     private String syncStatus = "";
@@ -143,8 +174,6 @@ public class KronometerService extends Service {
         this.syncStatus = status;
         updateNotification();
     }
-
-    private boolean started = false;
 
 
     public Event duplicateEvent(Event event) {
@@ -159,13 +188,6 @@ public class KronometerService extends Service {
     }
 
 
-    public class LocalBinder extends Binder {
-        public KronometerService getService() {
-            return KronometerService.this;
-        }
-    }
-
-
     protected void notifyDataChanged() {
         sendBroadcast(notifyDataChangedIntent);
     }
@@ -175,14 +197,6 @@ public class KronometerService extends Service {
 
     public List<Event> getEvents() {
         return events;
-    }
-
-    public void addEvent(Long timestamp) {
-        try {
-            eventQueue.add(timestamp);
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Event queue is full.");
-        }
     }
 
     private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
@@ -212,10 +226,10 @@ public class KronometerService extends Service {
         }
     }
 
-    public void setEndTime(Contestant contestant, Event event) {
+    public void setEndTime(Contestant contestant, Long timestamp) {
         if (contestant == null || contestant.dummy)
             return;
-        if (event == null)
+        if (timestamp == null)
             return;
 
         if (contestant.getEndTime() != null) {
@@ -226,11 +240,9 @@ public class KronometerService extends Service {
             }
         }
 
-        Date endTime = event.getTime();
+        Date endTime = new Date(timestamp);
         Update update = contestant.setEndTime(endTime);
         addUpdate(update);
-
-        event.setContestant(contestant);
     }
 
     private ArrayList<Category> categories = new ArrayList<Category>();
@@ -273,136 +285,127 @@ public class KronometerService extends Service {
     public BlockingQueue<Update> getUpdates() {
         return pendingUpdates;
     }
+}
+
+class BluetoothSensorThread extends Thread {
+    private static final String TAG = "KronometerService.BluetoothSensorThread";
+    private final UUID BLUETOOTH_SERIAL = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    private Context context;
+    private String deviceAddress;
+
+    ArrayBlockingQueue<Long> eventQueue;
+
+    private InputStream inStream;
+
+    public BluetoothSensorThread(Context context, String deviceAddress) {
+        this.context = context;
+        this.deviceAddress = deviceAddress;
+
+        this.eventQueue = new ArrayBlockingQueue<Long>(100);
+    }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        unregisterReceiver(statusReceiver);
-
-        if (bluetoothSensorThread != null)
-            bluetoothSensorThread.interrupt();
-        if (contestantSyncThread != null)
-            contestantSyncThread.interrupt();
-        if (eventProcessingThread != null)
-            eventProcessingThread.interrupt();
-    }
-
-
-    private class EventProcessingThread extends Thread {
-        private BlockingQueue<Long> eventQueue;
-
-        public EventProcessingThread(BlockingQueue<Long> eventQueue) {
-            this.eventQueue = eventQueue;
+    public void run() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            setSensorStatus("This device does not support bluetooth");
+            return;
         }
 
-        @Override
-        public void run() {
-            while (!isInterrupted()) {
-                try {
-                    Long timestamp = eventQueue.take();
-                    ContentResolver contentResolver = getContentResolver();
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put(SensorEvent.TIMESTAMP, timestamp);
-                    contentResolver.insert(SensorEvent.CONTENT_URI, contentValues);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-        }
-    }
-
-    private class BluetoothSensorThread extends Thread {
-        private static final String TAG = "KronometerService";
-        private final UUID BLUETOOTH_SERIAL = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
-        private String deviceAddress;
-        private InputStream inStream;
-
-        public BluetoothSensorThread(String deviceAddress) {
-            this.deviceAddress = deviceAddress;
-        }
-
-        @Override
-        public void run() {
-            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (bluetoothAdapter == null) {
-                setBluetoothStatus("This device does not support bluetooth");
-                return;
-            }
-
-            BluetoothDevice btDevice = null;
-            BluetoothSocket btSocket = null;
-            inStream = null;
-            while (!isInterrupted()) {
-                if (!bluetoothAdapter.isEnabled()) {
-                    setBluetoothStatus("Bluetooth is disabled");
-                }
-
-                setBluetoothStatus("Looking for sensor");
-                try {
-                    btDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
-                    btSocket = btDevice.createRfcommSocketToServiceRecord(BLUETOOTH_SERIAL);
-                    btSocket.connect();
-                    inStream = btSocket.getInputStream();
-                    setBluetoothStatus("Sensor connected");
-
-                    byte[] data = new byte[1];
-                    readLoop:
-                    while (!this.isInterrupted()) {
-                        Log.d(TAG, "BT Waiting for data");
-                        switch(inStream.read()) {
-                            case 'E':
-                                Log.d(TAG, "BT received event");
-                                addEvent(new Date().getTime());
-                                break;
-                            case -1:
-                                break readLoop;
-                            default:
-                                Log.d(TAG, "BT Received unknown command");
-                        }
-                    }
-                    setBluetoothStatus("Sensor disconnected");
-                } catch (IOException e) {
-                    Log.i(TAG, e.getMessage());
-                    setBluetoothStatus("Error connecting to the sensor");
-                } finally {
-                    if (inStream != null) {
-                        try {
-                            inStream.close();
-                        } catch (IOException e) {
-                            Log.e(TAG, "Error occurred while closing BT stream.");
-                        }
-                    }
-
-                    if (btSocket != null) {
-                        try {
-                            btSocket.close();
-                        } catch (IOException e) {
-                            Log.e(TAG, "Error occurred while closing BT socket.");
-                        }
-                    }
-                }
-
+        BluetoothDevice btDevice = null;
+        BluetoothSocket btSocket = null;
+        inStream = null;
+        while (!isInterrupted()) {
+            if (!bluetoothAdapter.isEnabled()) {
+                setSensorStatus("Bluetooth is disabled");
+                Intent requestBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                requestBluetooth.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(requestBluetooth);
                 try {
                     sleep(10000);
                 } catch (InterruptedException e) {
                     break;
                 }
             }
-        }
 
-        @Override
-        public void interrupt() {
             try {
-                inStream.close();
+                setSensorStatus("Looking for sensor");
+                btDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
+                btSocket = btDevice.createRfcommSocketToServiceRecord(BLUETOOTH_SERIAL);
+                btSocket.connect();
+                inStream = btSocket.getInputStream();
+                setSensorStatus("Sensor connected");
+
+                byte[] data = new byte[1];
+                readLoop:
+                while (!this.isInterrupted()) {
+                    switch (inStream.read()) {
+                        case 'E':
+                            processEvent(new Date().getTime());
+                            break;
+                        case -1:
+                            break readLoop;
+                        default:
+                            Log.d(TAG, "Received unknown command");
+                    }
+                }
+                setSensorStatus("Sensor disconnected");
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.i(TAG, e.getMessage());
+                setSensorStatus("Error connecting to the sensor");
+            } finally {
+                if (inStream != null) {
+                    try {
+                        inStream.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error occurred while closing BT stream.");
+                    }
+                }
+
+                if (btSocket != null) {
+                    try {
+                        btSocket.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error occurred while closing BT socket.");
+                    }
+                }
             }
-            super.interrupt();
+
+            try {
+                sleep(10000);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    }
+
+    private void setSensorStatus(String status) {
+        Log.i(TAG, status);
+        Intent eventNotification = new Intent(SENSOR_STATUS_CHANGED_ACTION);
+        eventNotification.putExtra(SENSOR_STATUS, status);
+        context.sendBroadcast(eventNotification);
+    }
+
+    public void processEvent(Long timestamp) {
+        Log.d(TAG, "Received sensor event");
+        Intent eventNotification = new Intent(SENSOR_EVENT_ACTION);
+        eventNotification.putExtra(SensorEvent.TIMESTAMP, timestamp);
+        context.sendBroadcast(eventNotification);
+    }
+
+    @Override
+    public void interrupt() {
+        closeConnectionStream();
+
+        super.interrupt();
+    }
+
+    private void closeConnectionStream() {
+        try {
+            inStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
-
-
-

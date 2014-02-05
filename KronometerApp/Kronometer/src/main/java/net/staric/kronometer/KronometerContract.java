@@ -6,6 +6,12 @@ import android.provider.BaseColumns;
 
 public final class KronometerContract {
 
+    // Custom Intents
+    public static final String SENSOR_EVENT_ACTION = "net.staric.kronometer.sensor_event";
+    public static final String SENSOR_STATUS_CHANGED_ACTION = "net.staric.kronometer.sensor_status_changed";
+    public static final String SENSOR_STATUS = "sensor_status";
+
+    // Content Provider
     public static final String AUTHORITY = "net.staric.kronometer";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
