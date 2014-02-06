@@ -136,38 +136,6 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.main, menu);
-        this.syncStatus = menu.findItem(R.id.action_refresh_bikers);
-        updateSyncStatus();
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            case R.id.action_refresh_bikers:
-                syncContestants();
-                return true;
-            case R.id.action_new_contestant:
-                intent = new Intent(this, ContestantActivity.class);
-                startActivities(new Intent[]{intent});
-                return true;
-            case R.id.action_finish:
-                startActivities(new Intent[]{new Intent(this, FinishActivity.class)});
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
     public void syncContestants() {
         if (Utils.hasInternetConnection(this))
             new SyncContestantListTask(this).execute();
