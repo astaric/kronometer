@@ -1,35 +1,19 @@
 package net.staric.kronometer;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import net.staric.kronometer.activities.ContestantActivity;
-import net.staric.kronometer.activities.SettingsActivity;
-import net.staric.kronometer.backend.ContestantBackend;
-import net.staric.kronometer.backend.Update;
-import net.staric.kronometer.utils.PushUpdates;
-import net.staric.kronometer.utils.Utils;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,19 +21,15 @@ import java.util.TimerTask;
 import static net.staric.kronometer.KronometerContract.Bikers;
 
 public class StartActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
-    static final String NEXT_START_TIME = "next_start";
-    Timer countdownRefreshTimer;
-    Spinner contestants;
-    TextView countdown;
-    MenuItem syncStatus;
+    private static final String NEXT_START_TIME = "next_start";
+    private static final int CONTESTANT_LOADER = 0;
 
-    ContestantBackend contestantBackend;
+    private Spinner contestants;
+    private ContestantAdapter contestantsAdapter;
+    private TextView countdown;
 
-    Date nextStart = new Date();
-
-    public static final String ACCOUNT_TYPE = "kronometer.staric.net";
-    public static final String ACCOUNT = "x";
-    private SimpleCursorAdapter contestantsAdapter;
+    private Date nextStart = new Date();
+    private Timer countdownRefreshTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,21 +41,13 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
             nextStart = new Date(savedInstanceState.getLong(NEXT_START_TIME));
         }
 
-        contestantBackend = ContestantBackend.getInstance();
-
         contestants = (Spinner) findViewById(R.id.contestants);
         countdown = (TextView) findViewById(R.id.countdown);
 
         contestantsAdapter = new StartContestantAdapter(this, true, true);
         contestants.setAdapter(contestantsAdapter);
-
-        updateSyncStatus();
-
         contestants.setKeepScreenOn(true);
-
-        Account account = CreateSyncAccount(this);
-
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(CONTESTANT_LOADER, null, this);
     }
 
     @Override
@@ -85,35 +57,11 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
         startRefreshingCountdown();
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
 
         stopRefreshingCountdown();
-    }
-
-    private SimpleCursorAdapter getContestantsAdapter() {
-        String[] fields = new String[]{Bikers._ID, Bikers.NAME, Bikers.START_TIME};
-        int[] views = new int[]{R.id.cid, R.id.name, R.id.extra};
-        return new SimpleCursorAdapter(this, R.layout.listitem_contestant, null, fields, views, 0) {
-            @Override
-            public void setViewText(TextView v, String text) {
-                switch (v.getId()) {
-                    case R.id.extra:
-                        if (!text.isEmpty()) {
-                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                            Long time = Long.parseLong(text);
-                            final Calendar cal = Calendar.getInstance();
-                            cal.setTimeInMillis(time);
-                            text = sdf.format(cal.getTime());
-
-                        }
-                        break;
-                }
-                super.setViewText(v, text);
-            }
-        };
     }
 
     @Override
@@ -123,106 +71,24 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
         super.onSaveInstanceState(outState);
     }
 
-    public static Account CreateSyncAccount(Context context) {
-        Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
-
-        AccountManager accountManager =
-                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
-
-        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            return newAccount;
-        } else {
-            return null;
-        }
-    }
-
-    public void syncContestants() {
-        if (Utils.hasInternetConnection(this))
-            new SyncContestantListTask(this).execute();
-    }
-
-
-    private class SyncContestantListTask extends AsyncTask<Void, Void, Void> {
-        private final Context context;
-
-        public SyncContestantListTask(Context context) {
-            super();
-            this.context = context;
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-            syncStatus.setTitle("Downloading");
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            contestantBackend.pull(context);
-            for (Update update : contestantBackend.getPendingUpdates()) {
-                contestantBackend.push(update);
-                publishProgress();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            int pending = contestantBackend.getNumberOfPendingContestants();
-            syncStatus.setTitle(String.format("Uploading (%d)", pending));
-        }
-
-        @Override
-        protected void onPostExecute(Void voids) {
-            updateSyncStatus();
-        }
-    }
-
-    private class PushStartTime extends PushUpdates {
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            syncStatus.setTitle(String.format("Uploading (%d/%d)", progress[0], progress[1]));
-        }
-
-        @Override
-        protected void onPostExecute(Void voids) {
-            updateSyncStatus();
-        }
-    }
 
     public void clickStart(View view) {
-        if (contestants.getCount() == 0)
-        {
+        if (contestants.getCount() == 0) {
             return;
         }
 
-        try {
-            Date startTime = new Date();
-            int contestantId = getSelectedContestantId();
-            setStartTime(contestantId, startTime);
-            resetCountdown();
+        long timestamp = new Date().getTime();
+        long contestantId = contestants.getSelectedItemId();
 
-            selectNextContestant();
-
-            updateSyncStatus();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        setStartTime(contestantId, timestamp);
+        resetCountdown();
+        selectNextContestant();
     }
 
-
-
-    private int getSelectedContestantId() {
-        Cursor selectedItem = (Cursor) contestants.getSelectedItem();
-        return selectedItem.getInt(selectedItem.getColumnIndex(Bikers._ID));
-    }
-
-    private void setStartTime(int contestantId, Date startTime) {
+    private void setStartTime(long contestantId, Long startTime) {
         Uri uri = ContentUris.withAppendedId(Bikers.CONTENT_URI, contestantId);
-
         ContentValues contentValues = new ContentValues(1);
-        contentValues.put(Bikers.START_TIME, startTime.getTime());
-
+        contentValues.put(Bikers.START_TIME, startTime);
         getContentResolver().update(uri, contentValues, null, null);
     }
 
@@ -233,18 +99,7 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
         }
     }
 
-    public void updateSyncStatus() {
-        if (syncStatus != null) {
-            int pending = contestantBackend.getNumberOfPendingContestants();
-            if (pending == 0)
-                syncStatus.setTitle("Synced");
-            else
-                syncStatus.setTitle(String.format("Pending (%d)", pending));
-        }
-    }
-
-
-    // countdown related stuff
+    // Countdown related stuff
     private void startRefreshingCountdown() {
         countdownRefreshTimer = new Timer();
         countdownRefreshTimer.schedule(new TimerTask() {
@@ -266,9 +121,8 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
     }
 
     private void updateCountdown() {
-        int countdownValue = (int)(nextStart.getTime() - new Date().getTime()) / 1000;
-        if (countdownValue < 0)
-        {
+        int countdownValue = (int) (nextStart.getTime() - new Date().getTime()) / 1000;
+        if (countdownValue < 0) {
             countdownValue = 0;
         }
         countdown.setText(
@@ -282,16 +136,32 @@ public class StartActivity extends Activity implements LoaderManager.LoaderCallb
     // LoaderManager.LoaderCallbacks<Cursor> implementation
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(StartActivity.this, Bikers.CONTENT_URI, null, null, null, null);
+        switch (i) {
+            case CONTESTANT_LOADER:
+                return new CursorLoader(StartActivity.this, Bikers.CONTENT_URI, null, null, null, null);
+            default:
+                throw new UnsupportedOperationException("Unknown loader id");
+        }
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        contestantsAdapter.swapCursor(cursor);
+        switch (cursorLoader.getId()) {
+            case CONTESTANT_LOADER:
+                contestantsAdapter.swapCursor(cursor);
+            default:
+                throw new UnsupportedOperationException("Unknown loader id");
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        contestantsAdapter.swapCursor(null);
+        switch (cursorLoader.getId()) {
+            case CONTESTANT_LOADER:
+                contestantsAdapter.swapCursor(null);
+            default:
+                throw new UnsupportedOperationException("Unknown loader id");
+        }
     }
 }
