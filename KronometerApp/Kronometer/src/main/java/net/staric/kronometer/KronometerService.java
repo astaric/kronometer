@@ -1,5 +1,7 @@
-package net.staric.kronometer.backend;
+package net.staric.kronometer;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,33 +10,23 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.util.SparseArray;
 
-import net.staric.kronometer.FinishActivity;
-import net.staric.kronometer.KronometerContract;
-import net.staric.kronometer.MainActivity;
-import net.staric.kronometer.R;
-import net.staric.kronometer.models.Category;
-import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static net.staric.kronometer.KronometerContract.SENSOR_EVENT_ACTION;
 import static net.staric.kronometer.KronometerContract.SENSOR_STATUS;
@@ -43,19 +35,21 @@ import static net.staric.kronometer.KronometerContract.SensorEvent;
 
 public class KronometerService extends Service {
     public static final String TAG = "KronometerService";
-    public static final String DATA_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
-    public static final String STATUS_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
-    private final IBinder binder = new LocalBinder();
-    int foregroundNotificationId = 47;
-    BlockingQueue<Update> pendingUpdates = new LinkedBlockingQueue<Update>();
+
     private boolean started = false;
+    private int foregroundNotificationId = 47;
+
     private Thread bluetoothSensorThread;
     private String sensorStatus = "";
+
+    private final IBinder binder = new LocalBinder();
+
     private BroadcastReceiver statusUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra(KronometerContract.SENSOR_STATUS)) {
-                setSensorStatus(intent.getStringExtra(KronometerContract.SENSOR_STATUS));
+                sensorStatus = intent.getStringExtra(KronometerContract.SENSOR_STATUS);
+                updateNotification();
             }
         }
     };
@@ -67,16 +61,6 @@ public class KronometerService extends Service {
             }
         }
     };
-    private Intent notifyDataChangedIntent;
-    private Thread contestantSyncThread;
-    private String syncStatus = "";
-    private ArrayList<Event> events = new ArrayList<Event>();
-    private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
-
-    // Get rid of this
-    private SparseArray<Contestant> contestantMap = new SparseArray<Contestant>();
-    private ArrayList<Category> categories = new ArrayList<Category>();
-    private SparseArray<Category> categoryMap = new SparseArray<Category>();
 
     @Override
     public void onCreate() {
@@ -94,12 +78,34 @@ public class KronometerService extends Service {
         registerReceiver(statusUpdateReceiver, new IntentFilter(KronometerContract.SENSOR_STATUS_CHANGED_ACTION));
         registerReceiver(sensorEventReceiver, new IntentFilter(KronometerContract.SENSOR_EVENT_ACTION));
 
+        Bundle settingsBundle = new Bundle();
+        settingsBundle.putBoolean(
+                ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        settingsBundle.putBoolean(
+                ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        Account account = createDummySyncAccount(this);
+        String AUTHORITY = "net.staric.kronometer";
+        ContentResolver.requestSync(account, AUTHORITY, settingsBundle);
+    }
 
-        // TODO: Get rid of these
-        notifyDataChangedIntent = new Intent(DATA_CHANGED_ACTION);
+    public static Account createDummySyncAccount(Context context) {
+        // An account type, in the form of a domain name
+        String ACCOUNT_TYPE = "kronometer.staric.net";
+        // The account name
+        String ACCOUNT = "dummyaccount";
 
-        contestantSyncThread = new ContestantSynchronizationThread("https://kronometer.herokuapp.com/", this);
-        contestantSyncThread.start();
+        // Create the account type and default account
+        Account newAccount = new Account(
+                ACCOUNT, ACCOUNT_TYPE);
+        // Get an instance of the Android account manager
+        AccountManager accountManager =
+                (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            return newAccount;
+        } else {
+            Log.e(TAG, "Account already exists");
+            return null;
+        }
     }
 
     @Override
@@ -114,11 +120,6 @@ public class KronometerService extends Service {
             startService(new Intent(this, KronometerService.class));
         }
         return binder;
-    }
-
-    protected void setSensorStatus(String status) {
-        this.sensorStatus = status;
-        updateNotification();
     }
 
     private void updateNotification() {
@@ -139,7 +140,6 @@ public class KronometerService extends Service {
                 new NotificationCompat.InboxStyle();
         inboxStyle.setBigContentTitle("Kronometer");
         inboxStyle.addLine(sensorStatus);
-        inboxStyle.addLine(syncStatus);
         mBuilder.setStyle(inboxStyle);
         return mBuilder.build();
     }
@@ -149,95 +149,10 @@ public class KronometerService extends Service {
         super.onDestroy();
 
         unregisterReceiver(statusUpdateReceiver);
+        unregisterReceiver(sensorEventReceiver);
 
         if (bluetoothSensorThread != null)
             bluetoothSensorThread.interrupt();
-        if (contestantSyncThread != null)
-            contestantSyncThread.interrupt();
-    }
-
-    protected void setSyncStatus(String status) {
-        this.syncStatus = status;
-        updateNotification();
-    }
-
-    protected void notifyDataChanged() {
-        sendBroadcast(notifyDataChangedIntent);
-    }
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public List<Contestant> getContestants() {
-        return contestants;
-    }
-
-    protected void updateContestants(ArrayList<Contestant> newContestants) {
-        boolean modified = false;
-        Collections.sort(newContestants);
-        for (Contestant contestant : newContestants) {
-            Contestant existingContestant = contestantMap.get(contestant.id);
-            if (existingContestant == null) {
-                contestants.add(contestant);
-                contestantMap.put(contestant.id, contestant);
-                modified = true;
-            } else {
-                if (existingContestant.update(contestant)) {
-                    modified = true;
-                }
-            }
-        }
-        if (modified) {
-            notifyDataChanged();
-        }
-    }
-
-    public void setEndTime(Contestant contestant, Long timestamp) {
-        if (contestant == null || contestant.dummy)
-            return;
-        if (timestamp == null)
-            return;
-
-        Date endTime = new Date(timestamp);
-        Update update = contestant.setEndTime(endTime);
-        addUpdate(update);
-    }
-
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void updateCategories(ArrayList<Category> newCategories) {
-        boolean modified = false;
-        Collections.sort(newCategories);
-        for (Category category : newCategories) {
-            Category existingCategory = categoryMap.get(category.id);
-            if (existingCategory == null) {
-                categories.add(category);
-                categoryMap.put(category.id, category);
-                modified = true;
-            } else {
-                if (existingCategory.update(category)) {
-                    modified = true;
-                }
-            }
-        }
-        if (modified) {
-            notifyDataChanged();
-        }
-    }
-
-    public void addUpdate(Update update) {
-        try {
-            pendingUpdates.put(update);
-        } catch (InterruptedException e) {
-        }
-        setSyncStatus(String.format("%d updates pending", pendingUpdates.size()));
-    }
-
-    public BlockingQueue<Update> getUpdates() {
-        return pendingUpdates;
     }
 
     public class LocalBinder extends Binder {

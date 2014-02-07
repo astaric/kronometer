@@ -40,7 +40,7 @@
             android:label="Settings" >
         </activity>
 
-        <service android:name="net.staric.kronometer.backend.KronometerService" />
+        <service android:name=".KronometerService" />
         <service android:name="net.staric.kronometer.sync.AuthenticatorService" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />

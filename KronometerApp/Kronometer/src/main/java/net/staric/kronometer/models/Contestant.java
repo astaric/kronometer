@@ -2,21 +2,15 @@ package net.staric.kronometer.models;
 
 import net.staric.kronometer.backend.ContestantBackend;
 import net.staric.kronometer.backend.EndTimeUpdate;
-import net.staric.kronometer.backend.KronometerService;
 import net.staric.kronometer.backend.StartTimeUpdate;
 import net.staric.kronometer.backend.Update;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 public class Contestant implements Comparable<Contestant> {

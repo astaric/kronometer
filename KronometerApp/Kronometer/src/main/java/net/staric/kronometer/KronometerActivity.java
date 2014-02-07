@@ -1,13 +1,7 @@
 package net.staric.kronometer;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.view.Menu;
-import android.view.MenuItem;
-
-import net.staric.kronometer.activities.ContestantActivity;
-import net.staric.kronometer.activities.SettingsActivity;
-import net.staric.kronometer.backend.KronometerService;
 
 
 public class KronometerActivity extends Activity {

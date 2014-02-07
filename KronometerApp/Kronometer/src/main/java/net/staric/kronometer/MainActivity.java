@@ -13,7 +13,6 @@ import android.view.WindowManager;
 
 import net.staric.kronometer.activities.ContestantActivity;
 import net.staric.kronometer.activities.SettingsActivity;
-import net.staric.kronometer.backend.KronometerService;
 
 public class MainActivity extends FragmentActivity {
     private static final String CURRENT_MODE = "current_mode";
