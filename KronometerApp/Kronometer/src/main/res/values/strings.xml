@@ -21,5 +21,6 @@
     <string name="action_share">Share</string>
     <string name="action_reply">Reply</string>
     <string name="buttonStart">Start</string>
+    <string name="generate_event_action">Generate event</string>
 
 </resources>

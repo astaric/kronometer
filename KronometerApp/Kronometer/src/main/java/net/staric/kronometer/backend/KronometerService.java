@@ -8,8 +8,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -19,9 +17,9 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.util.SparseArray;
 
+import net.staric.kronometer.FinishActivity;
 import net.staric.kronometer.KronometerContract;
 import net.staric.kronometer.R;
-import net.staric.kronometer.FinishActivity;
 import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
 import net.staric.kronometer.models.Event;
@@ -37,22 +35,19 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static net.staric.kronometer.KronometerContract.*;
+import static net.staric.kronometer.KronometerContract.SENSOR_EVENT_ACTION;
+import static net.staric.kronometer.KronometerContract.SENSOR_STATUS;
+import static net.staric.kronometer.KronometerContract.SENSOR_STATUS_CHANGED_ACTION;
+import static net.staric.kronometer.KronometerContract.SensorEvent;
 
 public class KronometerService extends Service {
     public static final String TAG = "KronometerService";
-
-    private boolean started = false;
-    int foregroundNotificationId = 47;
-
-    public class LocalBinder extends Binder {
-        public KronometerService getService() {
-            return KronometerService.this;
-        }
-    }
-
+    public static final String DATA_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
+    public static final String STATUS_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
     private final IBinder binder = new LocalBinder();
-
+    int foregroundNotificationId = 47;
+    BlockingQueue<Update> pendingUpdates = new LinkedBlockingQueue<Update>();
+    private boolean started = false;
     private Thread bluetoothSensorThread;
     private String sensorStatus = "";
     private BroadcastReceiver statusUpdateReceiver = new BroadcastReceiver() {
@@ -63,15 +58,24 @@ public class KronometerService extends Service {
             }
         }
     };
-
     private BroadcastReceiver sensorEventReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra(SensorEvent.TIMESTAMP)) {
-                storeEvent(intent.getLongExtra(SensorEvent.TIMESTAMP, 0));
+                Event.create(KronometerService.this, intent.getLongExtra(SensorEvent.TIMESTAMP, 0));
             }
         }
     };
+    private Intent notifyDataChangedIntent;
+    private Thread contestantSyncThread;
+    private String syncStatus = "";
+    private ArrayList<Event> events = new ArrayList<Event>();
+    private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
+
+    // Get rid of this
+    private SparseArray<Contestant> contestantMap = new SparseArray<Contestant>();
+    private ArrayList<Category> categories = new ArrayList<Category>();
+    private SparseArray<Category> categoryMap = new SparseArray<Category>();
 
     @Override
     public void onCreate() {
@@ -139,14 +143,6 @@ public class KronometerService extends Service {
         return mBuilder.build();
     }
 
-    public void storeEvent(long timestamp) {
-        Log.i(TAG, "Store event");
-        ContentResolver contentResolver = getContentResolver();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(SensorEvent.TIMESTAMP, timestamp);
-        contentResolver.insert(SensorEvent.CONTENT_URI, contentValues);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -159,48 +155,18 @@ public class KronometerService extends Service {
             contestantSyncThread.interrupt();
     }
 
-    // Get rid of this
-
-    public static final String DATA_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
-    public static final String STATUS_CHANGED_ACTION = "net.staric.kronometer.data_changed_broadcast";
-
-    private Intent notifyDataChangedIntent;
-
-
-    private Thread contestantSyncThread;
-    private String syncStatus = "";
-
     protected void setSyncStatus(String status) {
         this.syncStatus = status;
         updateNotification();
     }
 
-
-    public Event duplicateEvent(Event event) {
-        Event newEvent = new Event(event.getTime());
-        for (int i = 0; i < events.size(); i++) {
-            if (events.get(i) == event) {
-                events.add(i + 1, newEvent);
-                break;
-            }
-        }
-        return newEvent;
-    }
-
-
     protected void notifyDataChanged() {
         sendBroadcast(notifyDataChangedIntent);
     }
 
-
-    private ArrayList<Event> events = new ArrayList<Event>();
-
     public List<Event> getEvents() {
         return events;
     }
-
-    private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
-    private SparseArray<Contestant> contestantMap = new SparseArray<Contestant>();
 
     public List<Contestant> getContestants() {
         return contestants;
@@ -232,21 +198,10 @@ public class KronometerService extends Service {
         if (timestamp == null)
             return;
 
-        if (contestant.getEndTime() != null) {
-            for (Event event1 : events) {
-                if (event1.getContestant() == contestant) {
-                    event1.setContestant(null);
-                }
-            }
-        }
-
         Date endTime = new Date(timestamp);
         Update update = contestant.setEndTime(endTime);
         addUpdate(update);
     }
-
-    private ArrayList<Category> categories = new ArrayList<Category>();
-    private SparseArray<Category> categoryMap = new SparseArray<Category>();
 
     public List<Category> getCategories() {
         return categories;
@@ -272,8 +227,6 @@ public class KronometerService extends Service {
         }
     }
 
-    BlockingQueue<Update> pendingUpdates = new LinkedBlockingQueue<Update>();
-
     public void addUpdate(Update update) {
         try {
             pendingUpdates.put(update);
@@ -285,17 +238,20 @@ public class KronometerService extends Service {
     public BlockingQueue<Update> getUpdates() {
         return pendingUpdates;
     }
+
+    public class LocalBinder extends Binder {
+        public KronometerService getService() {
+            return KronometerService.this;
+        }
+    }
 }
 
 class BluetoothSensorThread extends Thread {
     private static final String TAG = "KronometerService.BluetoothSensorThread";
     private final UUID BLUETOOTH_SERIAL = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
+    ArrayBlockingQueue<Long> eventQueue;
     private Context context;
     private String deviceAddress;
-
-    ArrayBlockingQueue<Long> eventQueue;
-
     private InputStream inStream;
 
     public BluetoothSensorThread(Context context, String deviceAddress) {

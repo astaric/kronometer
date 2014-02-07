@@ -1,39 +1,35 @@
 package net.staric.kronometer.models;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.net.Uri;
+
+import net.staric.kronometer.KronometerContract;
+
 import java.util.Date;
+
+import static net.staric.kronometer.KronometerContract.SensorEvent;
 
 
 public class Event {
-    public Event(Date eventTime) {
-        time = eventTime;
-        contestant = null;
+    private final Context context;
+    private final Uri uri;
+
+    public Event(Context context, Long id) {
+        this.context = context;
+        this.uri = ContentUris.withAppendedId(SensorEvent.CONTENT_URI, id);
     }
 
-    private Date time;
-    public Date getTime() {
-        return time;
+    public static void create(Context context, Date date) {
+        create(context, date.getTime());
     }
 
-    private Contestant contestant;
-    public Contestant getContestant() {
-        return contestant;
-    }
-
-    public void setContestant(Contestant contestant) {
-        if (this.contestant != null && contestant != null)
-            throw new IllegalArgumentException("Event is already associated with a contestant.");
-        this.contestant = contestant;
-    }
-
-    private boolean selected;
-    public boolean isSelected() {
-        return selected;
-    }public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    @Override
-    public String toString() {
-        return time.toString();
+    public static void create(Context context, Long timestamp) {
+        ContentResolver contentResolver = context.getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SensorEvent.TIMESTAMP, timestamp);
+        contentResolver.insert(SensorEvent.CONTENT_URI, contentValues);
     }
 }

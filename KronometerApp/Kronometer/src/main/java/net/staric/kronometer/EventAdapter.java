@@ -11,26 +11,18 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import net.staric.kronometer.R;
-
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static net.staric.kronometer.KronometerContract.SensorEvent;
 
 
 public class EventAdapter extends SimpleCursorAdapter {
-
     private Context context;
     private int layoutResourceId;
     private Long selectedId = null;
 
-    public Long getSelectedId() {
-        return selectedId;
-    }
-
-    public void setSelectedId(Long id) {
-        selectedId = id;
-    }
+    private View.OnClickListener onMergeClickedListener = null;
 
     public EventAdapter(Context context) {
         this(context, R.layout.listitem_event, null,
@@ -42,6 +34,18 @@ public class EventAdapter extends SimpleCursorAdapter {
         super(context, layoutResourceId, cursor, fields, views, flags);
         this.context = context;
         this.layoutResourceId = layoutResourceId;
+    }
+
+    public Long getSelectedId() {
+        return selectedId;
+    }
+
+    public void setSelectedId(Long id) {
+        selectedId = id;
+    }
+
+    public void setOnMergeClickedListener(View.OnClickListener listener) {
+        onMergeClickedListener = listener;
     }
 
     @Override
@@ -66,6 +70,14 @@ public class EventAdapter extends SimpleCursorAdapter {
             holder.frame = (RelativeLayout) row.findViewById(R.id.frame);
             holder.txtEndTime = (TextView) row.findViewById(R.id.endTime);
             holder.btnMerge = (Button) row.findViewById(R.id.btnMerge);
+            holder.btnMerge.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onMergeClickedListener != null) {
+                        onMergeClickedListener.onClick(view);
+                    }
+                }
+            });
 
             row.setTag(holder);
         } else {
@@ -80,7 +92,8 @@ public class EventAdapter extends SimpleCursorAdapter {
             SimpleDateFormat outFmt = new SimpleDateFormat("HH:mm:ss.SSS");
             holder.txtEndTime.setText(outFmt.format(timestamp));
 
-            if (id == selectedId) {
+            holder.btnMerge.setTag(timestamp);
+            if (id.equals(selectedId)) {
                 holder.btnMerge.setVisibility(View.VISIBLE);
             } else {
                 holder.btnMerge.setVisibility(View.INVISIBLE);
