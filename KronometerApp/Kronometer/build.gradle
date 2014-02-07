@@ -9,15 +9,16 @@ buildscript {
 apply plugin: 'android'
 
 dependencies {
-    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:support-v4:18.0.0'
+    compile 'com.android.support:appcompat-v7:+'
 }
 
 android {
-    compileSdkVersion 17
-    buildToolsVersion "17.0.0"
+    compileSdkVersion 19
+    buildToolsVersion '19.0.1'
 
     defaultConfig {
         minSdkVersion 12
-        targetSdkVersion 16
+        targetSdkVersion 19
     }
 }
