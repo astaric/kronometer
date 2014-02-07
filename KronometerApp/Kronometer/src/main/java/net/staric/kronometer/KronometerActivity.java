@@ -18,27 +18,5 @@ public class KronometerActivity extends Activity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            case R.id.action_new_contestant:
-                intent = new Intent(this, ContestantActivity.class);
-                startActivities(new Intent[]{intent});
-                return true;
-            case R.id.action_select_mode:
-                startActivities(new Intent[]{new Intent(this, FinishActivity.class)});
-                return true;
-            case R.id.action_exit:
-                stopService(new Intent(this, KronometerService.class));
-                finish();
-                System.exit(0);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+
 }

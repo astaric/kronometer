@@ -19,6 +19,7 @@ import android.util.SparseArray;
 
 import net.staric.kronometer.FinishActivity;
 import net.staric.kronometer.KronometerContract;
+import net.staric.kronometer.MainActivity;
 import net.staric.kronometer.R;
 import net.staric.kronometer.models.Category;
 import net.staric.kronometer.models.Contestant;
@@ -127,7 +128,7 @@ public class KronometerService extends Service {
     }
 
     private Notification createNotification() {
-        Intent notificationIntent = new Intent(this, FinishActivity.class);
+        Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_stat_notify_biker)

@@ -5,9 +5,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 
-import net.staric.kronometer.KronometerContract;
-
 import java.util.Date;
+
+import static net.staric.kronometer.KronometerContract.Bikers;
 
 
 public class Biker {
@@ -15,8 +15,26 @@ public class Biker {
     private final Uri uri;
 
     public Biker(Context context, Long id) {
+        this(context, ContentUris.withAppendedId(Bikers.CONTENT_URI, id));
+    }
+
+    public Biker(Context context, Uri uri) {
         this.context = context;
-        this.uri = ContentUris.withAppendedId(KronometerContract.Bikers.CONTENT_URI, id);
+        this.uri = uri;
+    }
+
+    public static Biker create(Context context, Long id, String name, Long startTime,
+                               Long endTime) {
+        ContentValues contentValues = new ContentValues(4);
+        contentValues.put(Bikers._ID, id);
+        contentValues.put(Bikers.NAME, name);
+        if (startTime != null)
+            contentValues.put(Bikers.START_TIME, startTime);
+        if (endTime != null)
+            contentValues.put(Bikers.END_TIME, endTime);
+
+        return new Biker(context,
+                context.getContentResolver().insert(Bikers.CONTENT_URI, contentValues));
     }
 
     public void setEndTime(Date endTime) {
@@ -25,7 +43,7 @@ public class Biker {
 
     public void setEndTime(long timestamp) {
         ContentValues contentValues = new ContentValues(1);
-        contentValues.put(KronometerContract.Bikers.END_TIME, timestamp);
+        contentValues.put(Bikers.END_TIME, timestamp);
         context.getContentResolver().update(uri, contentValues, null, null);
     }
 }
