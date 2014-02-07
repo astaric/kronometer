@@ -22,5 +22,6 @@
     <string name="action_reply">Reply</string>
     <string name="buttonStart">Start</string>
     <string name="generate_event_action">Generate event</string>
+    <string name="start_action">Start</string>
 
 </resources>
