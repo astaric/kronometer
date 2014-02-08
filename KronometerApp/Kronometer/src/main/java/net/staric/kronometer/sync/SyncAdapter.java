@@ -72,7 +72,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         getContestants();
     }
 
-    private void getContestants() {
+    protected void getContestants() {
         HttpClient httpClient = new DefaultHttpClient();
         int created = 0;
         int updated = 0;
@@ -88,8 +88,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 JSONObject fields = jsonObject.getJSONObject("fields");
 
                 int id = fields.getInt("number");
-                String name = fields.getString("name");
-                String surname = fields.getString("surname");
+                String name = fields.getString("name") + " " + fields.getString("surname");
                 Long startTime = parseDate(fields.getString("start_time"));
                 Long endTime = parseDate(fields.getString("end_time"));
 
@@ -97,17 +96,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 Cursor cursor = contentResolver.query(contestantUri,
                         new String[]{}, "", new String[]{}, "");
                 if (cursor != null && cursor.moveToFirst()) {
+                    String db_name = cursor.getString(cursor.getColumnIndex(Bikers.NAME));
+                    Long db_startTime = cursor.getLong(cursor.getColumnIndex(Bikers.START_TIME));
+                    Long db_endTime = cursor.getLong(cursor.getColumnIndex(Bikers.END_TIME));
+
                     ContentValues contentValues = new ContentValues(0);
-                    if (!cursor.getString(cursor.getColumnIndex(Bikers.NAME))
-                            .equals(name + " " + surname)) {
-                        contentValues.put(Bikers.NAME, name + " " + surname);
+                    if ((db_name != null) && !db_name.equals(name)) {
+                        contentValues.put(Bikers.NAME, name);
                     }
-                    if (cursor.getLong(cursor.getColumnIndex(Bikers.START_TIME))
-                            < (long) startTime) {
+                    if (((startTime != null) && (db_startTime < startTime))) {
                         contentValues.put(Bikers.START_TIME, startTime);
                     }
-                    if (cursor.getLong(cursor.getColumnIndex(Bikers.END_TIME))
-                            < (long) endTime) {
+                    if (((endTime != null) && (db_endTime < endTime))
+                            ) {
                         contentValues.put(Bikers.END_TIME, endTime);
                     }
 
@@ -119,7 +120,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     created += 1;
                     ContentValues contentValues = new ContentValues(4);
                     contentValues.put(Bikers._ID, id);
-                    contentValues.put(Bikers.NAME, name + " " + surname);
+                    contentValues.put(Bikers.NAME, name);
                     contentValues.put(Bikers.START_TIME, startTime);
                     contentValues.put(Bikers.END_TIME, endTime);
                     contentResolver.insert(Bikers.CONTENT_URI, contentValues);
@@ -137,7 +138,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    private String readResponse(HttpResponse response) throws IOException {
+    protected String readResponse(HttpResponse response) throws IOException {
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -155,31 +156,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 try {
                     in.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
     }
 
-    private static long parseDate(String dateString) {
+    protected static Long parseDate(String dateString) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss.SSS'Z'");
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
             return format.parse(dateString).getTime();
         } catch (ParseException e) {
-            return 0;
+            return null;
         }
-    }
-}
-
-abstract class Deserializer<T> {
-    abstract T fromJson(JSONObject jsonObject);
-
-    ArrayList<T> deserialize(String jsonEncodedObject) throws JSONException {
-        JSONArray jsonArray = new JSONArray(jsonEncodedObject);
-        ArrayList<T> deserializedArray = new ArrayList<T>(jsonArray.length());
-        for (int i = 0; i < jsonArray.length(); i++) {
-            deserializedArray.add((T) fromJson(jsonArray.getJSONObject(i)));
-        }
-        return deserializedArray;
     }
 }
