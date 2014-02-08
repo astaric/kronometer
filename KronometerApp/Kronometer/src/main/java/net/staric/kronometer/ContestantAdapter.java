@@ -98,7 +98,7 @@ abstract class ContestantAdapter extends SimpleCursorAdapter {
 
     @Override
     public Cursor swapCursor(Cursor c) {
-        if (c != null && addPlaceholder) {
+        if (c != null && c.getCount() > 0 && addPlaceholder) {
             MatrixCursor matrixCursor = new MatrixCursor(fields);
             matrixCursor.addRow(emptyRow());
 
