@@ -1,5 +1,6 @@
 package net.staric.kronometer;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,15 +12,15 @@ import static net.staric.kronometer.KronometerContract.Bikers;
 
 
 public class Contestant {
-    private final Context context;
     private final Uri uri;
+    private final ContentResolver contentResolver;
 
     public Contestant(Context context, Long id) {
         this(context, ContentUris.withAppendedId(Bikers.CONTENT_URI, id));
     }
 
     public Contestant(Context context, Uri uri) {
-        this.context = context;
+        this.contentResolver = context.getContentResolver();
         this.uri = uri;
     }
 
@@ -44,7 +45,7 @@ public class Contestant {
     public void setEndTime(long timestamp) {
         ContentValues contentValues = new ContentValues(1);
         contentValues.put(Bikers.END_TIME, timestamp);
-        context.getContentResolver().update(uri, contentValues, null, null);
+        contentResolver.update(uri, contentValues, null, null);
     }
 
     public void setFinishTime(Date date) {
@@ -54,12 +55,12 @@ public class Contestant {
     public void setFinishTime(Long timestamp) {
         ContentValues contentValues = new ContentValues(1);
         contentValues.put(Bikers.ON_FINISH, timestamp);
-        context.getContentResolver().update(uri, contentValues, null, null);
+        contentResolver.update(uri, contentValues, null, null);
     }
 
     public void setStartTime(Long startTime) {
         ContentValues contentValues = new ContentValues(1);
         contentValues.put(KronometerContract.Bikers.START_TIME, startTime);
-        context.getContentResolver().update(uri, contentValues, null, null);
+        contentResolver.update(uri, contentValues, null, null);
     }
 }
