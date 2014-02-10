@@ -45,13 +45,13 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_finish, container, false);
 
         contestantsListView = (ListView) view.findViewById(R.id.contestants);
         contestantsAdapter = new StartContestantAdapter(getActivity(), false, false);
         contestantsListView.setAdapter(contestantsAdapter);
         contestantsListView.setKeepScreenOn(true);
+        contestantsListView.setOnItemClickListener(onContestantClicked);
 
         contestantsOnFinishSpinner = (Spinner) view.findViewById(R.id.contestantsOnFinish);
         contestantsOnFinishAdapter = new FinishContestantAdapter(getActivity(), true, true);
@@ -60,7 +60,7 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
         sensorEventsListView = (ListView) view.findViewById(R.id.sensorEvents);
         sensorEventsAdapter = new EventAdapter(getActivity());
         sensorEventsListView.setAdapter(sensorEventsAdapter);
-        sensorEventsListView.setOnItemClickListener(onContestantClicked);
+        sensorEventsListView.setOnItemClickListener(onEventSelected);
         sensorEventsAdapter.setOnMergeClickedListener(onMergeClicked);
 
         generateEventButton = (Button) view.findViewById(R.id.generateEvent);
@@ -148,7 +148,7 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
 
-    private AdapterView.OnItemClickListener onContestantClicked =
+    private AdapterView.OnItemClickListener onEventSelected =
             new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -184,6 +184,14 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
         @Override
         public void onClick(View view) {
             Event.create(getActivity(), new Date());
+        }
+    };
+
+    private AdapterView.OnItemClickListener onContestantClicked = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i,
+                                long contestantId) {
+            new Contestant(getActivity(), contestantId).setFinishTime(new Date());
         }
     };
 }
