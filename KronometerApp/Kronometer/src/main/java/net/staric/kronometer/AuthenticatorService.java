@@ -1,4 +1,4 @@
-package net.staric.kronometer.sync;
+package net.staric.kronometer;
 
 import android.app.Service;
 import android.content.Intent;

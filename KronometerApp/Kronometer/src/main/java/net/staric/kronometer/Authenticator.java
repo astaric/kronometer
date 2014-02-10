@@ -1,4 +1,4 @@
-package net.staric.kronometer.sync;
+package net.staric.kronometer;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;

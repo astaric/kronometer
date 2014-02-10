@@ -41,7 +41,7 @@
         </activity>
 
         <service android:name=".KronometerService" />
-        <service android:name="net.staric.kronometer.sync.AuthenticatorService" >
+        <service android:name=".AuthenticatorService" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -51,7 +51,7 @@
                 android:resource="@xml/authenticator" />
         </service>
         <service
-            android:name="net.staric.kronometer.sync.SyncService"
+            android:name=".SyncService"
             android:exported="true"
             android:process=":sync" >
             <intent-filter>
