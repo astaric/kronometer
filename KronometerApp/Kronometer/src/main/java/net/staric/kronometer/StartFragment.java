@@ -1,10 +1,11 @@
 package net.staric.kronometer;
 
 
-import android.content.ContentUris;
-import android.content.ContentValues;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -21,6 +22,8 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static net.staric.kronometer.KronometerContract.SensorEvent;
+
 
 public class StartFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String NEXT_START_TIME = "next_start";
@@ -33,6 +36,18 @@ public class StartFragment extends Fragment implements LoaderManager.LoaderCallb
 
     private Date nextStart = new Date();
     private Timer countdownRefreshTimer;
+
+    private BroadcastReceiver sensorEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra(SensorEvent.TIMESTAMP)) {
+                long timestamp = intent.getLongExtra(SensorEvent.TIMESTAMP, 0);
+                if (nextStart.getTime() - timestamp < 5) {
+                    setStartTime(timestamp);
+                }
+            }
+        }
+    };
 
     public StartFragment() {
     }
@@ -52,12 +67,7 @@ public class StartFragment extends Fragment implements LoaderManager.LoaderCallb
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long timestamp = new Date().getTime();
-                long contestantId = contestants.getSelectedItemId();
-
-                setStartTime(contestantId, timestamp);
-                resetCountdown();
-                selectNextContestant();
+                setStartTime(new Date().getTime());
             }
         });
 
@@ -71,6 +81,8 @@ public class StartFragment extends Fragment implements LoaderManager.LoaderCallb
 
         if (savedInstanceState != null) {
             nextStart = new Date(savedInstanceState.getLong(NEXT_START_TIME));
+        } else {
+            resetCountdown();
         }
     }
 
@@ -86,6 +98,8 @@ public class StartFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onResume();
 
         startRefreshingCountdown();
+        getActivity().registerReceiver(sensorEventReceiver,
+                new IntentFilter(KronometerContract.SENSOR_EVENT_ACTION));
     }
 
     @Override
@@ -93,13 +107,21 @@ public class StartFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onPause();
 
         stopRefreshingCountdown();
+        getActivity().unregisterReceiver(sensorEventReceiver);
     }
 
-    private void setStartTime(long contestantId, Long startTime) {
-        Uri uri = ContentUris.withAppendedId(KronometerContract.Bikers.CONTENT_URI, contestantId);
-        ContentValues contentValues = new ContentValues(1);
-        contentValues.put(KronometerContract.Bikers.START_TIME, startTime);
-        getActivity().getContentResolver().update(uri, contentValues, null, null);
+
+    private void setStartTime(long timestamp) {
+        setStartTime(contestants.getSelectedItemId(), timestamp);
+    }
+
+    private void setStartTime(long contestantId, long startTime) {
+        if (contestantId == 0 || startTime == 0)
+            return;
+
+        new Contestant(getActivity(), contestantId).setStartTime(startTime);
+        resetCountdown();
+        selectNextContestant();
     }
 
     private void selectNextContestant() {
