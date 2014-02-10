@@ -20,8 +20,6 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import net.staric.kronometer.models.Event;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;

@@ -16,9 +16,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import net.staric.kronometer.models.Biker;
-import net.staric.kronometer.models.Event;
-
 import java.util.Date;
 
 
@@ -163,7 +160,7 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
             Long contestantId = contestantsOnFinishSpinner.getSelectedItemId();
             Long timestamp = (Long) view.getTag();
             if (contestantId != 0 && timestamp != null) {
-                new Biker(getActivity(), contestantId).setEndTime(timestamp);
+                new Contestant(getActivity(), contestantId).setEndTime(timestamp);
                 hideOldEvents();
                 selectNextContestant();
             }

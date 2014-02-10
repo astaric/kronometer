@@ -1,4 +1,4 @@
-package net.staric.kronometer.models;
+package net.staric.kronometer;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
