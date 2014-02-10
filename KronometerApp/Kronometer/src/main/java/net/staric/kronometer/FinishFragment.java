@@ -35,6 +35,7 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
     private EventAdapter sensorEventsAdapter;
 
     private Long displayFromId = null;
+    private Button generateEventButton;
 
     public FinishFragment() {
         // Required empty public constructor
@@ -59,15 +60,16 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
         sensorEventsListView = (ListView) view.findViewById(R.id.sensorEvents);
         sensorEventsAdapter = new EventAdapter(getActivity());
         sensorEventsListView.setAdapter(sensorEventsAdapter);
-        sensorEventsListView.setOnItemClickListener(new OnContestantClicked());
-        sensorEventsAdapter.setOnMergeClickedListener(new OnMergeClicked());
+        sensorEventsListView.setOnItemClickListener(onContestantClicked);
+        sensorEventsAdapter.setOnMergeClickedListener(onMergeClicked);
 
-        Button generateEventButton = (Button) view.findViewById(R.id.generateEvent);
-        generateEventButton.setOnClickListener(new OnGenerateEventClicked());
+        generateEventButton = (Button) view.findViewById(R.id.generateEvent);
+        generateEventButton.setOnClickListener(onGenerateEventClicked);
 
-        getLoaderManager().initLoader(CONTESTANTS_LOADER, null, this);
-        getLoaderManager().initLoader(CONTESTANTS_ON_FINISH_LOADER, null, this);
-        getLoaderManager().initLoader(SENSOR_EVENTS_LOADER, null, this);
+        LoaderManager loaderManager = getLoaderManager();
+        loaderManager.initLoader(CONTESTANTS_LOADER, null, this);
+        loaderManager.initLoader(CONTESTANTS_ON_FINISH_LOADER, null, this);
+        loaderManager.initLoader(SENSOR_EVENTS_LOADER, null, this);
 
         return view;
     }
@@ -146,15 +148,16 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
 
-    private class OnContestantClicked implements AdapterView.OnItemClickListener {
+    private AdapterView.OnItemClickListener onContestantClicked =
+            new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             sensorEventsAdapter.setSelectedId(id);
             sensorEventsAdapter.notifyDataSetChanged();
         }
-    }
+    };
 
-    private class OnMergeClicked implements View.OnClickListener {
+    private View.OnClickListener onMergeClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Long contestantId = contestantsOnFinishSpinner.getSelectedItemId();
@@ -175,14 +178,12 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
             if (contestantsOnFinishAdapter.getCount() > contestantsOnFinishSpinner.getSelectedItemPosition() + 1)
                 contestantsOnFinishSpinner.setSelection(contestantsOnFinishSpinner.getSelectedItemPosition() + 1);
         }
+    };
 
-
-    }
-
-    private class OnGenerateEventClicked implements View.OnClickListener {
+    private View.OnClickListener onGenerateEventClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Event.create(getActivity(), new Date());
         }
-    }
+    };
 }
