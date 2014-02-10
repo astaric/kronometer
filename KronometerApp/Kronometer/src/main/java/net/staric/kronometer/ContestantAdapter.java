@@ -1,6 +1,5 @@
 package net.staric.kronometer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -20,18 +19,25 @@ import static net.staric.kronometer.KronometerContract.Bikers;
 
 abstract class ContestantAdapter extends SimpleCursorAdapter {
 
+    private final LayoutInflater inflater;
     protected boolean highlight = true;
     protected boolean addPlaceholder = false;
     protected Context context;
     protected int layoutResourceId;
     protected final String[] fields;
+    private final Resources resources;
 
-    public ContestantAdapter(Context context, int layoutResourceId, Cursor cursor,
-                             String[] fields, int[] views, int flags) {
-        super(context, layoutResourceId, cursor, fields, views, flags);
+    public ContestantAdapter(Context context, boolean highlight, boolean addPlaceholder) {
+        super(context, R.layout.listitem_contestant, null, Bikers.PROJECTION_ALL, new int[0], 0);
+
         this.context = context;
-        this.layoutResourceId = layoutResourceId;
-        this.fields = fields;
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.resources = context.getResources();
+
+        this.layoutResourceId = R.layout.listitem_contestant;
+        this.fields = Bikers.PROJECTION_ALL;
+        this.addPlaceholder = addPlaceholder;
+        this.highlight = highlight;
     }
 
     @Override
@@ -49,7 +55,6 @@ abstract class ContestantAdapter extends SimpleCursorAdapter {
         ContestantHolder holder = null;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new ContestantHolder();
@@ -77,7 +82,6 @@ abstract class ContestantAdapter extends SimpleCursorAdapter {
             holder.txtExtra.setText(getExtra(cursor));
         }
 
-        Resources resources = context.getResources();
         if (validContestant && highlight && isSelected(cursor)) {
             holder.frame.setBackgroundColor(resources.getColor(android.R.color.background_light));
             holder.txtId.setTextColor(resources.getColor(android.R.color.primary_text_light));
@@ -126,10 +130,7 @@ abstract class ContestantAdapter extends SimpleCursorAdapter {
 class StartContestantAdapter extends ContestantAdapter {
 
     public StartContestantAdapter(Context context, boolean highlight, boolean addPlaceholder) {
-        super(context, R.layout.listitem_contestant, null, Bikers.PROJECTION_ALL,
-                new int[0], 0);
-        this.addPlaceholder = addPlaceholder;
-        this.highlight = highlight;
+        super(context, highlight, addPlaceholder);
     }
 
     @Override
@@ -150,10 +151,9 @@ class StartContestantAdapter extends ContestantAdapter {
 }
 
 class FinishContestantAdapter extends ContestantAdapter {
+
     public FinishContestantAdapter(Context context, boolean highlight, boolean addPlaceholder) {
-        super(context, R.layout.listitem_contestant, null, Bikers.PROJECTION_ALL, new int[0], 0);
-        this.addPlaceholder = addPlaceholder;
-        this.highlight = highlight;
+        super(context, highlight, addPlaceholder);
     }
 
     @Override
