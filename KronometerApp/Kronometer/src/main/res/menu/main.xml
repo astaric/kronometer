@@ -3,10 +3,6 @@
         android:title="Select Mode"
         android:orderInCategory="200"
         android:showAsAction="never" />
-    <item android:id="@+id/action_new_contestant"
-          android:title="New contestant"
-          android:orderInCategory="300"
-          android:showAsAction="never" />
     <item android:id="@+id/action_show_all_events"
         android:title="Show hidden events"
         android:orderInCategory="500"

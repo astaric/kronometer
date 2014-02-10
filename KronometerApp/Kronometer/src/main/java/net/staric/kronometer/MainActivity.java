@@ -11,8 +11,6 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
-import net.staric.kronometer.activities.ContestantActivity;
-import net.staric.kronometer.activities.SettingsActivity;
 
 public class MainActivity extends FragmentActivity {
     private static final String CURRENT_MODE = "current_mode";
@@ -65,13 +63,6 @@ public class MainActivity extends FragmentActivity {
         switch (item.getItemId()) {
             case R.id.action_select_mode:
                 showSelectModeDialog();
-                return true;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            case R.id.action_new_contestant:
-                intent = new Intent(this, ContestantActivity.class);
-                startActivities(new Intent[]{intent});
                 return true;
             case R.id.action_exit:
                 stopService(new Intent(this, KronometerService.class));
