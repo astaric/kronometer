@@ -24,8 +24,24 @@ def biker_list(request):
     return HttpResponse(serializers.serialize("json", Biker.objects.all()),
                         mimetype="application/json")
 
+
 def biker_update(request):
-    return HttpResponseNotFound()
+    params = request.POST if request.method == 'POST' else request.GET
+    number = params.get('number')
+
+    biker = Biker.objects.get(number=number)
+
+    if "start_time" in params:
+        start_time = float(params.get("start_time")) / 1000
+        biker.start_time = datetime.fromtimestamp(start_time)
+
+    if "end_time" in params:
+        end_time = float(params.get("end_time")) / 1000
+        biker.end_time = datetime.fromtimestamp(end_time)
+
+    biker.save()
+    return HttpResponse()
+
 
 def biker_create(request):
     params = request.POST if request.method == 'POST' else request.GET
