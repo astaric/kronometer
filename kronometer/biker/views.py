@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 
 from django.core import serializers
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 
 from kronometer.biker.models import Biker, Category
@@ -24,6 +24,8 @@ def biker_list(request):
     return HttpResponse(serializers.serialize("json", Biker.objects.all()),
                         mimetype="application/json")
 
+def biker_update(request):
+    return HttpResponseNotFound()
 
 def biker_create(request):
     params = request.POST if request.method == 'POST' else request.GET
