@@ -4,7 +4,7 @@ from django.db import models
 class Category(models.Model):
     name = models.TextField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -34,5 +34,5 @@ class Biker(models.Model):
         else:
             return "Nerazporejeni"
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s %s' % (self.number, self.name, self.surname)

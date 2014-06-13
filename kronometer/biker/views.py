@@ -46,7 +46,6 @@ def biker_create(request):
         return HttpResponse(json.dumps({"error": str(e)}), status=500)
 
 
-
 def set_start_time(request):
     number = request.POST.get('number') or request.GET.get('number')
     start_time = request.POST.get('start_time') or request.GET.get('start_time')
