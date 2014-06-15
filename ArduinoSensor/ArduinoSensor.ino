@@ -2,7 +2,9 @@ void setup() {
   Serial.begin(9600);
   delay(100);
   pinMode(2, INPUT_PULLUP);
+  pinMode(13, OUTPUT);
   attachInterrupt(0, interruptHandler, FALLING);
+  digitalWrite(13, HIGH);
 }
 
 long lastEventTime = 0;
