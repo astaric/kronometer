@@ -65,5 +65,13 @@ class BikerChangeLog(models.Model):
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
 
+    @property
+    def detail_start_time(self):
+        return str(self.start_time)
+
+    @property
+    def detail_end_time(self):
+        return str(self.end_time)
+
     def __str__(self):
         return str(self.change_time)

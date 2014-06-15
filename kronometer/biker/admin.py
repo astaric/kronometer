@@ -6,7 +6,8 @@ from kronometer.biker.models import Biker, Category, BikerChangeLog
 
 class ChangeLogInline(TabularInline):
     model = BikerChangeLog
-    readonly_fields = ['change_time', 'start_time', 'end_time']
+    fields = ['change_time', 'detail_start_time', 'detail_end_time']
+    readonly_fields = fields
     extra = 0
 
     def has_add_permission(self, request):
