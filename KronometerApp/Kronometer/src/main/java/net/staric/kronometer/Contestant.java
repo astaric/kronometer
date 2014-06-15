@@ -176,10 +176,10 @@ public class Contestant {
     public List<NameValuePair> toListOfNameValuePairs() {
         List<NameValuePair> params = new ArrayList<NameValuePair>(3);
         params.add(new BasicNameValuePair("number", "" + id));
-        if (startTime != null) {
+        if (startTime != null && startTime != 0) {
             params.add(new BasicNameValuePair("start_time", "" + startTime));
         }
-        if (endTime != null) {
+        if (endTime != null && endTime != 0) {
             params.add(new BasicNameValuePair("end_time", "" + endTime));
         }
         return params;

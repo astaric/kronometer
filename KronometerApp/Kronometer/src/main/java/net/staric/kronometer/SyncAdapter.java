@@ -86,7 +86,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 contestant.markUploaded();
             }
         }
-        cursor.close();
+        if (cursor != null)
+            cursor.close();
     }
 
     private boolean uploadContestant(Contestant contestant) {
@@ -139,7 +140,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
                     receivedContestant.insert();
                 }
-                cursor.close();
+                if (cursor != null)
+                    cursor.close();
             }
             Log.i(TAG, "Created " + created + " , updated " + updated + " contestants.");
         } catch (URISyntaxException e) {
