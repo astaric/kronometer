@@ -33,13 +33,12 @@ def biker_update(request):
 
     if "start_time" in params:
         start_time = float(params.get("start_time")) / 1000
-        biker.start_time = datetime.fromtimestamp(start_time)
+        biker.set_start_time(start_time)
 
     if "end_time" in params:
         end_time = float(params.get("end_time")) / 1000
-        biker.end_time = datetime.fromtimestamp(end_time)
+        biker.set_end_time(end_time)
 
-    biker.save()
     return HttpResponse()
 
 
