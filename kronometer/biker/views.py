@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 
 from django.core import serializers
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from kronometer.biker.models import Biker, Category
@@ -65,26 +65,24 @@ def biker_create(request):
 
 
 def set_start_time(request):
-    number = request.POST.get('number') or request.GET.get('number')
-    start_time = request.POST.get('start_time') or request.GET.get('start_time')
-    start_time = float(start_time) / 1000
-    start_time = datetime.fromtimestamp(start_time)
+    params = request.POST if request.method == 'POST' else request.GET
+    number = params.get('number')
+    start_time = float(params.get('start_time')) / 1000
 
     biker = Biker.objects.get(number=number)
-    biker.start_time = start_time
-    biker.save()
+    biker.set_start_time(start_time)
 
     return HttpResponse(serializers.serialize("json", [biker]),
                         mimetype="application/json")
 
 
 def set_end_time(request):
-    number = request.POST.get('number') or request.GET.get('number')
-    end_time = request.POST.get('end_time') or request.GET.get('start_time')
-    end_time = float(end_time) / 1000
-    end_time = datetime.fromtimestamp(end_time)
+    params = request.POST if request.method == 'POST' else request.GET
+    number = params.get('number')
+    end_time = float(params.get('end_time')) / 1000
 
     biker = Biker.objects.get(number=number)
+    biker.set_end_time(end_time)
     biker.end_time = end_time
     biker.save()
 
