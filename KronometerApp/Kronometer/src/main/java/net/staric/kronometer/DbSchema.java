@@ -24,7 +24,8 @@ import android.provider.BaseColumns;
                     "surname      TEXT, \n" +
                     "start_time   INTEGER, \n" +
                     "on_finish    INTEGER, \n" +
-                    "end_time     INTEGER \n" +
+                    "end_time     INTEGER, \n" +
+                    "uploaded     INTEGER \n" +
                     ")";
     String DDL_CREATE_TBL_SENSOR_EVENTS =
             "CREATE TABLE sensor_events (" +

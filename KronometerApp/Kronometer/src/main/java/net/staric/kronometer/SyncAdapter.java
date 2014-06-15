@@ -5,7 +5,6 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
@@ -14,13 +13,16 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +31,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import static net.staric.kronometer.KronometerContract.Bikers;
@@ -42,6 +44,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     private static String getBikerListEndpoint() {
         return SERVER_ENDPOINT + "biker/list";
     }
+    private static String getUpdateBikerEndpoint() { return SERVER_ENDPOINT + "biker/update"; }
 
     ContentResolver contentResolver;
 
@@ -58,7 +61,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             boolean autoInitialize,
             boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
-        contentResolver = context.getContentResolver();
+        this.contentResolver = context.getContentResolver();
     }
 
     @Override
@@ -69,10 +72,44 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             ContentProviderClient contentProviderClient,
             SyncResult syncResult) {
         Log.i(TAG, "Performing sync");
-        getContestants();
+        uploadPendingChanges();
+        syncContestants();
     }
 
-    protected void getContestants() {
+    private void uploadPendingChanges() {
+        String selection = "(" + Bikers.UPLOADED + " = 0)";
+        Cursor cursor = contentResolver.query(Bikers.CONTENT_URI, null, selection, null, null);
+        while (cursor != null && cursor.moveToNext()) {
+            Contestant contestant = Contestant.fromCursor(getContext(), cursor);
+
+            if (uploadContestant(contestant)) {
+                contestant.markUploaded();
+            }
+        }
+        cursor.close();
+    }
+
+    private boolean uploadContestant(Contestant contestant) {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(getUpdateBikerEndpoint());
+        try {
+            List<NameValuePair> nameValuePairs = contestant.toListOfNameValuePairs();
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+            HttpResponse response = httpclient.execute(httppost);
+            if (response.getStatusLine().getStatusCode() == 200) {
+                Log.i(TAG, String.format("Uploaded contestant %s", contestant.name));
+                return true;
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, String.format("Error uploading contestant %s", contestant.name));
+        return false;
+    }
+
+    protected void syncContestants() {
         HttpClient httpClient = new DefaultHttpClient();
         int created = 0;
         int updated = 0;
@@ -84,47 +121,25 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String response = readResponse(httpClient.execute(request));
             JSONArray jsonArray = new JSONArray(response);
             for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                JSONObject fields = jsonObject.getJSONObject("fields");
+                Contestant receivedContestant = Contestant.fromJSON(getContext(),
+                                                                    jsonArray.getJSONObject(i));
 
-                int id = fields.getInt("number");
-                String name = fields.getString("name") + " " + fields.getString("surname");
-                Long startTime = parseDate(fields.getString("start_time"));
-                Long endTime = parseDate(fields.getString("end_time"));
-
-                Uri contestantUri = ContentUris.withAppendedId(Bikers.CONTENT_URI, id);
+                Uri contestantUri = ContentUris.withAppendedId(Bikers.CONTENT_URI,
+                        receivedContestant.id);
                 Cursor cursor = contentResolver.query(contestantUri,
                         new String[]{}, "", new String[]{}, "");
                 if (cursor != null && cursor.moveToFirst()) {
-                    String db_name = cursor.getString(cursor.getColumnIndex(Bikers.NAME));
-                    Long db_startTime = cursor.getLong(cursor.getColumnIndex(Bikers.START_TIME));
-                    Long db_endTime = cursor.getLong(cursor.getColumnIndex(Bikers.END_TIME));
+                    Contestant dbContestant = Contestant.fromCursor(getContext(), cursor);
 
-                    ContentValues contentValues = new ContentValues(0);
-                    if ((db_name != null) && !db_name.equals(name)) {
-                        contentValues.put(Bikers.NAME, name);
-                    }
-                    if (((startTime != null) && (db_startTime < startTime))) {
-                        contentValues.put(Bikers.START_TIME, startTime);
-                    }
-                    if (((endTime != null) && (db_endTime < endTime))
-                            ) {
-                        contentValues.put(Bikers.END_TIME, endTime);
-                    }
-
-                    if (contentValues.size() > 0) {
+                    if (dbContestant.mergeWith(receivedContestant)) {
                         updated += 1;
-                        contentResolver.update(contestantUri, contentValues, null, null);
                     }
                 } else {
                     created += 1;
-                    ContentValues contentValues = new ContentValues(4);
-                    contentValues.put(Bikers._ID, id);
-                    contentValues.put(Bikers.NAME, name);
-                    contentValues.put(Bikers.START_TIME, startTime);
-                    contentValues.put(Bikers.END_TIME, endTime);
-                    contentResolver.insert(Bikers.CONTENT_URI, contentValues);
+
+                    receivedContestant.insert();
                 }
+                cursor.close();
             }
             Log.i(TAG, "Created " + created + " , updated " + updated + " contestants.");
         } catch (URISyntaxException e) {

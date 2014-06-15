@@ -48,13 +48,13 @@ public class FinishFragment extends Fragment implements LoaderManager.LoaderCall
         View view = inflater.inflate(R.layout.fragment_finish, container, false);
 
         contestantsListView = (ListView) view.findViewById(R.id.contestants);
-        contestantsAdapter = new StartContestantAdapter(getActivity(), false, false);
+        contestantsAdapter = new ContestantAdapterStart(getActivity(), false, false);
         contestantsListView.setAdapter(contestantsAdapter);
         contestantsListView.setKeepScreenOn(true);
         contestantsListView.setOnItemClickListener(onContestantClicked);
 
         contestantsOnFinishSpinner = (Spinner) view.findViewById(R.id.contestantsOnFinish);
-        contestantsOnFinishAdapter = new FinishContestantAdapter(getActivity(), true, true);
+        contestantsOnFinishAdapter = new ContestantAdapterFinish(getActivity(), true, true);
         contestantsOnFinishSpinner.setAdapter(contestantsOnFinishAdapter);
 
         sensorEventsListView = (ListView) view.findViewById(R.id.sensorEvents);

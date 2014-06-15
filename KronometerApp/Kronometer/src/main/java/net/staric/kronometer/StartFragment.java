@@ -42,7 +42,7 @@ public class StartFragment extends Fragment implements LoaderManager.LoaderCallb
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra(SensorEvent.TIMESTAMP)) {
                 long timestamp = intent.getLongExtra(SensorEvent.TIMESTAMP, 0);
-                if (nextStart.getTime() - timestamp < 5) {
+                if (nextStart.getTime() - timestamp < 5000) {
                     setStartTime(timestamp);
                 }
             }
@@ -59,7 +59,7 @@ public class StartFragment extends Fragment implements LoaderManager.LoaderCallb
         contestants = (Spinner) view.findViewById(R.id.contestants);
         countdown = (TextView) view.findViewById(R.id.countdown);
 
-        contestantsAdapter = new StartContestantAdapter(getActivity(), true, true);
+        contestantsAdapter = new ContestantAdapterStart(getActivity(), true, true);
         contestants.setAdapter(contestantsAdapter);
         contestants.setKeepScreenOn(true);
 

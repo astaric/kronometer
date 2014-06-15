@@ -3,6 +3,10 @@
         android:title="Select Mode"
         android:orderInCategory="200"
         android:showAsAction="never" />
+    <item android:id="@+id/action_select_sensor"
+          android:title="Select Sensor"
+          android:orderInCategory="250"
+          android:showAsAction="never" />
     <item android:id="@+id/action_show_all_events"
         android:title="Show hidden events"
         android:orderInCategory="500"
@@ -11,8 +15,12 @@
         android:title="@string/action_settings"
         android:orderInCategory="600"
         android:showAsAction="never" />
+    <item android:id="@+id/action_reset"
+          android:title="Reset"
+          android:orderInCategory="700"
+          android:showAsAction="never" />
     <item android:id="@+id/action_exit"
         android:title="Exit"
-        android:orderInCategory="700"
+        android:orderInCategory="800"
         android:showAsAction="never" />
 </menu>

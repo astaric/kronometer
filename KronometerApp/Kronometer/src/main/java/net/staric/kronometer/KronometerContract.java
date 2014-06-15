@@ -21,6 +21,7 @@ public final class KronometerContract {
         public static final String START_TIME = "start_time";
         public static final String ON_FINISH = "on_finish";
         public static final String END_TIME = "end_time";
+        public static final String UPLOADED = "uploaded";
 
         public static final Uri CONTENT_URI =
                 Uri.withAppendedPath(KronometerContract.CONTENT_URI, "bikers");
