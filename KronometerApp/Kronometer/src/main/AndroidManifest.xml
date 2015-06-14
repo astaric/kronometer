@@ -28,19 +28,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="net.staric.kronometer.activities.ContestantActivity"
-            android:label="New Contestant"
-            android:parentActivityName="net.staric.kronometer.StartActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.staric.kronometer.activities.StartActivity" />
-        </activity>
-        <activity
-            android:name="net.staric.kronometer.activities.SettingsActivity"
-            android:label="Settings" >
-        </activity>
-
         <service android:name=".KronometerService" />
         <service android:name=".AuthenticatorService" >
             <intent-filter>
