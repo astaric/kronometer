@@ -6,6 +6,9 @@ from kronometer import settings
 from django.contrib import admin
 admin.autodiscover()
 
+import brillixy.site
+brillixy.site.setup(admin.site)
+
 urlpatterns = patterns('',
     url(r'^biker/list', views.biker_list, name='biker_list'),
     url(r'^biker/update', views.biker_update, name='biker_update'),
