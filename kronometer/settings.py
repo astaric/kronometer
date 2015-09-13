@@ -112,7 +112,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'brillixy',
+#    'brillixy',
     'django.contrib.admin',
     'south',
     'kronometer.biker',
