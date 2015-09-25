@@ -4,7 +4,7 @@
     <title></title>
 </head>
 <body>
-<h1>Kolesarski vzpon na Sveti Primož 2015 - Skupno</h1>
+<h1>Kronometer Želimlje - Turjak</h1>
 {% regroup bikers by category_name as results %}
 
 <ul>
@@ -19,21 +19,6 @@
 {% endfor %}
 </ul>
 
-
-<h1>Kolesarski vzpon na Sveti Primož - Občinsko</h1>
-{% regroup domestic_bikers by category_name as domestic_results %}
-
-<ul>
-{% for category in domestic_results %}
-    <li>{{ category.grouper }}
-    <ul>
-        {% for biker in category.list %}
-          <li>{{ forloop.counter }} {{ biker.name }} {{ biker.surname }} {{biker.duration|default_if_none:""}}</li>
-        {% endfor %}
-    </ul>
-    </li>
-{% endfor %}
-</ul>
 
 </body>
 </html>
