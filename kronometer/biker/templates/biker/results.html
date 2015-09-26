@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Kronometer Želimlje - Turjak - Rezultati</title>
+    <style>
+        li {
+            list-style: none;
+        }
+    </style>
 </head>
 <body>
 <h1>Kronometer Želimlje - Turjak</h1>
@@ -11,7 +16,7 @@
     <h2>{{ category }}</h2>
     <ul>
         {% for biker in bikers %}
-          <li>{{ forloop.counter }}. {{ biker.name }} {{ biker.surname }} {{biker.duration|default_if_none:""}}</li>
+          <li>{{ forloop.counter }}. {{ biker.name }} {{ biker.surname }} ({{ biker.birth_year|default_if_none:"????" }}) {{biker.duration|default_if_none:""}}</li>
         {% endfor %}
     </ul>
 {% endfor %}

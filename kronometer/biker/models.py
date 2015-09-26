@@ -17,6 +17,7 @@ class Biker(models.Model):
     surname = models.TextField()
 
     category = models.ForeignKey(Category, null=True)
+    birth_year = models.IntegerField(null=True, blank=True)
     domestic = models.BooleanField()
 
     start_time = models.DateTimeField(null=True, blank=True)
