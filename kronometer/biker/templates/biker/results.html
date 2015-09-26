@@ -5,19 +5,16 @@
 </head>
 <body>
 <h1>Kronometer Želimlje - Turjak</h1>
-{% regroup bikers by category_name as results %}
 
-<ul>
-{% for category in results %}
-    <li>{{ category.grouper }}
+
+{% for category, bikers in results %}
+    <h2>{{ category }}</h2>
     <ul>
-        {% for biker in category.list %}
-          <li>{{ forloop.counter }} {{ biker.name }} {{ biker.surname }} {{biker.duration|default_if_none:""}}</li>
+        {% for biker in bikers %}
+          <li>{{ forloop.counter }}. {{ biker.name }} {{ biker.surname }} {{biker.duration|default_if_none:""}}</li>
         {% endfor %}
     </ul>
-    </li>
 {% endfor %}
-</ul>
 
 
 </body>

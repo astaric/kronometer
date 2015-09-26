@@ -1,3 +1,4 @@
+from itertools import groupby
 from datetime import datetime
 import json
 
@@ -9,15 +10,19 @@ from kronometer.biker.models import Biker, Category
 
 
 def results(request):
+    results = []
     bikers = list(Biker.objects.select_related('category'))
     bikers.sort(
-        key=lambda b: (b.category_name, b.duration is None, b.duration))
-    domestic_bikers = list(Biker.objects.filter(domestic=True)
-                                        .select_related('category'))
-    domestic_bikers.sort(
-        key=lambda b: (b.category_name, b.duration is None, b.duration))
-    return render(request, 'biker/results.html', {"bikers": bikers,
-                                                  "domestic_bikers":domestic_bikers})
+        key=lambda b: (b.category.gender, b.duration is None, b.duration))
+    for c, b in groupby(bikers, key=lambda b:b.category.gender):
+        results.append((c, list(b)))
+
+    bikers.sort(
+        key=lambda b: (b.category.name, b.duration is None, b.duration))
+    for c, b in groupby(bikers, key=lambda b:b.category.name):
+        results.append((c, list(b)))
+
+    return render(request, 'biker/results.html', {"results": results})
 
 
 def biker_list(request):
