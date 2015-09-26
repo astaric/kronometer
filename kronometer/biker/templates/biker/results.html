@@ -16,7 +16,7 @@
     <h2>{{ category }}</h2>
     <ul>
         {% for biker in bikers %}
-          <li>{{ forloop.counter }}. {{ biker.name }} {{ biker.surname }} ({{ biker.birth_year|default_if_none:"????" }}) {{biker.duration|default_if_none:""}}</li>
+          <li>{% if biker.duration %}{{ forloop.counter }}. {% endif %}{{ biker.name }} {{ biker.surname }} ({{ biker.birth_year|default_if_none:"????" }}) {{biker.duration|default_if_none:""}}</li>
         {% endfor %}
     </ul>
 {% endfor %}
