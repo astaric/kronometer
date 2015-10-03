@@ -13,12 +13,14 @@
 
 
 {% for category, bikers in results %}
+    <div style="page-break-inside:avoid;">
     <h2>{{ category }}</h2>
     <ul>
         {% for biker in bikers %}
           <li>{% if biker.duration %}{{ forloop.counter }}. {% endif %}{{ biker.name }} {{ biker.surname }} ({{ biker.birth_year|default_if_none:"????" }}) {{biker.duration|default_if_none:""}}</li>
         {% endfor %}
     </ul>
+    </div>
 {% endfor %}
 
 
