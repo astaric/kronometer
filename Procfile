@@ -1,1 +1,1 @@
-web: gunicorn kronometer.wsgi
+web: gunicorn kronometer.wsgi --log-file -

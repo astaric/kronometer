@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import TabularInline
-from django.contrib.contenttypes.generic import GenericTabularInline
-from kronometer.biker.models import Biker, Category, BikerChangeLog
+from biker.models import Biker, Category, BikerChangeLog
 
 
 class ChangeLogInline(TabularInline):

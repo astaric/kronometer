@@ -1,25 +1,19 @@
-from django.conf.urls import patterns, url, include
-
-from kronometer.biker import views
-from kronometer import settings
+from django.conf.urls import include, url
 
 from django.contrib import admin
+
+import biker.views
+
 admin.autodiscover()
 
-#import brillixy.site
-#brillixy.site.setup(admin.site)
-
-urlpatterns = patterns('',
-    url(r'^biker/list', views.biker_list, name='biker_list'),
-    url(r'^biker/update', views.biker_update, name='biker_update'),
-    url(r'^biker/create', views.biker_create, name='biker_create'),
-    url(r'^biker/set_start_time', views.set_start_time, name='set_start_time'),
-    url(r'^biker/set_end_time', views.set_end_time, name='set_end_time'),
-    url(r'^category/list', views.category_list, name='category/list'),
-    url(r'^category/create', views.category_create, name='category/list'),
+urlpatterns = [
+    url(r'^biker/list', biker.views.biker_list, name='biker_list'),
+    url(r'^biker/update', biker.views.biker_update, name='biker_update'),
+    url(r'^biker/create', biker.views.biker_create, name='biker_create'),
+    url(r'^biker/set_start_time', biker.views.set_start_time, name='set_start_time'),
+    url(r'^biker/set_end_time', biker.views.set_end_time, name='set_end_time'),
+    url(r'^category/list', biker.views.category_list, name='category/list'),
+    url(r'^category/create', biker.views.category_create, name='category/list'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-        'document_root': settings.STATIC_ROOT,
-    }),
-    url(r'^', views.results, name='results'),
-)
+    url(r'^', biker.views.results, name='results'),
+]

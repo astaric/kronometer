@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils.timezone import datetime, make_aware, utc
 
-from kronometer.biker.models import Biker, Category
+from biker.models import Biker, Category
 
 
 class BikerTest(TestCase):

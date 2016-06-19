@@ -1,5 +1,5 @@
 from django.core.management import BaseCommand
-from kronometer.biker.models import Biker
+from biker.models import Biker
 
 
 class Command(BaseCommand):

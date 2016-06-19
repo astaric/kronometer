@@ -6,7 +6,7 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from kronometer.biker.models import Biker, Category
+from biker.models import Biker, Category
 
 
 def results(request):
@@ -27,7 +27,7 @@ def results(request):
 
 def biker_list(request):
     return HttpResponse(serializers.serialize("json", Biker.objects.all()),
-                        mimetype="application/json")
+                        content_type="application/json")
 
 
 def biker_update(request):
@@ -63,7 +63,7 @@ def biker_create(request):
             domestic=bool(domestic)
         )
         return HttpResponse(serializers.serialize("json", [biker]),
-                            mimetype="application/json")
+                            content_type="application/json")
     except Exception as e:
         return HttpResponse(json.dumps({"error": str(e)}), status=500)
 
@@ -77,7 +77,7 @@ def set_start_time(request):
     biker.set_start_time(start_time)
 
     return HttpResponse(serializers.serialize("json", [biker]),
-                        mimetype="application/json")
+                        content_type="application/json")
 
 
 def set_end_time(request):
@@ -91,16 +91,16 @@ def set_end_time(request):
     biker.save()
 
     return HttpResponse(serializers.serialize("json", [biker]),
-                        mimetype="application/json")
+                        content_type="application/json")
 
 
 def category_list(request):
     return HttpResponse(serializers.serialize(
-        "json", Category.objects.order_by('id')), mimetype="application/json")
+        "json", Category.objects.order_by('id')), content_type="application/json")
 
 
 def category_create(request):
     name = request.POST.get("name") or request.GET.get("name")
     category = Category.objects.create(name=name)
     return HttpResponse(serializers.serialize("json", [category]),
-                        mimetype="application/json")
+                        content_type="application/json")
