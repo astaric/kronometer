@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import TabularInline
-from biker.models import Biker, Category, BikerChangeLog
+from biker.models import Biker, Category, BikerChangeLog, Competition
 
 
 class ChangeLogInline(TabularInline):
@@ -24,3 +24,4 @@ class BikerAdmin(admin.ModelAdmin):
 
 admin.site.register(Biker, BikerAdmin)
 admin.site.register(Category)
+admin.site.register(Competition)

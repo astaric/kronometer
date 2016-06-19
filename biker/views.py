@@ -1,28 +1,38 @@
 from itertools import groupby
-from datetime import datetime
 import json
 
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils.safestring import mark_safe
 
-from biker.models import Biker, Category
+from biker.models import Biker, Category, Competition
 
 
 def results(request):
     results = []
+
+    results.append((mark_safe("<h2>Skupno</h2>"), []))
     bikers = list(Biker.objects.select_related('category'))
     bikers.sort(
         key=lambda b: (b.category.gender, b.duration is None, b.duration))
-    for c, b in groupby(bikers, key=lambda b:b.category.gender):
+
+    for c, b in groupby(bikers, key=lambda b: b.category.gender):
         results.append((c, list(b)))
 
+    results.append((mark_safe("<h2>Občinsko</h2>"), []))
+    bikers = list(Biker.objects.filter(domestic=1).select_related('category'))
     bikers.sort(
         key=lambda b: (b.category.name, b.duration is None, b.duration))
-    for c, b in groupby(bikers, key=lambda b:b.category.name):
+    for c, b in groupby(bikers, key=lambda b: b.category.name):
         results.append((c, list(b)))
 
-    return render(request, 'biker/results.html', {"results": results})
+    competition = Competition.objects.first()
+
+    return render(request, 'biker/results.html', {
+        "competition": competition,
+        "results": results,
+    })
 
 
 def biker_list(request):
