@@ -10,9 +10,11 @@ from biker.models import Biker, Category, Competition
 
 
 def results(request):
-    results = []
+    competition = Competition.objects.first()
+    assert isinstance(competition, Competition)
 
-    results.append((mark_safe("<h2>Skupno</h2>"), []))
+    results = []
+    results.append((mark_safe("<h2>{}</h2>".format(competition.result_section_1 or "Skupno")), []))
     bikers = list(Biker.objects.select_related('category'))
     bikers.sort(
         key=lambda b: (b.category.gender, b.duration is None, b.duration))
@@ -20,14 +22,14 @@ def results(request):
     for c, b in groupby(bikers, key=lambda b: b.category.gender):
         results.append((c, list(b)))
 
-    results.append((mark_safe("<h2>Občinsko</h2>"), []))
+    results.append((mark_safe("<h2>{}</h2>".format(competition.result_section_2 or "Občinsko")), []))
     bikers = list(Biker.objects.filter(domestic=1).select_related('category'))
     bikers.sort(
         key=lambda b: (b.category.name, b.duration is None, b.duration))
     for c, b in groupby(bikers, key=lambda b: b.category.name):
         results.append((c, list(b)))
 
-    competition = Competition.objects.first()
+
 
     return render(request, 'biker/results.html', {
         "competition": competition,

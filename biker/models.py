@@ -83,5 +83,8 @@ class Competition(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
 
+    result_section_1 = models.TextField(null=True, blank=True)
+    result_section_2 = models.TextField(null=True, blank=True)
+
     def __str__(self):
         return str(self.title)
