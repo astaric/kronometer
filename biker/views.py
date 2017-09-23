@@ -11,7 +11,8 @@ from biker.models import Biker, Category, Competition
 
 def results(request):
     competition = Competition.objects.first()
-    assert isinstance(competition, Competition)
+    if competition is None:
+        competition = Competition.objects.create()
 
     results = []
     results.append((mark_safe("<h2>{}</h2>".format(competition.result_section_1 or "Skupno")), []))
@@ -23,8 +24,11 @@ def results(request):
         results.append((c, list(b)))
 
     results.append((mark_safe("<h2>{}</h2>".format(competition.result_section_2 or "Občinsko")), []))
-    #bikers = list(Biker.objects.select_related('category'))
-    bikers = list(Biker.objects.filter(domestic=1).select_related('category'))
+
+    if competition.section_2_domestic_only:
+        bikers = list(Biker.objects.filter(domestic=1).select_related('category'))
+    else:
+        bikers = list(Biker.objects.select_related('category'))
     bikers.sort(
         key=lambda b: (b.category.name, b.duration is None, b.duration))
     for c, b in groupby(bikers, key=lambda b: b.category.name):

@@ -86,5 +86,7 @@ class Competition(models.Model):
     result_section_1 = models.TextField(null=True, blank=True)
     result_section_2 = models.TextField(null=True, blank=True)
 
+    section_2_domestic_only = models.BooleanField(default=False)
+
     def __str__(self):
         return str(self.title)
