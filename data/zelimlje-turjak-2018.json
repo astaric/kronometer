@@ -1,0 +1,1543 @@
+[
+  {
+    "model": "biker.category",
+    "pk": 8,
+    "fields": {
+      "name": "Mo\u0161ki do 30 let",
+      "gender": "Mo\u0161ki"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 9,
+    "fields": {
+      "name": "Mo\u0161ki nad 30 do 40 let",
+      "gender": "Mo\u0161ki"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 10,
+    "fields": {
+      "name": "Mo\u0161ki nad 40 do 50 let",
+      "gender": "Mo\u0161ki"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 11,
+    "fields": {
+      "name": "Mo\u0161ki nad 50 do 60 let",
+      "gender": "Mo\u0161ki"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 12,
+    "fields": {
+      "name": "Mo\u0161ki nad 60 let",
+      "gender": "Mo\u0161ki"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 13,
+    "fields": {
+      "name": "\u017denske do 30 let",
+      "gender": "\u017denske"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 14,
+    "fields": {
+      "name": "\u017denske nad 30 do 50 let",
+      "gender": "\u017denske"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 15,
+    "fields": {
+      "name": "\u017denske nad 50 do 60 let",
+      "gender": "\u017denske"
+    }
+  },
+  {
+    "model": "biker.category",
+    "pk": 16,
+    "fields": {
+      "name": "\u017denske nad 60 let",
+      "gender": "\u017denske"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 14,
+    "fields": {
+      "number": 40,
+      "name": "Gregor",
+      "surname": "Homan (1994)",
+      "category": 8,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2018-06-16T16:53:46.718Z",
+      "end_time": "2017-09-23T12:16:05.718Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 15,
+    "fields": {
+      "number": 41,
+      "name": "Marjan",
+      "surname": "\u010cuden (1957)",
+      "category": 12,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2018-06-16T16:54:12.720Z",
+      "end_time": "2017-09-23T12:18:59.478Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 16,
+    "fields": {
+      "number": 42,
+      "name": "Borislav",
+      "surname": "Skubic (1958)",
+      "category": 11,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:01:25.190Z",
+      "end_time": "2017-09-23T12:18:12.797Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 17,
+    "fields": {
+      "number": 43,
+      "name": "Rudi",
+      "surname": "Ravbar (1947)",
+      "category": 12,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:01:57.485Z",
+      "end_time": "2017-09-23T12:22:27.334Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 18,
+    "fields": {
+      "number": 44,
+      "name": "Tadej",
+      "surname": "Arko (1986)",
+      "category": 9,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:02:28.338Z",
+      "end_time": "2017-09-23T12:22:52.396Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 19,
+    "fields": {
+      "number": 45,
+      "name": "Primo\u017e",
+      "surname": "Jak\u0161e (1954)",
+      "category": 12,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:03:00.938Z",
+      "end_time": "2017-09-23T12:28:08.376Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 20,
+    "fields": {
+      "number": 46,
+      "name": "Jan",
+      "surname": "Arko (1992)",
+      "category": 8,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:03:30.943Z",
+      "end_time": "2017-09-23T12:19:14.880Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 21,
+    "fields": {
+      "number": 47,
+      "name": "Mihael",
+      "surname": "\u0160tajnar (2000)",
+      "category": 8,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:04:02.052Z",
+      "end_time": "2017-09-23T12:20:32.229Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 22,
+    "fields": {
+      "number": 48,
+      "name": "Stanislav",
+      "surname": "Verstov\u0161ek (1976)",
+      "category": 10,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:04:33.229Z",
+      "end_time": "2017-09-23T12:19:50.047Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 23,
+    "fields": {
+      "number": 49,
+      "name": "Bine",
+      "surname": "Novak (1981)",
+      "category": 9,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:05:00.544Z",
+      "end_time": "2017-09-23T12:22:01.749Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 24,
+    "fields": {
+      "number": 50,
+      "name": "Milivoj",
+      "surname": "Papi\u010d (1956)",
+      "category": 12,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:05:32.098Z",
+      "end_time": "2017-09-23T12:24:12.626Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 25,
+    "fields": {
+      "number": 51,
+      "name": "Gregor",
+      "surname": "Grbec (1988)",
+      "category": 8,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:06:01.869Z",
+      "end_time": "2017-09-23T12:24:38.600Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 26,
+    "fields": {
+      "number": 52,
+      "name": "Luka",
+      "surname": "Mihovec (1980)",
+      "category": 9,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:06:34.048Z",
+      "end_time": "2017-09-23T12:23:28.265Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 27,
+    "fields": {
+      "number": 53,
+      "name": "Toma\u017e",
+      "surname": "Ivani\u010d (1973)",
+      "category": 10,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:07:04.698Z",
+      "end_time": "2017-09-23T12:25:10.772Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 28,
+    "fields": {
+      "number": 54,
+      "name": "Mateja",
+      "surname": "Me\u0161ko (1971)",
+      "category": 14,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:07:32.246Z",
+      "end_time": "2017-09-23T12:27:25.711Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 29,
+    "fields": {
+      "number": 55,
+      "name": "Janez",
+      "surname": "Trunkelj (1967)",
+      "category": 11,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:08:03.925Z",
+      "end_time": "2017-09-23T12:26:36.058Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 30,
+    "fields": {
+      "number": 56,
+      "name": "Alojz",
+      "surname": "Poglavc (1971)",
+      "category": 10,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:10:00.720Z",
+      "end_time": "2017-09-23T12:25:54.709Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 31,
+    "fields": {
+      "number": 57,
+      "name": "Matija",
+      "surname": "\u0160trlekar (1983)",
+      "category": 9,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:09:06.420Z",
+      "end_time": "2017-09-23T12:32:26.812Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 32,
+    "fields": {
+      "number": 58,
+      "name": "Bla\u017e",
+      "surname": "Leni\u010d (1982)",
+      "category": 9,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:09:35.328Z",
+      "end_time": "2017-09-23T12:27:19.880Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 33,
+    "fields": {
+      "number": 59,
+      "name": "Edina",
+      "surname": "Zejni\u010d (1983)",
+      "category": 14,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:10:32.345Z",
+      "end_time": "2017-09-23T12:32:07.593Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 34,
+    "fields": {
+      "number": 60,
+      "name": "Teja",
+      "surname": "Gor\u0161i\u010d (1979)",
+      "category": 14,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:11:00.421Z",
+      "end_time": "2017-09-23T12:33:36.008Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 35,
+    "fields": {
+      "number": 61,
+      "name": "Gorazd",
+      "surname": "Konc (1974)",
+      "category": 10,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:11:33.145Z",
+      "end_time": "2017-09-23T12:27:05.681Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 36,
+    "fields": {
+      "number": 62,
+      "name": "Jernej",
+      "surname": "Kogov\u0161ek (1984)",
+      "category": 9,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:12:01.696Z",
+      "end_time": "2017-09-23T12:32:15.069Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 37,
+    "fields": {
+      "number": 63,
+      "name": "Matej",
+      "surname": "Zalar (1983)",
+      "category": 9,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:12:32.721Z",
+      "end_time": "2017-09-23T12:29:46.102Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 38,
+    "fields": {
+      "number": 64,
+      "name": "Lado",
+      "surname": "Prpar (1965)",
+      "category": 11,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:13:03.747Z",
+      "end_time": "2017-09-23T12:31:42.677Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 39,
+    "fields": {
+      "number": 65,
+      "name": "Primo\u017e",
+      "surname": "Jereb (1988)",
+      "category": 8,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:13:34.546Z",
+      "end_time": "2017-09-23T12:30:06.545Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 40,
+    "fields": {
+      "number": 66,
+      "name": "Andrej",
+      "surname": "\u0160inkovec (1982)",
+      "category": 9,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:14:04.754Z",
+      "end_time": "2017-09-23T12:32:23.681Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 41,
+    "fields": {
+      "number": 67,
+      "name": "Miran",
+      "surname": "Juvan (1959)",
+      "category": 11,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:14:35.647Z",
+      "end_time": "2017-09-23T12:33:03.785Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 42,
+    "fields": {
+      "number": 68,
+      "name": "Bojan",
+      "surname": "Adami\u010d (1977)",
+      "category": 10,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:15:04.223Z",
+      "end_time": "2017-09-23T12:33:09.405Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 43,
+    "fields": {
+      "number": 69,
+      "name": "Marko",
+      "surname": "Podr\u017eaj (1959)",
+      "category": 11,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:15:30.098Z",
+      "end_time": "2017-09-23T12:39:27.551Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 44,
+    "fields": {
+      "number": 70,
+      "name": "Jure",
+      "surname": "Tratnik (1983)",
+      "category": 9,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:16:02.327Z",
+      "end_time": "2017-09-23T12:33:47.717Z"
+    }
+  },
+  {
+    "model": "biker.biker",
+    "pk": 45,
+    "fields": {
+      "number": 71,
+      "name": "Lili",
+      "surname": "Hren (1966)",
+      "category": 15,
+      "birth_year": null,
+      "domestic": false,
+      "start_time": "2017-09-23T12:17:19Z",
+      "end_time": "2017-09-23T12:42:47Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 43,
+    "fields": {
+      "biker": 14,
+      "change_time": "2017-09-23T12:00:26.875Z",
+      "start_time": "2017-09-23T12:00:27.064Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 44,
+    "fields": {
+      "biker": 15,
+      "change_time": "2017-09-23T12:00:55.234Z",
+      "start_time": "2017-09-23T12:00:55.613Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 45,
+    "fields": {
+      "biker": 16,
+      "change_time": "2017-09-23T12:01:24.837Z",
+      "start_time": "2017-09-23T12:01:25.190Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 46,
+    "fields": {
+      "biker": 17,
+      "change_time": "2017-09-23T12:02:27.991Z",
+      "start_time": "2017-09-23T12:01:57.485Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 47,
+    "fields": {
+      "biker": 18,
+      "change_time": "2017-09-23T12:02:28.268Z",
+      "start_time": "2017-09-23T12:02:28.338Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 48,
+    "fields": {
+      "biker": 19,
+      "change_time": "2017-09-23T12:03:00.714Z",
+      "start_time": "2017-09-23T12:03:00.938Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 49,
+    "fields": {
+      "biker": 20,
+      "change_time": "2017-09-23T12:03:30.576Z",
+      "start_time": "2017-09-23T12:03:30.943Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 50,
+    "fields": {
+      "biker": 21,
+      "change_time": "2017-09-23T12:04:01.820Z",
+      "start_time": "2017-09-23T12:04:02.052Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 51,
+    "fields": {
+      "biker": 22,
+      "change_time": "2017-09-23T12:04:32.844Z",
+      "start_time": "2017-09-23T12:04:33.229Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 52,
+    "fields": {
+      "biker": 23,
+      "change_time": "2017-09-23T12:05:00.178Z",
+      "start_time": "2017-09-23T12:05:00.544Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 53,
+    "fields": {
+      "biker": 24,
+      "change_time": "2017-09-23T12:05:31.856Z",
+      "start_time": "2017-09-23T12:05:32.098Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 54,
+    "fields": {
+      "biker": 25,
+      "change_time": "2017-09-23T12:06:01.528Z",
+      "start_time": "2017-09-23T12:06:01.869Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 55,
+    "fields": {
+      "biker": 26,
+      "change_time": "2017-09-23T12:06:33.839Z",
+      "start_time": "2017-09-23T12:06:34.048Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 56,
+    "fields": {
+      "biker": 27,
+      "change_time": "2017-09-23T12:07:04.305Z",
+      "start_time": "2017-09-23T12:07:04.698Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 57,
+    "fields": {
+      "biker": 28,
+      "change_time": "2017-09-23T12:07:31.884Z",
+      "start_time": "2017-09-23T12:07:32.246Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 58,
+    "fields": {
+      "biker": 29,
+      "change_time": "2017-09-23T12:08:03.702Z",
+      "start_time": "2017-09-23T12:08:03.925Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 59,
+    "fields": {
+      "biker": 30,
+      "change_time": "2017-09-23T12:08:28.922Z",
+      "start_time": "2017-09-23T12:08:29.270Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 60,
+    "fields": {
+      "biker": 31,
+      "change_time": "2017-09-23T12:09:06.140Z",
+      "start_time": "2017-09-23T12:09:06.420Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 61,
+    "fields": {
+      "biker": 32,
+      "change_time": "2017-09-23T12:09:37.766Z",
+      "start_time": "2017-09-23T12:09:35.328Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 62,
+    "fields": {
+      "biker": 30,
+      "change_time": "2017-09-23T12:10:00.362Z",
+      "start_time": "2017-09-23T12:10:00.720Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 63,
+    "fields": {
+      "biker": 33,
+      "change_time": "2017-09-23T12:10:32.116Z",
+      "start_time": "2017-09-23T12:10:32.345Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 64,
+    "fields": {
+      "biker": 34,
+      "change_time": "2017-09-23T12:11:00.258Z",
+      "start_time": "2017-09-23T12:11:00.421Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 65,
+    "fields": {
+      "biker": 35,
+      "change_time": "2017-09-23T12:11:32.964Z",
+      "start_time": "2017-09-23T12:11:33.145Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 66,
+    "fields": {
+      "biker": 36,
+      "change_time": "2017-09-23T12:12:01.284Z",
+      "start_time": "2017-09-23T12:12:01.696Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 67,
+    "fields": {
+      "biker": 37,
+      "change_time": "2017-09-23T12:12:32.367Z",
+      "start_time": "2017-09-23T12:12:32.721Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 68,
+    "fields": {
+      "biker": 38,
+      "change_time": "2017-09-23T12:13:03.406Z",
+      "start_time": "2017-09-23T12:13:03.747Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 69,
+    "fields": {
+      "biker": 39,
+      "change_time": "2017-09-23T12:13:34.193Z",
+      "start_time": "2017-09-23T12:13:34.546Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 70,
+    "fields": {
+      "biker": 40,
+      "change_time": "2017-09-23T12:14:04.523Z",
+      "start_time": "2017-09-23T12:14:04.754Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 71,
+    "fields": {
+      "biker": 41,
+      "change_time": "2017-09-23T12:14:35.274Z",
+      "start_time": "2017-09-23T12:14:35.647Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 72,
+    "fields": {
+      "biker": 42,
+      "change_time": "2017-09-23T12:15:03.870Z",
+      "start_time": "2017-09-23T12:15:04.223Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 73,
+    "fields": {
+      "biker": 43,
+      "change_time": "2017-09-23T12:15:29.873Z",
+      "start_time": "2017-09-23T12:15:30.098Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 74,
+    "fields": {
+      "biker": 44,
+      "change_time": "2017-09-23T12:16:01.984Z",
+      "start_time": "2017-09-23T12:16:02.327Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 75,
+    "fields": {
+      "biker": 14,
+      "change_time": "2017-09-23T12:16:12.860Z",
+      "start_time": "2017-09-23T12:00:27.064Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 76,
+    "fields": {
+      "biker": 14,
+      "change_time": "2017-09-23T12:16:12.873Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:16:05.718Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 77,
+    "fields": {
+      "biker": 45,
+      "change_time": "2017-09-23T12:17:19.046Z",
+      "start_time": "2017-09-23T12:17:19.284Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 78,
+    "fields": {
+      "biker": 16,
+      "change_time": "2017-09-23T12:18:17.456Z",
+      "start_time": "2017-09-23T12:01:25.190Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 79,
+    "fields": {
+      "biker": 16,
+      "change_time": "2017-09-23T12:18:17.470Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:18:12.797Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 80,
+    "fields": {
+      "biker": 15,
+      "change_time": "2017-09-23T12:19:03.600Z",
+      "start_time": "2017-09-23T12:00:55.613Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 81,
+    "fields": {
+      "biker": 15,
+      "change_time": "2017-09-23T12:19:03.615Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:18:59.478Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 82,
+    "fields": {
+      "biker": 20,
+      "change_time": "2017-09-23T12:19:19.624Z",
+      "start_time": "2017-09-23T12:03:30.943Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 83,
+    "fields": {
+      "biker": 20,
+      "change_time": "2017-09-23T12:19:19.634Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:19:14.880Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 84,
+    "fields": {
+      "biker": 22,
+      "change_time": "2017-09-23T12:19:59.744Z",
+      "start_time": "2017-09-23T12:04:33.229Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 85,
+    "fields": {
+      "biker": 22,
+      "change_time": "2017-09-23T12:19:59.767Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:19:50.047Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 86,
+    "fields": {
+      "biker": 21,
+      "change_time": "2017-09-23T12:20:36.467Z",
+      "start_time": "2017-09-23T12:04:02.052Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 87,
+    "fields": {
+      "biker": 21,
+      "change_time": "2017-09-23T12:20:36.476Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:20:32.229Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 88,
+    "fields": {
+      "biker": 23,
+      "change_time": "2017-09-23T12:22:06.678Z",
+      "start_time": "2017-09-23T12:05:00.544Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 89,
+    "fields": {
+      "biker": 23,
+      "change_time": "2017-09-23T12:22:06.686Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:22:01.749Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 90,
+    "fields": {
+      "biker": 17,
+      "change_time": "2017-09-23T12:22:31.633Z",
+      "start_time": "2017-09-23T12:01:57.485Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 91,
+    "fields": {
+      "biker": 17,
+      "change_time": "2017-09-23T12:22:31.653Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:22:27.334Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 92,
+    "fields": {
+      "biker": 18,
+      "change_time": "2017-09-23T12:22:56.615Z",
+      "start_time": "2017-09-23T12:02:28.338Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 93,
+    "fields": {
+      "biker": 18,
+      "change_time": "2017-09-23T12:22:56.630Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:22:52.396Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 94,
+    "fields": {
+      "biker": 26,
+      "change_time": "2017-09-23T12:23:32.534Z",
+      "start_time": "2017-09-23T12:06:34.048Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 95,
+    "fields": {
+      "biker": 26,
+      "change_time": "2017-09-23T12:23:32.554Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:23:28.265Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 96,
+    "fields": {
+      "biker": 24,
+      "change_time": "2017-09-23T12:24:20.267Z",
+      "start_time": "2017-09-23T12:05:32.098Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 97,
+    "fields": {
+      "biker": 24,
+      "change_time": "2017-09-23T12:24:20.274Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:24:12.626Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 98,
+    "fields": {
+      "biker": 25,
+      "change_time": "2017-09-23T12:24:43.814Z",
+      "start_time": "2017-09-23T12:06:01.869Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 99,
+    "fields": {
+      "biker": 25,
+      "change_time": "2017-09-23T12:24:43.828Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:24:38.600Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 100,
+    "fields": {
+      "biker": 27,
+      "change_time": "2017-09-23T12:25:16.224Z",
+      "start_time": "2017-09-23T12:07:04.698Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 101,
+    "fields": {
+      "biker": 27,
+      "change_time": "2017-09-23T12:25:16.239Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:25:10.772Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 102,
+    "fields": {
+      "biker": 30,
+      "change_time": "2017-09-23T12:25:59.648Z",
+      "start_time": "2017-09-23T12:10:00.720Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 103,
+    "fields": {
+      "biker": 30,
+      "change_time": "2017-09-23T12:25:59.658Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:25:54.709Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 104,
+    "fields": {
+      "biker": 29,
+      "change_time": "2017-09-23T12:26:40.548Z",
+      "start_time": "2017-09-23T12:08:03.925Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 105,
+    "fields": {
+      "biker": 29,
+      "change_time": "2017-09-23T12:26:40.558Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:26:36.058Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 106,
+    "fields": {
+      "biker": 35,
+      "change_time": "2017-09-23T12:27:15.233Z",
+      "start_time": "2017-09-23T12:11:33.145Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 107,
+    "fields": {
+      "biker": 35,
+      "change_time": "2017-09-23T12:27:15.243Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:27:05.681Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 108,
+    "fields": {
+      "biker": 32,
+      "change_time": "2017-09-23T12:27:40.687Z",
+      "start_time": "2017-09-23T12:09:35.328Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 109,
+    "fields": {
+      "biker": 32,
+      "change_time": "2017-09-23T12:27:40.696Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:27:19.880Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 110,
+    "fields": {
+      "biker": 28,
+      "change_time": "2017-09-23T12:28:08.328Z",
+      "start_time": "2017-09-23T12:07:32.246Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 111,
+    "fields": {
+      "biker": 28,
+      "change_time": "2017-09-23T12:28:08.339Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:27:25.711Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 112,
+    "fields": {
+      "biker": 19,
+      "change_time": "2017-09-23T12:28:12.755Z",
+      "start_time": "2017-09-23T12:03:00.938Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 113,
+    "fields": {
+      "biker": 19,
+      "change_time": "2017-09-23T12:28:12.779Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:28:08.376Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 114,
+    "fields": {
+      "biker": 37,
+      "change_time": "2017-09-23T12:29:50.884Z",
+      "start_time": "2017-09-23T12:12:32.721Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 115,
+    "fields": {
+      "biker": 37,
+      "change_time": "2017-09-23T12:29:50.917Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:29:46.102Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 118,
+    "fields": {
+      "biker": 39,
+      "change_time": "2017-09-23T12:31:49.478Z",
+      "start_time": "2017-09-23T12:13:34.546Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 119,
+    "fields": {
+      "biker": 39,
+      "change_time": "2017-09-23T12:31:49.487Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:30:06.545Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 120,
+    "fields": {
+      "biker": 38,
+      "change_time": "2017-09-23T12:31:50.917Z",
+      "start_time": "2017-09-23T12:13:03.747Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 121,
+    "fields": {
+      "biker": 38,
+      "change_time": "2017-09-23T12:31:50.926Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:31:42.677Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 122,
+    "fields": {
+      "biker": 33,
+      "change_time": "2017-09-23T12:32:14.204Z",
+      "start_time": "2017-09-23T12:10:32.345Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 123,
+    "fields": {
+      "biker": 33,
+      "change_time": "2017-09-23T12:32:14.240Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:32:07.593Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 124,
+    "fields": {
+      "biker": 36,
+      "change_time": "2017-09-23T12:32:20.124Z",
+      "start_time": "2017-09-23T12:12:01.696Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 125,
+    "fields": {
+      "biker": 36,
+      "change_time": "2017-09-23T12:32:20.137Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:32:15.069Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 126,
+    "fields": {
+      "biker": 40,
+      "change_time": "2017-09-23T12:32:35.676Z",
+      "start_time": "2017-09-23T12:14:04.754Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 127,
+    "fields": {
+      "biker": 40,
+      "change_time": "2017-09-23T12:32:35.695Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:32:23.681Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 128,
+    "fields": {
+      "biker": 31,
+      "change_time": "2017-09-23T12:33:06.368Z",
+      "start_time": "2017-09-23T12:09:06.420Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 129,
+    "fields": {
+      "biker": 31,
+      "change_time": "2017-09-23T12:33:06.388Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:32:26.812Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 130,
+    "fields": {
+      "biker": 41,
+      "change_time": "2017-09-23T12:33:09.163Z",
+      "start_time": "2017-09-23T12:14:35.647Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 131,
+    "fields": {
+      "biker": 41,
+      "change_time": "2017-09-23T12:33:09.171Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:33:03.785Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 132,
+    "fields": {
+      "biker": 42,
+      "change_time": "2017-09-23T12:33:14.310Z",
+      "start_time": "2017-09-23T12:15:04.223Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 133,
+    "fields": {
+      "biker": 42,
+      "change_time": "2017-09-23T12:33:14.319Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:33:09.405Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 134,
+    "fields": {
+      "biker": 34,
+      "change_time": "2017-09-23T12:33:40.220Z",
+      "start_time": "2017-09-23T12:11:00.421Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 135,
+    "fields": {
+      "biker": 34,
+      "change_time": "2017-09-23T12:33:40.234Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:33:36.008Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 136,
+    "fields": {
+      "biker": 44,
+      "change_time": "2017-09-23T12:34:02.503Z",
+      "start_time": "2017-09-23T12:16:02.327Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 137,
+    "fields": {
+      "biker": 44,
+      "change_time": "2017-09-23T12:34:02.512Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:33:47.717Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 138,
+    "fields": {
+      "biker": 43,
+      "change_time": "2017-09-23T12:39:33.563Z",
+      "start_time": "2017-09-23T12:15:30.098Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 139,
+    "fields": {
+      "biker": 43,
+      "change_time": "2017-09-23T12:39:33.572Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:39:27.551Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 140,
+    "fields": {
+      "biker": 45,
+      "change_time": "2017-09-23T12:44:27.611Z",
+      "start_time": "2017-09-23T12:17:19.284Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 141,
+    "fields": {
+      "biker": 45,
+      "change_time": "2017-09-23T12:44:27.620Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:42:47.528Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 142,
+    "fields": {
+      "biker": 14,
+      "change_time": "2018-06-16T16:53:47.291Z",
+      "start_time": "2018-06-16T16:53:46.718Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 143,
+    "fields": {
+      "biker": 14,
+      "change_time": "2018-06-16T16:53:47.312Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:16:05.718Z"
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 144,
+    "fields": {
+      "biker": 15,
+      "change_time": "2018-06-16T16:54:13.254Z",
+      "start_time": "2018-06-16T16:54:12.720Z",
+      "end_time": null
+    }
+  },
+  {
+    "model": "biker.bikerchangelog",
+    "pk": 145,
+    "fields": {
+      "biker": 15,
+      "change_time": "2018-06-16T16:54:13.262Z",
+      "start_time": null,
+      "end_time": "2017-09-23T12:18:59.478Z"
+    }
+  },
+  {
+    "model": "biker.competition",
+    "pk": 1,
+    "fields": {
+      "title": "Kronometer \u017delimlje - Turjak",
+      "description": "<h3>organizira KD Grosuplje</h3>\r\nCestna dirka, ki bo izvedena 23. septembra 2017. \u0160tart bo ob 14.00 v \u017delimlju pri kapelici.",
+      "result_section_1": "Skupno",
+      "result_section_2": "Po kategorijah",
+      "section_2_domestic_only": false
+    }
+  }
+]
