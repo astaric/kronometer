@@ -1,0 +1,98 @@
+[
+    {
+        "model": "biker.category",
+        "pk": 25,
+        "fields": {
+            "name": "Pred\u0161olski",
+            "gender": "Pred\u0161olski"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 26,
+        "fields": {
+            "name": "u\u010denci - 1. triada",
+            "gender": "u\u010denci O\u0160"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 27,
+        "fields": {
+            "name": "u\u010denci - 2. triada",
+            "gender": "u\u010denci O\u0160"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 28,
+        "fields": {
+            "name": "u\u010denci - 3. triada",
+            "gender": "u\u010denci O\u0160"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 29,
+        "fields": {
+            "name": "u\u010denke - 1. triada",
+            "gender": "u\u010denke O\u0160"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 30,
+        "fields": {
+            "name": "u\u010denke - 2. triada",
+            "gender": "u\u010denke O\u0160"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 31,
+        "fields": {
+            "name": "u\u010denke - 3. triada",
+            "gender": "u\u010denke O\u0160"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 32,
+        "fields": {
+            "name": "dekleta do 35 let",
+            "gender": "dekleta do 35 let"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 33,
+        "fields": {
+            "name": "dekleta nad 35 let",
+            "gender": "dekleta nad 35 let"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 34,
+        "fields": {
+            "name": "fantje do 40",
+            "gender": "fantje do 40"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 35,
+        "fields": {
+            "name": "fantje 40 do 60",
+            "gender": "fantje 40 do 60"
+        }
+    },
+    {
+        "model": "biker.category",
+        "pk": 36,
+        "fields": {
+            "name": "fantje nad 60",
+            "gender": "fantje nad 60"
+        }
+    }
+]
