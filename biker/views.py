@@ -34,8 +34,6 @@ def results(request):
     for c, b in groupby(bikers, key=lambda b: b.category.name):
         results.append((c, list(b)))
 
-
-
     return render(request, 'biker/results.html', {
         "competition": competition,
         "results": results,

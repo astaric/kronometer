@@ -4,10 +4,10 @@ when you run "manage.py test".
 
 Replace this with more appropriate tests for your application.
 """
-from datetime import timedelta
+from datetime import timedelta, timezone
 import json
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 from django.utils.timezone import datetime, make_aware, utc
 
 from biker.models import Biker, Category
@@ -18,7 +18,7 @@ class BikerTest(TestCase):
         b = Biker(name="John", surname="Doe")
         self.assertIsNone(b.duration)
 
-        b.start_time = datetime.now()
+        b.start_time = datetime.now(tz=timezone.utc)
         self.assertIsNone(b.duration)
 
         b.end_time = b.start_time + timedelta(minutes=1)
@@ -62,13 +62,16 @@ class ViewTests(TestCase):
         self.assertEqual(response.status_code, 500)
         jsonResponse = json.loads(response.content)
         self.assertEqual(jsonResponse,
-                         {"error": "biker_biker.number may not be NULL"})
+                         {"error": "NOT NULL constraint failed: biker_biker.number"})
 
     def test_partial_results(self):
+        category = Category.objects.create(name="Cat")
         Biker.objects.create(number=1,
-                             start_time=datetime.now())
+                             category=category,
+                             start_time=datetime.now(tz=timezone.utc))
         Biker.objects.create(number=2,
-                             start_time=datetime.now(),
-                             end_time=datetime.now())
+                             category=category,
+                             start_time=datetime.now(tz=timezone.utc),
+                             end_time=datetime.now(tz=timezone.utc))
 
         self.client.post(reverse("results"))

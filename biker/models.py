@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from django.db import models
 
 
@@ -11,14 +11,14 @@ class Category(models.Model):
 
 
 class Biker(models.Model):
-    number = models.IntegerField(unique=True)
+    number = models.IntegerField(unique=True, )
 
     name = models.TextField()
     surname = models.TextField()
 
-    category = models.ForeignKey(Category, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     birth_year = models.IntegerField(null=True, blank=True)
-    domestic = models.BooleanField()
+    domestic = models.BooleanField(default=False, blank=True)
 
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
@@ -39,7 +39,7 @@ class Biker(models.Model):
 
     def set_start_time(self, start_time):
         if isinstance(start_time, float):
-            start_time = datetime.fromtimestamp(start_time)
+            start_time = datetime.fromtimestamp(start_time, tz=timezone.utc)
 
         BikerChangeLog.objects.create(biker=self, start_time=start_time)
 
@@ -48,7 +48,7 @@ class Biker(models.Model):
 
     def set_end_time(self, end_time):
         if isinstance(end_time, float):
-            end_time = datetime.fromtimestamp(end_time)
+            end_time = datetime.fromtimestamp(end_time, tz=timezone.utc)
 
         BikerChangeLog.objects.create(biker=self, end_time=end_time)
 
@@ -60,7 +60,7 @@ class Biker(models.Model):
 
 
 class BikerChangeLog(models.Model):
-    biker = models.ForeignKey(Biker)
+    biker = models.ForeignKey(Biker, on_delete=models.CASCADE)
 
     change_time = models.DateTimeField(auto_now_add=True)
 
