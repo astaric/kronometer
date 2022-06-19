@@ -129,8 +129,8 @@ def biker_start(request):
         biker.set_start_time(datetime.datetime.now())
         return redirect('biker/start')
 
-    not_started = list(Biker.objects.filter(start_time=None).all())
-    started = list(Biker.objects.exclude(start_time=None).all())
+    not_started = list(Biker.objects.filter(start_time=None).order_by("number").all())
+    started = list(Biker.objects.exclude(start_time=None).order_by("number").all())
     return render(request, 'biker/start.html', {
         "not_started": not_started,
         "started": started,
@@ -139,9 +139,16 @@ def biker_start(request):
 
 @login_required
 def biker_finish(request):
-    not_started = list(Biker.objects.filter(start_time=None).all())
-    started = list(Biker.objects.exclude(start_time=None).all())
+    number = request.POST.get("number")
+    if number:
+        biker = Biker.objects.get(number=number)
+        biker.set_end_time(datetime.datetime.now())
+        return redirect('biker/finish')
+
+    not_finished = list(Biker.objects.filter(end_time=None).order_by("number").all())
+    finished = list(Biker.objects.exclude(end_time=None).order_by("number").all())
     return render(request, 'biker/finish.html', {
-        "bikers": not_started + started
+        "not_finished": not_finished,
+        "finished": finished,
     })
 

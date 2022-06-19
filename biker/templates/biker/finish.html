@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Start</title>
+    <style>
+        input.start {
+            border: 1px solid black;
+            width: 3em;
+            height: 2em;
+        }
+
+        #countdown {
+            font-size: 50pt;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        td {
+            padding-bottom: 10px;
+        }
+
+        * {
+            font-size: 30pt;
+        }
+
+
+    </style>
+    <script>
+        function logClick(number) {
+            let now = Date.now();
+            let timestamp = "";
+            if (window.localStorage.getItem(number)) {
+                timestamp = window.localStorage.getItem(number) + "," + now;
+            } else {
+                timestamp = "" + now;
+            }
+            window.localStorage.setItem(number, timestamp)
+            let xhttp = new XMLHttpRequest();
+            xhttp.open( "GET", "{%  url 'set_end_time' %}?number=" + number + "&end_time=" + now, true);
+            xhttp.send(null);
+            console.log(xhttp.responseText);
+            return false;
+        }
+    </script>
+</head>
+<body>
+<table>
+    {% for biker in not_finished %}
+        <tr>
+        <form action="/biker/finish" method="post" onsubmit="logClick({{ biker.number }})">
+            {% csrf_token %}
+            <td>
+                <input type="hidden" name="number" value="{{ biker.number }}"/>
+                {{ biker.number }}
+            </td>
+            <td>{{ biker.name }} {{ biker.surname }}</td>
+            <td><input class="start" type="submit" value="finish"></td>
+
+        </form>
+        </tr>
+    {% endfor %}
+</table>
+<hr>
+<table>
+    {% for biker in finished %}
+        <tr>
+        <form action="/biker/finish" method="post" onsubmit="return logClick({{ biker.number }})">
+            {% csrf_token %}
+            <td>
+                <input type="hidden" name="number" value="{{ biker.number }}"/>
+                {{ biker.number }}
+            </td>
+            <td>{{ biker.name }} {{ biker.surname }}</td>
+            <td><input class="start" type="submit" value="finish"></td>
+        </form>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
