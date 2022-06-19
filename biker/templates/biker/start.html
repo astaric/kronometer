@@ -17,7 +17,7 @@
         }
 
         td {
-            font-size: 2em;
+            font-size: 30pt;
         }
 
 
@@ -57,8 +57,6 @@ setTimeout(function() {
                 {{ biker.number }}
             </td>
             <td>{{ biker.name }} {{ biker.surname }}</td>
-            {% if biker.start_time %}
-                <td>{{ biker.nice_start_time|default_if_none:"" }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> {% endif %}
             <td><input class="start" type="submit" value="start"></td>
             </li>
         </form>
