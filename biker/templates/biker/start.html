@@ -6,8 +6,8 @@
     <style>
         input.start {
             border: 1px solid black;
-            width: 5em;
-            height: 5em;
+            width: 3em;
+            height: 2em;
         }
 
         #countdown {
@@ -15,8 +15,11 @@
             margin-top: 0;
             margin-bottom: 20px;
         }
-
         td {
+            padding-bottom: 10px;
+        }
+
+        * {
             font-size: 30pt;
         }
 
@@ -48,7 +51,21 @@ setTimeout(function() {
 </script>
 
 <table>
-    {% for biker in bikers %}
+    {% for biker in not_started %}
+        <tr>
+        <form action="/biker/start" method="post">
+            {% csrf_token %}
+            <td>
+                <input type="hidden" name="number" value="{{ biker.number }}"/>
+                {{ biker.number }}
+            </td>
+            <td>{{ biker.name }} {{ biker.surname }}</td>
+            <td><input class="start" type="submit" value="start"></td>
+            </li>
+        </form>
+    {% endfor %}
+    <hr>
+    {% for biker in started %}
         <tr>
         <form action="/biker/start" method="post">
             {% csrf_token %}

@@ -132,7 +132,8 @@ def biker_start(request):
     not_started = list(Biker.objects.filter(start_time=None).all())
     started = list(Biker.objects.exclude(start_time=None).all())
     return render(request, 'biker/start.html', {
-        "bikers": not_started + started
+        "not_started": not_started,
+        "started": started,
     })
 
 
