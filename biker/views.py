@@ -102,8 +102,6 @@ def set_end_time(request):
 
     biker = Biker.objects.get(number=number)
     biker.set_end_time(end_time)
-    biker.end_time = end_time
-    biker.save()
 
     return HttpResponse(serializers.serialize("json", [biker]),
                         content_type="application/json")
