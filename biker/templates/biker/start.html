@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Start</title>
+    <style>
+        input.start {
+            border: 1px solid black;
+            width: 5em;
+            height: 5em;
+        }
+    </style>
+</head>
+<body>
+<table>
+    {% for biker in bikers %}
+        <tr>
+        <form action="/biker/start" method="post">
+            {% csrf_token %}
+            <td>
+                <input type="hidden" name="number" value="{{ biker.number }}"/>
+                {{ biker.number }}
+            </td>
+            <td>{{ biker.name }} {{ biker.surname }}</td>
+            {% if biker.start_time %}
+                <td>{{ biker.nice_start_time|default_if_none:"" }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> {% endif %}
+            <td><input class="start" type="submit" value="start"></td>
+            </li>
+        </form>
+    {% endfor %}
+</table>
+</body>
+</html>

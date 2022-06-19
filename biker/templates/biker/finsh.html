@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% for biker in bikers %}
+         <form action="/biker/start">
+            <li>{{ biker.name }}
+
+                <input type="submit" value="start">
+            </li>
+        </form>
+    {% endfor %}
+</head>
+<body>
+
+</body>
+</html>

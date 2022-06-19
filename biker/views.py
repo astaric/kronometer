@@ -1,9 +1,11 @@
+import datetime
 from itertools import groupby
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.safestring import mark_safe
 
 from biker.models import Biker, Category, Competition
@@ -117,3 +119,28 @@ def category_create(request):
     category = Category.objects.create(name=name)
     return HttpResponse(serializers.serialize("json", [category]),
                         content_type="application/json")
+
+
+@login_required
+def biker_start(request):
+    number = request.POST.get("number")
+    if number:
+        biker = Biker.objects.get(number=number)
+        biker.set_start_time(datetime.datetime.now())
+        return redirect('biker/start')
+
+    not_started = list(Biker.objects.filter(start_time=None).all())
+    started = list(Biker.objects.exclude(start_time=None).all())
+    return render(request, 'biker/start.html', {
+        "bikers": not_started + started
+    })
+
+
+@login_required
+def biker_finish(request):
+    not_started = list(Biker.objects.filter(start_time=None).all())
+    started = list(Biker.objects.exclude(start_time=None).all())
+    return render(request, 'biker/finish.html', {
+        "bikers": not_started + started
+    })
+

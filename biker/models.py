@@ -37,6 +37,13 @@ class Biker(models.Model):
         else:
             return "Nerazporejeni"
 
+    @property
+    def nice_start_time(self):
+        if self.start_time:
+            return self.start_time.strftime("%H:%M:%S.%f")
+        else:
+            return None
+
     def set_start_time(self, start_time):
         if isinstance(start_time, float):
             start_time = datetime.fromtimestamp(start_time, tz=timezone.utc)
