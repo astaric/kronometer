@@ -9,11 +9,12 @@ import SwiftUI
 
 struct StartButton: View {
     @EnvironmentObject var countdown: CountdownModel
+    @EnvironmentObject var bleController: BLEController
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         Button {
-            countdown.reset()
+            start()
         } label: {
             Text("Start")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -21,6 +22,18 @@ struct StartButton: View {
                 .foregroundColor(.primary)
         }
         .background(colorScheme == .light ? Color.light : Color.dark)
+        .onReceive(self.bleController.$events) { newValue in
+            if countdown.counter <= 5 {
+                start()
+            }
+        }
+        .onChange(of: self.countdown.defaultCountdown) { newValue in
+            countdown.reset()
+        }
+    }
+
+    private func start() {
+        countdown.reset()
     }
 }
 

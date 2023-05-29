@@ -13,6 +13,7 @@ struct KronometerApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(CountdownModel())
+                .environmentObject(BLEController())
        }
     }
 }

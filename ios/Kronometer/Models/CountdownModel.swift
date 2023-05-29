@@ -5,13 +5,12 @@
 //  Created by Anze Staric on 29/05/2023.
 //
 
-import Foundation
-
+import SwiftUI
 
 @MainActor
 final class CountdownModel: ObservableObject {
     @Published var counter: Int = 0
-    var defaultCountdown = 30
+    @AppStorage("defaultCountdown") var defaultCountdown = 30
     private var endTime: Date?
     private var timer: Timer?
 

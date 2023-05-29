@@ -13,6 +13,10 @@
 		C70348492A2499830062FD6E /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348482A2499830062FD6E /* Color.swift */; };
 		C703484B2A2499C10062FD6E /* StartHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = C703484A2A2499C10062FD6E /* StartHome.swift */; };
 		C703484E2A2499F80062FD6E /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C703484D2A2499F80062FD6E /* Separator.swift */; };
+		C72524362A24AA8E0022680F /* BLEController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72524352A24AA8E0022680F /* BLEController.swift */; };
+		C72524382A24AD950022680F /* RTSensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72524372A24AD950022680F /* RTSensor.swift */; };
+		C725243A2A24AF0C0022680F /* BTSensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72524392A24AF0C0022680F /* BTSensors.swift */; };
+		C725243C2A24F2F30022680F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C725243B2A24F2F30022680F /* Settings.bundle */; };
 		C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */; };
 		C79FB35F2A248DF100FEFD59 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35E2A248DF100FEFD59 /* ContentView.swift */; };
 		C79FB3612A248DF200FEFD59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C79FB3602A248DF200FEFD59 /* Assets.xcassets */; };
@@ -26,6 +30,10 @@
 		C70348482A2499830062FD6E /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		C703484A2A2499C10062FD6E /* StartHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartHome.swift; sourceTree = "<group>"; };
 		C703484D2A2499F80062FD6E /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
+		C72524352A24AA8E0022680F /* BLEController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEController.swift; sourceTree = "<group>"; };
+		C72524372A24AD950022680F /* RTSensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTSensor.swift; sourceTree = "<group>"; };
+		C72524392A24AF0C0022680F /* BTSensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSensors.swift; sourceTree = "<group>"; };
+		C725243B2A24F2F30022680F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		C79FB3592A248DF100FEFD59 /* Kronometer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kronometer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerApp.swift; sourceTree = "<group>"; };
 		C79FB35E2A248DF100FEFD59 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -59,6 +67,7 @@
 				C70348452A2499110062FD6E /* StartButton.swift */,
 				C703484A2A2499C10062FD6E /* StartHome.swift */,
 				C703484D2A2499F80062FD6E /* Separator.swift */,
+				C72524392A24AF0C0022680F /* BTSensors.swift */,
 			);
 			path = Start;
 			sourceTree = "<group>";
@@ -105,6 +114,9 @@
 				C79FB35E2A248DF100FEFD59 /* ContentView.swift */,
 				C79FB3602A248DF200FEFD59 /* Assets.xcassets */,
 				C79FB3622A248DF200FEFD59 /* Preview Content */,
+				C72524352A24AA8E0022680F /* BLEController.swift */,
+				C72524372A24AD950022680F /* RTSensor.swift */,
+				C725243B2A24F2F30022680F /* Settings.bundle */,
 			);
 			path = Kronometer;
 			sourceTree = "<group>";
@@ -176,6 +188,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C79FB3642A248DF200FEFD59 /* Preview Assets.xcassets in Resources */,
+				C725243C2A24F2F30022680F /* Settings.bundle in Resources */,
 				C79FB3612A248DF200FEFD59 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -190,8 +203,11 @@
 				C703484B2A2499C10062FD6E /* StartHome.swift in Sources */,
 				C79FB35F2A248DF100FEFD59 /* ContentView.swift in Sources */,
 				C70348442A2498570062FD6E /* CountdownModel.swift in Sources */,
+				C72524382A24AD950022680F /* RTSensor.swift in Sources */,
 				C703484E2A2499F80062FD6E /* Separator.swift in Sources */,
 				C70348462A2499110062FD6E /* StartButton.swift in Sources */,
+				C72524362A24AA8E0022680F /* BLEController.swift in Sources */,
+				C725243A2A24AF0C0022680F /* BTSensors.swift in Sources */,
 				C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */,
 				C70348412A2498080062FD6E /* Countdown.swift in Sources */,
 				C70348492A2499830062FD6E /* Color.swift in Sources */,
@@ -326,6 +342,8 @@
 				DEVELOPMENT_TEAM = 8AWHVW9A5C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Kronometer/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "App uses bluetooth to connect to sensor";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -355,6 +373,8 @@
 				DEVELOPMENT_TEAM = 8AWHVW9A5C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Kronometer/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "App uses bluetooth to connect to sensor";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
