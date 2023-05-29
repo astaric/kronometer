@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C70348412A2498080062FD6E /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348402A2498080062FD6E /* Countdown.swift */; };
+		C70348442A2498570062FD6E /* CountdownModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348432A2498570062FD6E /* CountdownModel.swift */; };
+		C70348462A2499110062FD6E /* StartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348452A2499110062FD6E /* StartButton.swift */; };
+		C70348492A2499830062FD6E /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348482A2499830062FD6E /* Color.swift */; };
+		C703484B2A2499C10062FD6E /* StartHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = C703484A2A2499C10062FD6E /* StartHome.swift */; };
+		C703484E2A2499F80062FD6E /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C703484D2A2499F80062FD6E /* Separator.swift */; };
 		C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */; };
 		C79FB35F2A248DF100FEFD59 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35E2A248DF100FEFD59 /* ContentView.swift */; };
 		C79FB3612A248DF200FEFD59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C79FB3602A248DF200FEFD59 /* Assets.xcassets */; };
@@ -14,6 +20,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C70348402A2498080062FD6E /* Countdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
+		C70348432A2498570062FD6E /* CountdownModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownModel.swift; sourceTree = "<group>"; };
+		C70348452A2499110062FD6E /* StartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartButton.swift; sourceTree = "<group>"; };
+		C70348482A2499830062FD6E /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		C703484A2A2499C10062FD6E /* StartHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartHome.swift; sourceTree = "<group>"; };
+		C703484D2A2499F80062FD6E /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
 		C79FB3592A248DF100FEFD59 /* Kronometer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kronometer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerApp.swift; sourceTree = "<group>"; };
 		C79FB35E2A248DF100FEFD59 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -32,6 +44,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C703483E2A2497BE0062FD6E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C703483F2A2497CA0062FD6E /* Start */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C703483F2A2497CA0062FD6E /* Start */ = {
+			isa = PBXGroup;
+			children = (
+				C70348402A2498080062FD6E /* Countdown.swift */,
+				C70348452A2499110062FD6E /* StartButton.swift */,
+				C703484A2A2499C10062FD6E /* StartHome.swift */,
+				C703484D2A2499F80062FD6E /* Separator.swift */,
+			);
+			path = Start;
+			sourceTree = "<group>";
+		};
+		C70348422A24982B0062FD6E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C70348432A2498570062FD6E /* CountdownModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C70348472A2499760062FD6E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C70348482A2499830062FD6E /* Color.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		C79FB3502A248DF100FEFD59 = {
 			isa = PBXGroup;
 			children = (
@@ -51,6 +98,9 @@
 		C79FB35B2A248DF100FEFD59 /* Kronometer */ = {
 			isa = PBXGroup;
 			children = (
+				C70348472A2499760062FD6E /* Extensions */,
+				C703483E2A2497BE0062FD6E /* Views */,
+				C70348422A24982B0062FD6E /* Models */,
 				C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */,
 				C79FB35E2A248DF100FEFD59 /* ContentView.swift */,
 				C79FB3602A248DF200FEFD59 /* Assets.xcassets */,
@@ -137,8 +187,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C703484B2A2499C10062FD6E /* StartHome.swift in Sources */,
 				C79FB35F2A248DF100FEFD59 /* ContentView.swift in Sources */,
+				C70348442A2498570062FD6E /* CountdownModel.swift in Sources */,
+				C703484E2A2499F80062FD6E /* Separator.swift in Sources */,
+				C70348462A2499110062FD6E /* StartButton.swift in Sources */,
 				C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */,
+				C70348412A2498080062FD6E /* Countdown.swift in Sources */,
+				C70348492A2499830062FD6E /* Color.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
