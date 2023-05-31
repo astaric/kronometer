@@ -1,16 +1,20 @@
 #include <ArduinoBLE.h>
 
+const int DEBUG = 0;
 const char* deviceServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1214";
 BLEService sensorService(deviceServiceUuid);
 BLEByteCharacteristic sensorCharacteristic(deviceServiceCharacteristicUuid, BLENotify);
 BLEDescriptor sensorDescriptor("2901", "Sensor");
+const char* sensorName = "Kronometer Sensor (1)";
 
 int BUTTON_PIN = 2;
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial);
+  if (DEBUG) {
+    while (!Serial);
+  }
 
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -21,8 +25,8 @@ void setup() {
     Serial.println("- Started Bluetooth® Low Energy module");
   }
 
-  BLE.setDeviceName("Nano 33 BLE (1)");
-  BLE.setLocalName("Nano 33 BLE (1)");
+  BLE.setDeviceName(sensorName);
+  BLE.setLocalName(sensorName);
   BLE.setAdvertisedService(sensorService);  
   sensorCharacteristic.addDescriptor(sensorDescriptor);
   sensorService.addCharacteristic(sensorCharacteristic);
@@ -31,7 +35,7 @@ void setup() {
   sensorCharacteristic.writeValue(0);
   BLE.advertise();
 
-  Serial.println("Nano 33 BLE (1)");
+  Serial.println(sensorName);
   Serial.println("");
   Serial.println("Waiting for connections");
 }
