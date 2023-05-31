@@ -9,8 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        BTSensors()
-        StartHome()
+        NavigationView {
+            VStack {
+                //DebugBikerSync()
+                StartHome()
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: DebugBTSensors()) {
+                        Image("Bluetooth")
+                            .colorInvert()
+                    }
+                }
+            }
+        }
+
     }
 }
 

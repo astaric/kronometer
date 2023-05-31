@@ -12,7 +12,7 @@ struct Countdown: View {
 
     var body: some View {
         Text(countdown.description)
-            .font(.custom("test", size: 100, relativeTo: .largeTitle))
+            .font(.custom("", size: 100, relativeTo: .largeTitle))
 
     }
 }

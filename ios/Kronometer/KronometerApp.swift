@@ -9,11 +9,13 @@ import SwiftUI
 
 @main
 struct KronometerApp: App {
+    @StateObject private var dataController = KronometerProvider.shared
+
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(CountdownModel())
                 .environmentObject(BLEController())
+                .environmentObject(CountdownModel())
        }
     }
 }
