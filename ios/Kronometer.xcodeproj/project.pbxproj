@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C7015CDF2A27526000D1F120 /* StartList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7015CDE2A27526000D1F120 /* StartList.swift */; };
+		C7015CE32A27754D00D1F120 /* StartListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7015CE22A27754D00D1F120 /* StartListItem.swift */; };
 		C70348412A2498080062FD6E /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348402A2498080062FD6E /* Countdown.swift */; };
 		C70348442A2498570062FD6E /* CountdownModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348432A2498570062FD6E /* CountdownModel.swift */; };
 		C70348462A2499110062FD6E /* StartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348452A2499110062FD6E /* StartButton.swift */; };
@@ -16,6 +18,12 @@
 		C72524362A24AA8E0022680F /* BLEController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72524352A24AA8E0022680F /* BLEController.swift */; };
 		C725243A2A24AF0C0022680F /* Sensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72524392A24AF0C0022680F /* Sensors.swift */; };
 		C725243C2A24F2F30022680F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C725243B2A24F2F30022680F /* Settings.bundle */; };
+		C76E99202A25D877002C5ADD /* Kronometer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C76E991E2A25D877002C5ADD /* Kronometer.xcdatamodeld */; };
+		C76E99222A25D926002C5ADD /* KronometerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E99212A25D926002C5ADD /* KronometerProvider.swift */; };
+		C76E99252A2720D0002C5ADD /* Biker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E99242A2720D0002C5ADD /* Biker.swift */; };
+		C76E99272A2721B8002C5ADD /* BikerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E99262A2721B8002C5ADD /* BikerError.swift */; };
+		C76E992A2A272A40002C5ADD /* CurrentBiker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E99292A272A40002C5ADD /* CurrentBiker.swift */; };
+		C76E992C2A272B88002C5ADD /* StartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E992B2A272B88002C5ADD /* StartModel.swift */; };
 		C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */; };
 		C79FB35F2A248DF100FEFD59 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35E2A248DF100FEFD59 /* ContentView.swift */; };
 		C79FB3612A248DF200FEFD59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C79FB3602A248DF200FEFD59 /* Assets.xcassets */; };
@@ -23,6 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C7015CDE2A27526000D1F120 /* StartList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartList.swift; sourceTree = "<group>"; };
+		C7015CE22A27754D00D1F120 /* StartListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartListItem.swift; sourceTree = "<group>"; };
 		C70348402A2498080062FD6E /* Countdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
 		C70348432A2498570062FD6E /* CountdownModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownModel.swift; sourceTree = "<group>"; };
 		C70348452A2499110062FD6E /* StartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartButton.swift; sourceTree = "<group>"; };
@@ -32,6 +42,12 @@
 		C72524352A24AA8E0022680F /* BLEController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEController.swift; sourceTree = "<group>"; };
 		C72524392A24AF0C0022680F /* Sensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sensors.swift; sourceTree = "<group>"; };
 		C725243B2A24F2F30022680F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		C76E991F2A25D877002C5ADD /* Kronometer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Kronometer.xcdatamodel; sourceTree = "<group>"; };
+		C76E99212A25D926002C5ADD /* KronometerProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerProvider.swift; sourceTree = "<group>"; };
+		C76E99242A2720D0002C5ADD /* Biker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biker.swift; sourceTree = "<group>"; };
+		C76E99262A2721B8002C5ADD /* BikerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikerError.swift; sourceTree = "<group>"; };
+		C76E99292A272A40002C5ADD /* CurrentBiker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentBiker.swift; sourceTree = "<group>"; };
+		C76E992B2A272B88002C5ADD /* StartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartModel.swift; sourceTree = "<group>"; };
 		C79FB3592A248DF100FEFD59 /* Kronometer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kronometer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerApp.swift; sourceTree = "<group>"; };
 		C79FB35E2A248DF100FEFD59 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -66,7 +82,9 @@
 				C70348452A2499110062FD6E /* StartButton.swift */,
 				C703484A2A2499C10062FD6E /* StartHome.swift */,
 				C703484D2A2499F80062FD6E /* Separator.swift */,
-				C72524392A24AF0C0022680F /* BTSensors.swift */,
+				C76E99292A272A40002C5ADD /* CurrentBiker.swift */,
+				C7015CDE2A27526000D1F120 /* StartList.swift */,
+				C7015CE22A27754D00D1F120 /* StartListItem.swift */,
 			);
 			path = Start;
 			sourceTree = "<group>";
@@ -74,7 +92,11 @@
 		C70348422A24982B0062FD6E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C76E99242A2720D0002C5ADD /* Biker.swift */,
+				C76E99262A2721B8002C5ADD /* BikerError.swift */,
 				C70348432A2498570062FD6E /* CountdownModel.swift */,
+				C76E99212A25D926002C5ADD /* KronometerProvider.swift */,
+				C76E992B2A272B88002C5ADD /* StartModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -93,6 +115,14 @@
 				C72524352A24AA8E0022680F /* BLEController.swift */,
 			);
 			path = Bluetooth;
+			sourceTree = "<group>";
+		};
+		C76E99282A2721D0002C5ADD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C76E991E2A25D877002C5ADD /* Kronometer.xcdatamodeld */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		C7804D322A2783940060CBC7 /* Settings */ = {
@@ -128,6 +158,7 @@
 				C70348472A2499760062FD6E /* Extensions */,
 				C703483E2A2497BE0062FD6E /* Views */,
 				C70348422A24982B0062FD6E /* Models */,
+				C76E99282A2721D0002C5ADD /* Resources */,
 				C79FB3602A248DF200FEFD59 /* Assets.xcassets */,
 				C79FB3622A248DF200FEFD59 /* Preview Content */,
 				C725243B2A24F2F30022680F /* Settings.bundle */,
@@ -215,14 +246,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				C703484B2A2499C10062FD6E /* StartHome.swift in Sources */,
+				C76E99252A2720D0002C5ADD /* Biker.swift in Sources */,
+				C76E99272A2721B8002C5ADD /* BikerError.swift in Sources */,
+				C7015CDF2A27526000D1F120 /* StartList.swift in Sources */,
+				C76E99202A25D877002C5ADD /* Kronometer.xcdatamodeld in Sources */,
 				C79FB35F2A248DF100FEFD59 /* ContentView.swift in Sources */,
 				C70348442A2498570062FD6E /* CountdownModel.swift in Sources */,
 				C703484E2A2499F80062FD6E /* Separator.swift in Sources */,
 				C70348462A2499110062FD6E /* StartButton.swift in Sources */,
+				C7015CE32A27754D00D1F120 /* StartListItem.swift in Sources */,
 				C72524362A24AA8E0022680F /* BLEController.swift in Sources */,
 				C725243A2A24AF0C0022680F /* Sensors.swift in Sources */,
 				C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */,
+				C76E992C2A272B88002C5ADD /* StartModel.swift in Sources */,
 				C70348412A2498080062FD6E /* Countdown.swift in Sources */,
+				C76E992A2A272A40002C5ADD /* CurrentBiker.swift in Sources */,
+				C76E99222A25D926002C5ADD /* KronometerProvider.swift in Sources */,
 				C70348492A2499830062FD6E /* Color.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -428,6 +467,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C76E991E2A25D877002C5ADD /* Kronometer.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C76E991F2A25D877002C5ADD /* Kronometer.xcdatamodel */,
+			);
+			currentVersion = C76E991F2A25D877002C5ADD /* Kronometer.xcdatamodel */;
+			path = Kronometer.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = C79FB3512A248DF100FEFD59 /* Project object */;
 }

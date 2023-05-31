@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct StartButton: View {
-    @EnvironmentObject var countdown: CountdownModel
     @EnvironmentObject var bleController: BLEController
+    @EnvironmentObject var countdown: CountdownModel
+    @EnvironmentObject var startModel: StartModel
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
@@ -33,6 +34,7 @@ struct StartButton: View {
     }
 
     private func start() {
+        startModel.startBiker()
         countdown.reset()
     }
 }

@@ -16,6 +16,8 @@ struct StartHome: View {
                 Countdown()
                     .padding([.top, .bottom], 50)
                 Separator()
+                CurrentBiker()
+                    .padding([.top, .bottom], 50)
                 StartButton()
                     .ignoresSafeArea()
             }
@@ -26,7 +28,7 @@ struct StartHome: View {
                     Spacer()
                     Separator()
                     Spacer()
-
+                    CurrentBiker()
                 }.padding(50)
                 StartButton()
             }
