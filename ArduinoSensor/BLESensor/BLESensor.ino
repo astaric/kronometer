@@ -6,9 +6,9 @@ const char* deviceServiceCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1
 BLEService sensorService(deviceServiceUuid);
 BLEByteCharacteristic sensorCharacteristic(deviceServiceCharacteristicUuid, BLENotify);
 BLEDescriptor sensorDescriptor("2901", "Sensor");
-const char* sensorName = "Kronometer Sensor (1)";
+const char* sensorName = "Kronometer Sensor 2";
 
-int BUTTON_PIN = 2;
+int BUTTON_PIN = 3;
 
 void setup() {
   Serial.begin(9600);

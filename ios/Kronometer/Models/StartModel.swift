@@ -14,7 +14,7 @@ struct BikerOnStart: Identifiable {
     var startTime: Date?
 
     var formattedStartTime: String {
-        self.startTime?.formatted(.dateTime.hour().minute().second()) ?? "ready"
+        self.startTime?.formatted(.dateTime.hour().minute().second()) ?? "waiting"
     }
 }
 
@@ -33,9 +33,18 @@ class StartModel: ObservableObject {
     @Published var nextBiker: BikerOnStart?
     @Published var bikers = [BikerOnStart]()
     var idToIndex: [Int?: Int] = [:]
+    @Published var errorMsg = ""
 
     func startBiker() {
         if let idx = idToIndex[nextBikerId] {
+            let bikerNo = nextBikerId!
+            Task {
+                do {
+                    try await createStartEvent(bikerId: bikerNo, startTime: Date.now)
+                } catch {
+                    self.errorMsg = error.localizedDescription
+                }
+            }
             bikers[idx].startTime = Date.now
         }
         selectNextBiker()
@@ -74,6 +83,22 @@ class StartModel: ObservableObject {
                 idToIndex[biker.id] = bikers.count - 1
             }
         }
+    }
 
+    func reset() {
+        bikers = []
+        idToIndex = [:]
+        nextBikerId = nil
+    }
+
+    private func createStartEvent(bikerId: Int, startTime: Date) async throws {
+        let moc = KronometerProvider.shared.container.viewContext
+        let startEvent = StartEvent(context: moc)
+        startEvent.biker_no = Int32(bikerId)
+        startEvent.start_time = startTime
+        try moc.save()
+        try await KronometerApi.shared.setStartTime(for: bikerId, to: startTime)
+        startEvent.uploaded = true
+        try moc.save()
     }
 }

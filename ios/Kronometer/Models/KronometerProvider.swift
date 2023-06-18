@@ -9,8 +9,6 @@ import CoreData
 import OSLog
 
 class KronometerProvider: ObservableObject {
-    let bikerListUrl = URL(string:"https://kronometer.staric.net/biker/list")!
-
     let logger = Logger(subsystem: "net.staric.kronometer", category: "persistence")
 
     static let shared = KronometerProvider()
@@ -26,24 +24,11 @@ class KronometerProvider: ObservableObject {
     }
 
     func fetchBikers() async throws {
-        let sesion = URLSession.shared
-        guard let (data, response) = try? await sesion.data(from: bikerListUrl),
-              let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode == 200
-        else {
-            logger.debug("Failed to receive valid response and/or data")
-            throw BikerError.fetchError
-        }
-
-        do {
-            let bikerPropertyList = try parseBikersJson(jsonData: data)
-            try await importBikers(from: bikerPropertyList)
-        } catch {
-            throw BikerError.wrongDataFormat(error: error)
-        }
+        let bikerPropertyList = try await KronometerApi.shared.getBikers()
+        try await importBikers(from: bikerPropertyList)
     }
 
-    func importBikers(from propertiesList: [BikerProperties]) async throws {
+    func importBikers(from propertiesList: [BikerData]) async throws {
         guard !propertiesList.isEmpty else { return }
 
         let taskContext = container.newBackgroundContext()
@@ -64,7 +49,7 @@ class KronometerProvider: ObservableObject {
         }
     }
 
-    func newBatchInsertRequest(with propertyList: [BikerProperties]) -> NSBatchInsertRequest {
+    func newBatchInsertRequest(with propertyList: [BikerData]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count
 
@@ -76,6 +61,53 @@ class KronometerProvider: ObservableObject {
         }
         return batchInsertRequest
     }
+
+    func removeAllData() throws {
+        for entityName in ["DBBiker", "StartEvent"] {
+            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: entityName)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            deleteRequest.resultType = .resultTypeObjectIDs
+            let context  = container.viewContext
+            let batchDelete = try context.execute(deleteRequest) as? NSBatchDeleteResult
+
+            guard let deleteResult = batchDelete?.result as? [NSManagedObjectID]
+            else { return }
+
+            let deletedObjects: [AnyHashable: Any] = [
+                NSDeletedObjectsKey: deleteResult
+            ]
+            NSManagedObjectContext.mergeChanges(
+                fromRemoteContextSave: deletedObjects,
+                into: [context]
+            )
+        }
+    }
+
+    func syncStartTimes() async throws {
+        let moc = container.newBackgroundContext()
+        let fetchRequest = StartEvent.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "uploaded == NO")
+        let pendingStartEvents: [StartEvent] = try moc.fetch(fetchRequest)
+        for startEvent in pendingStartEvents {
+            if let start_time = startEvent.start_time {
+                try await KronometerApi.shared.setStartTime(for: Int(startEvent.biker_no), to: start_time)
+            }
+            startEvent.uploaded = true
+            try moc.save()
+        }
+    }
+
+    func syncEndTimes() async throws {
+        let moc = container.newBackgroundContext()
+        let fetchRequest = EndEvent.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "uploaded == NO")
+        let pendingEndEvents: [EndEvent] = try moc.fetch(fetchRequest)
+        for endEvent in pendingEndEvents {
+            if let end_time = endEvent.end_time {
+                try await KronometerApi.shared.setEndTime(for: Int(endEvent.biker_no), to: end_time)
+            }
+            endEvent.uploaded = true
+            try moc.save()
+        }
+    }
 }
-
-

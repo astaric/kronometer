@@ -7,23 +7,48 @@
 
 import SwiftUI
 
+enum AppMode: String {
+    case start = "start"
+    case finish = "finish"
+}
+
 struct ContentView: View {
+    @AppStorage("debug")
+    var debug = false
+    @AppStorage("mode")
+    var mode = ""
+
+    var appMode: AppMode {
+        AppMode(rawValue: mode) ?? AppMode.start
+    }
+
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
-                //DebugBikerSync()
-                StartHome()
+                switch appMode {
+                    case .start:
+                        StartHome()
+                    case .finish:
+                        FinishHome()
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: DebugBTSensors()) {
+                    NavigationLink(destination: SensorSettings()) {
                         Image("Bluetooth")
-                            .colorInvert()
+                            .foregroundColor(.primary)
+                    }
+                }
+                if debug {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        NavigationLink(destination: DebugMenu()) {
+                            Image(systemName: "line.3.horizontal")
+                                .foregroundColor(.primary)
+                        }
                     }
                 }
             }
         }
-
     }
 }
 

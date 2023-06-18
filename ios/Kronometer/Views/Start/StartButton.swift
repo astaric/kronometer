@@ -22,7 +22,7 @@ struct StartButton: View {
                 .font(.custom("", size: 50, relativeTo: .largeTitle))
                 .foregroundColor(.primary)
         }
-        .background(colorScheme == .light ? Color.light : Color.dark)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
         .onReceive(self.bleController.$events) { newValue in
             if countdown.counter <= 5 {
                 start()

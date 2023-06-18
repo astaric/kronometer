@@ -10,6 +10,36 @@
 	<array>
 		<dict>
 			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Mode</string>
+			<key>Key</key>
+			<string>mode</string>
+			<key>DefaultValue</key>
+			<string>start</string>
+			<key>Titles</key>
+			<array>
+				<string>Start</string>
+				<string>Finish</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<string>start</string>
+				<string>finish</string>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Debug</string>
+			<key>Key</key>
+			<string>debug</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
 			<string>Countdown</string>

@@ -65,8 +65,6 @@ class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,CBPeri
 
     func connect(_ sensor: Sensor?) {
         if let sensor = sensor {
-
-
             self.sensorId = sensor.id.uuidString
             self.sensorName = sensor.name
             self.connectToSensor()
@@ -157,7 +155,6 @@ extension BLEController {
             }
         }
     }
-
 }
 
 extension BLEController {
@@ -180,12 +177,17 @@ extension BLEController {
         } else {
             self.log("could not subscribe to sensor \(error!)")
         }
-
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if let value = characteristic.value?.withUnsafeBytes({ $0.load(as: Int8.self) }) {
             if value == 0 {
+                let now = Date.now
+                if let lastEvent = events.last {
+                    if Calendar.current.dateComponents([.nanosecond], from: lastEvent.time, to: now).nanosecond ?? 0 < 100_000_000 {
+                        return
+                    }
+                }
                 events.append(SensorEvent(id: events.count, time: Date.now, value: Int(value)))
             }
         }

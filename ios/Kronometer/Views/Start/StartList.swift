@@ -12,8 +12,6 @@ struct StartList: View {
     @EnvironmentObject var modelData: StartModel
     @Environment(\.dismiss) private var dismiss
 
-    @State var error = ""
-
     var body: some View {
         ScrollViewReader { proxy in
             VStack {
@@ -27,23 +25,11 @@ struct StartList: View {
                         try await kronometerProvider.fetchBikers()
                         try await modelData.refresh()
                     } catch {
-                        self.error = error.localizedDescription
+                        self.modelData.errorMsg = error.localizedDescription
                     }
                 }
 
-                Text("error: \(error)")
-                Button {
-                    if let selectedBikerId = modelData.nextBikerId {
-                        proxy.scrollTo(selectedBikerId, anchor: .top)
-                    }
-                } label: {
-                    Text("Next: \(modelData.nextBiker?.name ?? "")")
-                }.buttonStyle(.plain)
-            }.onAppear {
-                print("app")
-            }
-            .onDisappear {
-                print("dis")
+                List {Text("error: \(modelData.errorMsg)")}
             }
         }
     }
