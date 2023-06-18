@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "C834A52C-33F7-4A5E-8DDB-63D5D32F428B",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Kronometer.xcodeproj",
+        "identifier" : "C7A8DFD62A38A78A00F931C5",
+        "name" : "KronometerTests"
+      }
+    }
+  ],
+  "version" : 1
+}
