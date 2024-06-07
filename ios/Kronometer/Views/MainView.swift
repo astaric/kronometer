@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  Kronometer
 //
 //  Created by Anze Staric on 29/05/2023.
@@ -8,23 +8,24 @@
 import SwiftUI
 
 enum AppMode: String {
-    case start = "start"
-    case finish = "finish"
+    case start, finish
 }
 
-struct ContentView: View {
+struct MainView: View {
     @AppStorage("debug")
     var debug = false
-    @AppStorage("mode")
-    var mode = ""
-
-    var appMode: AppMode {
-        AppMode(rawValue: mode) ?? AppMode.start
-    }
+    @AppStorage("appMode")
+    var appMode: AppMode = .start
 
     var body: some View {
         NavigationStack {
             VStack {
+                HStack {
+                    Image(systemName: "line.3.horizontal")
+                    Spacer()
+                    Image("Bluetooth")
+                }
+                
                 switch appMode {
                     case .start:
                         StartHome()
@@ -54,7 +55,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        MainView()
             .environmentObject(CountdownModel())
             .environmentObject(BLEController())
     }

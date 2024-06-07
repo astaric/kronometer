@@ -60,7 +60,6 @@ class KronometerApi {
         urlComponents.queryItems = [
             URLQueryItem(name: "number", value: "\(bikerId)"),
             URLQueryItem(name: "end_time", value: "\(Int(time.timeIntervalSince1970 * 1000))")
-
         ]
         let response: URLResponse
         let data: Data

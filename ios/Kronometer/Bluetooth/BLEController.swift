@@ -26,8 +26,8 @@ struct LogEntry : Identifiable {
     static private var lastId = 0
 
     init(_ message: String) {
-        LogEntry.lastId += 1
-        self.id = LogEntry.lastId
+        Self.lastId += 1
+        self.id = Self.lastId
         self.time = Date.now
         self.message = message
     }
@@ -94,7 +94,6 @@ class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,CBPeri
 }
 
 extension BLEController {
-
     func startDiscovery() {
         if let discoveryTimer = discoveryTimer {
             discoveryTimer.invalidate()

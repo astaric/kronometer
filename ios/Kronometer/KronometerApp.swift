@@ -13,7 +13,7 @@ struct KronometerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
                 .environmentObject(BLEController())
                 .environmentObject(CountdownModel())
                 .environmentObject(StartModel())

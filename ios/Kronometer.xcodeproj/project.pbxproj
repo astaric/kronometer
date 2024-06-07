@@ -28,7 +28,7 @@
 		C7804D382A27956F0060CBC7 /* StartEventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D372A27956F0060CBC7 /* StartEventLog.swift */; };
 		C7804D3D2A27998E0060CBC7 /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D3C2A27998E0060CBC7 /* DebugMenu.swift */; };
 		C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */; };
-		C79FB35F2A248DF100FEFD59 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35E2A248DF100FEFD59 /* ContentView.swift */; };
+		C79FB35F2A248DF100FEFD59 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35E2A248DF100FEFD59 /* MainView.swift */; };
 		C79FB3612A248DF200FEFD59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C79FB3602A248DF200FEFD59 /* Assets.xcassets */; };
 		C79FB3642A248DF200FEFD59 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C79FB3632A248DF200FEFD59 /* Preview Assets.xcassets */; };
 		C7A8DFB62A38483300F931C5 /* FinishModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFB52A38483300F931C5 /* FinishModel.swift */; };
@@ -81,7 +81,7 @@
 		C7804D3C2A27998E0060CBC7 /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
 		C79FB3592A248DF100FEFD59 /* Kronometer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kronometer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerApp.swift; sourceTree = "<group>"; };
-		C79FB35E2A248DF100FEFD59 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C79FB35E2A248DF100FEFD59 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		C79FB3602A248DF200FEFD59 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C79FB3632A248DF200FEFD59 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C7A8DFB52A38483300F931C5 /* FinishModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishModel.swift; sourceTree = "<group>"; };
@@ -123,6 +123,7 @@
 		C703483E2A2497BE0062FD6E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				C79FB35E2A248DF100FEFD59 /* MainView.swift */,
 				C703483F2A2497CA0062FD6E /* Start */,
 				C7ED15B02A306BBF00F34AFC /* Finish */,
 				C7804D322A2783940060CBC7 /* Settings */,
@@ -227,7 +228,6 @@
 			isa = PBXGroup;
 			children = (
 				C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */,
-				C79FB35E2A248DF100FEFD59 /* ContentView.swift */,
 				C7A8DFEB2A39CED800F931C5 /* API */,
 				C76E99232A25F015002C5ADD /* Bluetooth */,
 				C70348472A2499760062FD6E /* Extensions */,
@@ -390,7 +390,7 @@
 				C7015CDF2A27526000D1F120 /* StartList.swift in Sources */,
 				C7A8DFE32A398F2B00F931C5 /* DateFormat.swift in Sources */,
 				C76E99202A25D877002C5ADD /* Kronometer.xcdatamodeld in Sources */,
-				C79FB35F2A248DF100FEFD59 /* ContentView.swift in Sources */,
+				C79FB35F2A248DF100FEFD59 /* MainView.swift in Sources */,
 				C7A8DFB62A38483300F931C5 /* FinishModel.swift in Sources */,
 				C70348442A2498570062FD6E /* CountdownModel.swift in Sources */,
 				C703484E2A2499F80062FD6E /* Separator.swift in Sources */,
