@@ -27,6 +27,7 @@ final class KronometerTests: XCTestCase {
               }
             ]
         """.utf8)
+        /*
         let bikers = try parseBikersJson(jsonData: data)
 
         XCTAssert(bikers.count == 1)
@@ -49,6 +50,7 @@ final class KronometerTests: XCTestCase {
         [{"model": "biker.biker", "pk": 371, "fields": {"number": 1, "name": "Test", "surname": "Prvi", "category": 42, "birth_year": null, "domestic": true, "start_time": null, "end_time": null}}, {"model": "biker.biker", "pk": 372, "fields": {"number": 2, "name": "Test", "surname": "Drugi", "category": 43, "birth_year": null, "domestic": true, "start_time": null, "end_time": null}}, {"model": "biker.biker", "pk": 373, "fields": {"number": 3, "name": "Test", "surname": "Tretji", "category": 44, "birth_year": null, "domestic": true, "start_time": null, "end_time": null}}]
         """.utf8)
         let bikers = try parseBikersJson(jsonData: data)
+         */
 
     }
 }

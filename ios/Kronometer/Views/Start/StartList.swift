@@ -9,42 +9,52 @@ import SwiftUI
 
 struct StartList: View {
     var kronometerProvider: KronometerProvider = .shared
-    @EnvironmentObject var modelData: StartModel
+    @Environment(BikerStore.self) var bikerStore
     @Environment(\.dismiss) private var dismiss
+    @State var filter: FilterType = .ready
+    @State var error: String?
+    
+    var readyBikers: [Biker] {
+        bikerStore.bikers.filter { $0.startTime == nil }
+    }
+    var startedBikers: [Biker] {
+        bikerStore.bikers.filter { $0.startTime != nil }
+    }
 
     var body: some View {
-        ScrollViewReader { proxy in
-            VStack {
-                List(selection: $modelData.nextBikerId) {
-                    ForEach(modelData.bikers) { biker in
-                        StartListItem(biker: biker)
-                    }
+        VStack {
+            List {
+                Picker("Tekmovalci", selection: $filter ) {
+                    Text("Pripravljeni").tag(FilterType.ready)
+                    Text("Na progi").tag(FilterType.started)
+                }.pickerStyle(.segmented)
+                
+                ForEach(filter == .ready ? readyBikers : startedBikers) { biker in
+                    StartListItem(biker: biker, selected: biker.id == bikerStore.nextBikerOnStart?.id)
+                        .onTapGesture {
+                            bikerStore.nextBikerOnStart = biker
+                            dismiss()
+                        }
                 }
-                .refreshable {
-                    do {
-                        try await kronometerProvider.fetchBikers()
-                        try await modelData.refresh()
-                    } catch {
-                        self.modelData.errorMsg = error.localizedDescription
-                    }
+            }
+            .refreshable {
+                do {
+                    try await bikerStore.refresh()
+                } catch {
+                    self.error = error.localizedDescription
                 }
-
-                List {Text("error: \(modelData.errorMsg)")}
             }
         }
     }
+
+enum FilterType {
+    case ready, started
+}
 }
 
 struct StartList_Previews: PreviewProvider {
     static var previews: some View {
-        let model = StartModel()
-        for i in 0..<15 {
-            model.bikers.append(BikerOnStart(id: i, name: "Janez Novak", startTime: Date.now))
-        }
-        model.bikers.append(BikerOnStart(id: 22, name: "Edvin Novak"))
-        model.bikers.append(BikerOnStart(id: 33, name: "Gregor Novak"))
-        model.nextBikerId = 22
         return StartList()
-            .environmentObject(model)
+            .environment(BikerStore())
     }
 }

@@ -7,11 +7,21 @@
 import SwiftUI
 
 struct Countdown: View {
-    @EnvironmentObject var countdown: CountdownModel
+    @Environment(CountdownModel.self) var countdown: CountdownModel
 
 
     var body: some View {
-        Text(countdown.description)
+        if countdown.active {
+            TimelineView(.animation(minimumInterval: 0.1)) { timeline in
+                countdownText
+            }
+        } else {
+            countdownText
+        }
+    }
+    
+    var countdownText: some View {
+        Text("\(countdown.description)")
             .font(.custom("", size: 100, relativeTo: .largeTitle))
     }
 }
@@ -21,6 +31,6 @@ struct Countdown_Previews: PreviewProvider {
         let model = CountdownModel()
         model.reset()
         return Countdown()
-            .environmentObject(model)
+            .environment(model)
     }
 }

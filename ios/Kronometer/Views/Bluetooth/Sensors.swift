@@ -26,7 +26,6 @@ struct Sensors: View {
                 }
             }
 
-
             ForEach(bleController.sensors) { sensor in
                 Button {
                     if sensor.isConnected {

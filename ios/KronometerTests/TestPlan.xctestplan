@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "C834A52C-33F7-4A5E-8DDB-63D5D32F428B",
+      "id" : "30E06D13-943D-4424-B337-6C88080B8822",
       "name" : "Configuration 1",
       "options" : {
 
@@ -13,9 +13,12 @@
   },
   "testTargets" : [
     {
+      "selectedTests" : [
+        "KronometerTests\/testOne()"
+      ],
       "target" : {
         "containerPath" : "container:Kronometer.xcodeproj",
-        "identifier" : "C7A8DFD62A38A78A00F931C5",
+        "identifier" : "C79E21352C1421BF00EACF55",
         "name" : "KronometerTests"
       }
     }

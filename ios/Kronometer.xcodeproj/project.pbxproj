@@ -11,22 +11,24 @@
 		C7015CE32A27754D00D1F120 /* StartListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7015CE22A27754D00D1F120 /* StartListItem.swift */; };
 		C70348412A2498080062FD6E /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348402A2498080062FD6E /* Countdown.swift */; };
 		C70348442A2498570062FD6E /* CountdownModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348432A2498570062FD6E /* CountdownModel.swift */; };
-		C70348462A2499110062FD6E /* StartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348452A2499110062FD6E /* StartButton.swift */; };
-		C70348492A2499830062FD6E /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70348482A2499830062FD6E /* Color.swift */; };
 		C703484B2A2499C10062FD6E /* StartHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = C703484A2A2499C10062FD6E /* StartHome.swift */; };
-		C703484E2A2499F80062FD6E /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C703484D2A2499F80062FD6E /* Separator.swift */; };
 		C72524362A24AA8E0022680F /* BLEController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72524352A24AA8E0022680F /* BLEController.swift */; };
 		C725243A2A24AF0C0022680F /* Sensors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72524392A24AF0C0022680F /* Sensors.swift */; };
 		C725243C2A24F2F30022680F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C725243B2A24F2F30022680F /* Settings.bundle */; };
+		C74906702C12E5C6001D409B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C749066F2C12E5C6001D409B /* Utils.swift */; };
+		C74906722C12E640001D409B /* Biker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74906712C12E640001D409B /* Biker.swift */; };
 		C76E99202A25D877002C5ADD /* Kronometer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C76E991E2A25D877002C5ADD /* Kronometer.xcdatamodeld */; };
 		C76E99222A25D926002C5ADD /* KronometerProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E99212A25D926002C5ADD /* KronometerProvider.swift */; };
 		C76E99272A2721B8002C5ADD /* BikerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E99262A2721B8002C5ADD /* BikerError.swift */; };
-		C76E992A2A272A40002C5ADD /* CurrentBiker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E99292A272A40002C5ADD /* CurrentBiker.swift */; };
 		C76E992C2A272B88002C5ADD /* StartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E992B2A272B88002C5ADD /* StartModel.swift */; };
 		C7804D342A27949C0060CBC7 /* SensorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D332A27949C0060CBC7 /* SensorLog.swift */; };
 		C7804D362A2794D30060CBC7 /* SensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D352A2794D30060CBC7 /* SensorSettings.swift */; };
 		C7804D382A27956F0060CBC7 /* StartEventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D372A27956F0060CBC7 /* StartEventLog.swift */; };
 		C7804D3D2A27998E0060CBC7 /* DebugMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D3C2A27998E0060CBC7 /* DebugMenu.swift */; };
+		C796F58D2C1436DC005BCFCA /* BluetoothStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C796F58C2C1436DC005BCFCA /* BluetoothStatus.swift */; };
+		C79E21392C1421BF00EACF55 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C749066F2C12E5C6001D409B /* Utils.swift */; };
+		C79E213A2C1421BF00EACF55 /* KronometerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFD92A38A78A00F931C5 /* KronometerTests.swift */; };
+		C79E214F2C14221200EACF55 /* UtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E21312C141F4700EACF55 /* UtilTests.swift */; };
 		C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */; };
 		C79FB35F2A248DF100FEFD59 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79FB35E2A248DF100FEFD59 /* MainView.swift */; };
 		C79FB3612A248DF200FEFD59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C79FB3602A248DF200FEFD59 /* Assets.xcassets */; };
@@ -36,20 +38,17 @@
 		C7A8DFBA2A3851CA00F931C5 /* CompletedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFB92A3851CA00F931C5 /* CompletedList.swift */; };
 		C7A8DFBC2A38520F00F931C5 /* ArrivedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFBB2A38520F00F931C5 /* ArrivedList.swift */; };
 		C7A8DFBE2A38526200F931C5 /* SensorEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFBD2A38526200F931C5 /* SensorEvents.swift */; };
-		C7A8DFDA2A38A78A00F931C5 /* KronometerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFD92A38A78A00F931C5 /* KronometerTests.swift */; };
-		C7A8DFE32A398F2B00F931C5 /* DateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFE22A398F2B00F931C5 /* DateFormat.swift */; };
-		C7A8DFE52A39923A00F931C5 /* DateComponentsFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFE42A39923A00F931C5 /* DateComponentsFormatter.swift */; };
 		C7A8DFE72A3996B100F931C5 /* AddEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFE62A3996B100F931C5 /* AddEvent.swift */; };
-		C7A8DFE82A39C32200F931C5 /* DateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFE22A398F2B00F931C5 /* DateFormat.swift */; };
 		C7A8DFEA2A39C41500F931C5 /* ClearData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFE92A39C41500F931C5 /* ClearData.swift */; };
 		C7A8DFED2A39CEE500F931C5 /* KronometerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFEC2A39CEE500F931C5 /* KronometerAPI.swift */; };
 		C7A8DFF12A39E85B00F931C5 /* EndEventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFF02A39E85B00F931C5 /* EndEventLog.swift */; };
+		C7C26CA62C12F667002C32F4 /* BikerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C26CA52C12F667002C32F4 /* BikerStore.swift */; };
 		C7ED15B22A306BE400F34AFC /* FinishList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7ED15B12A306BE400F34AFC /* FinishList.swift */; };
 		C7ED15B42A306CB700F34AFC /* FinishHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7ED15B32A306CB700F34AFC /* FinishHome.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C7A8DFDB2A38A78A00F931C5 /* PBXContainerItemProxy */ = {
+		C79E21372C1421BF00EACF55 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C79FB3512A248DF100FEFD59 /* Project object */;
 			proxyType = 1;
@@ -63,22 +62,24 @@
 		C7015CE22A27754D00D1F120 /* StartListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartListItem.swift; sourceTree = "<group>"; };
 		C70348402A2498080062FD6E /* Countdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
 		C70348432A2498570062FD6E /* CountdownModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownModel.swift; sourceTree = "<group>"; };
-		C70348452A2499110062FD6E /* StartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartButton.swift; sourceTree = "<group>"; };
-		C70348482A2499830062FD6E /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		C703484A2A2499C10062FD6E /* StartHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartHome.swift; sourceTree = "<group>"; };
-		C703484D2A2499F80062FD6E /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
 		C72524352A24AA8E0022680F /* BLEController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEController.swift; sourceTree = "<group>"; };
 		C72524392A24AF0C0022680F /* Sensors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sensors.swift; sourceTree = "<group>"; };
 		C725243B2A24F2F30022680F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		C749066F2C12E5C6001D409B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		C74906712C12E640001D409B /* Biker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biker.swift; sourceTree = "<group>"; };
 		C76E991F2A25D877002C5ADD /* Kronometer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Kronometer.xcdatamodel; sourceTree = "<group>"; };
 		C76E99212A25D926002C5ADD /* KronometerProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerProvider.swift; sourceTree = "<group>"; };
 		C76E99262A2721B8002C5ADD /* BikerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikerError.swift; sourceTree = "<group>"; };
-		C76E99292A272A40002C5ADD /* CurrentBiker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentBiker.swift; sourceTree = "<group>"; };
 		C76E992B2A272B88002C5ADD /* StartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartModel.swift; sourceTree = "<group>"; };
 		C7804D332A27949C0060CBC7 /* SensorLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorLog.swift; sourceTree = "<group>"; };
 		C7804D352A2794D30060CBC7 /* SensorSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorSettings.swift; sourceTree = "<group>"; };
 		C7804D372A27956F0060CBC7 /* StartEventLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartEventLog.swift; sourceTree = "<group>"; };
 		C7804D3C2A27998E0060CBC7 /* DebugMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenu.swift; sourceTree = "<group>"; };
+		C796F58C2C1436DC005BCFCA /* BluetoothStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStatus.swift; sourceTree = "<group>"; };
+		C79E21312C141F4700EACF55 /* UtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilTests.swift; sourceTree = "<group>"; };
+		C79E21402C1421BF00EACF55 /* KronometerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KronometerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C79E21502C14225A00EACF55 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
 		C79FB3592A248DF100FEFD59 /* Kronometer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kronometer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerApp.swift; sourceTree = "<group>"; };
 		C79FB35E2A248DF100FEFD59 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -89,28 +90,25 @@
 		C7A8DFB92A3851CA00F931C5 /* CompletedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedList.swift; sourceTree = "<group>"; };
 		C7A8DFBB2A38520F00F931C5 /* ArrivedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivedList.swift; sourceTree = "<group>"; };
 		C7A8DFBD2A38526200F931C5 /* SensorEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorEvents.swift; sourceTree = "<group>"; };
-		C7A8DFD72A38A78A00F931C5 /* KronometerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KronometerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7A8DFD92A38A78A00F931C5 /* KronometerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerTests.swift; sourceTree = "<group>"; };
-		C7A8DFE02A38A97100F931C5 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
-		C7A8DFE22A398F2B00F931C5 /* DateFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormat.swift; sourceTree = "<group>"; };
-		C7A8DFE42A39923A00F931C5 /* DateComponentsFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateComponentsFormatter.swift; sourceTree = "<group>"; };
 		C7A8DFE62A3996B100F931C5 /* AddEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEvent.swift; sourceTree = "<group>"; };
 		C7A8DFE92A39C41500F931C5 /* ClearData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearData.swift; sourceTree = "<group>"; };
 		C7A8DFEC2A39CEE500F931C5 /* KronometerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerAPI.swift; sourceTree = "<group>"; };
 		C7A8DFF02A39E85B00F931C5 /* EndEventLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndEventLog.swift; sourceTree = "<group>"; };
+		C7C26CA52C12F667002C32F4 /* BikerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikerStore.swift; sourceTree = "<group>"; };
 		C7ED15B12A306BE400F34AFC /* FinishList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishList.swift; sourceTree = "<group>"; };
 		C7ED15B32A306CB700F34AFC /* FinishHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishHome.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C79FB3562A248DF100FEFD59 /* Frameworks */ = {
+		C79E213B2C1421BF00EACF55 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C7A8DFD42A38A78A00F931C5 /* Frameworks */ = {
+		C79FB3562A248DF100FEFD59 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -126,7 +124,7 @@
 				C79FB35E2A248DF100FEFD59 /* MainView.swift */,
 				C703483F2A2497CA0062FD6E /* Start */,
 				C7ED15B02A306BBF00F34AFC /* Finish */,
-				C7804D322A2783940060CBC7 /* Settings */,
+				C7804D322A2783940060CBC7 /* Bluetooth */,
 				C7804D3B2A27996F0060CBC7 /* Debug */,
 			);
 			path = Views;
@@ -136,10 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				C70348402A2498080062FD6E /* Countdown.swift */,
-				C70348452A2499110062FD6E /* StartButton.swift */,
 				C703484A2A2499C10062FD6E /* StartHome.swift */,
-				C703484D2A2499F80062FD6E /* Separator.swift */,
-				C76E99292A272A40002C5ADD /* CurrentBiker.swift */,
 				C7015CDE2A27526000D1F120 /* StartList.swift */,
 				C7015CE22A27754D00D1F120 /* StartListItem.swift */,
 			);
@@ -149,31 +144,23 @@
 		C70348422A24982B0062FD6E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C74906712C12E640001D409B /* Biker.swift */,
 				C76E99262A2721B8002C5ADD /* BikerError.swift */,
 				C70348432A2498570062FD6E /* CountdownModel.swift */,
 				C76E99212A25D926002C5ADD /* KronometerProvider.swift */,
-				C76E992B2A272B88002C5ADD /* StartModel.swift */,
-				C7A8DFB52A38483300F931C5 /* FinishModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
 		};
-		C70348472A2499760062FD6E /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				C70348482A2499830062FD6E /* Color.swift */,
-				C7A8DFE22A398F2B00F931C5 /* DateFormat.swift */,
-				C7A8DFE42A39923A00F931C5 /* DateComponentsFormatter.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		C76E99232A25F015002C5ADD /* Bluetooth */ = {
+		C74906732C12E653001D409B /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				C72524352A24AA8E0022680F /* BLEController.swift */,
+				C76E992B2A272B88002C5ADD /* StartModel.swift */,
+				C7A8DFB52A38483300F931C5 /* FinishModel.swift */,
+				C7C26CA52C12F667002C32F4 /* BikerStore.swift */,
 			);
-			path = Bluetooth;
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		C76E99282A2721D0002C5ADD /* Resources */ = {
@@ -184,14 +171,15 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		C7804D322A2783940060CBC7 /* Settings */ = {
+		C7804D322A2783940060CBC7 /* Bluetooth */ = {
 			isa = PBXGroup;
 			children = (
 				C72524392A24AF0C0022680F /* Sensors.swift */,
 				C7804D332A27949C0060CBC7 /* SensorLog.swift */,
 				C7804D352A2794D30060CBC7 /* SensorSettings.swift */,
+				C796F58C2C1436DC005BCFCA /* BluetoothStatus.swift */,
 			);
-			path = Settings;
+			path = Bluetooth;
 			sourceTree = "<group>";
 		};
 		C7804D3B2A27996F0060CBC7 /* Debug */ = {
@@ -210,7 +198,6 @@
 			children = (
 				C79FB35B2A248DF100FEFD59 /* Kronometer */,
 				C7A8DFD82A38A78A00F931C5 /* KronometerTests */,
-				C7A8DFE02A38A97100F931C5 /* TestPlan.xctestplan */,
 				C79FB35A2A248DF100FEFD59 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -219,7 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				C79FB3592A248DF100FEFD59 /* Kronometer.app */,
-				C7A8DFD72A38A78A00F931C5 /* KronometerTests.xctest */,
+				C79E21402C1421BF00EACF55 /* KronometerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -229,10 +216,10 @@
 			children = (
 				C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */,
 				C7A8DFEB2A39CED800F931C5 /* API */,
-				C76E99232A25F015002C5ADD /* Bluetooth */,
-				C70348472A2499760062FD6E /* Extensions */,
 				C703483E2A2497BE0062FD6E /* Views */,
 				C70348422A24982B0062FD6E /* Models */,
+				C74906732C12E653001D409B /* ViewModels */,
+				C749066F2C12E5C6001D409B /* Utils.swift */,
 				C76E99282A2721D0002C5ADD /* Resources */,
 				C79FB3602A248DF200FEFD59 /* Assets.xcassets */,
 				C79FB3622A248DF200FEFD59 /* Preview Content */,
@@ -252,7 +239,9 @@
 		C7A8DFD82A38A78A00F931C5 /* KronometerTests */ = {
 			isa = PBXGroup;
 			children = (
+				C79E21502C14225A00EACF55 /* TestPlan.xctestplan */,
 				C7A8DFD92A38A78A00F931C5 /* KronometerTests.swift */,
+				C79E21312C141F4700EACF55 /* UtilTests.swift */,
 			);
 			path = KronometerTests;
 			sourceTree = "<group>";
@@ -282,6 +271,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		C79E21352C1421BF00EACF55 /* KronometerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C79E213D2C1421BF00EACF55 /* Build configuration list for PBXNativeTarget "KronometerTests" */;
+			buildPhases = (
+				C79E21382C1421BF00EACF55 /* Sources */,
+				C79E213B2C1421BF00EACF55 /* Frameworks */,
+				C79E213C2C1421BF00EACF55 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C79E21362C1421BF00EACF55 /* PBXTargetDependency */,
+			);
+			name = KronometerTests;
+			productName = KronometerTests;
+			productReference = C79E21402C1421BF00EACF55 /* KronometerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		C79FB3582A248DF100FEFD59 /* Kronometer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C79FB3672A248DF200FEFD59 /* Build configuration list for PBXNativeTarget "Kronometer" */;
@@ -299,24 +306,6 @@
 			productReference = C79FB3592A248DF100FEFD59 /* Kronometer.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C7A8DFD62A38A78A00F931C5 /* KronometerTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C7A8DFDD2A38A78A00F931C5 /* Build configuration list for PBXNativeTarget "KronometerTests" */;
-			buildPhases = (
-				C7A8DFD32A38A78A00F931C5 /* Sources */,
-				C7A8DFD42A38A78A00F931C5 /* Frameworks */,
-				C7A8DFD52A38A78A00F931C5 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C7A8DFDC2A38A78A00F931C5 /* PBXTargetDependency */,
-			);
-			name = KronometerTests;
-			productName = KronometerTests;
-			productReference = C7A8DFD72A38A78A00F931C5 /* KronometerTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -324,15 +313,11 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					C79FB3582A248DF100FEFD59 = {
 						CreatedOnToolsVersion = 14.3;
-					};
-					C7A8DFD62A38A78A00F931C5 = {
-						CreatedOnToolsVersion = 14.3.1;
-						TestTargetID = C79FB3582A248DF100FEFD59;
 					};
 				};
 			};
@@ -350,12 +335,19 @@
 			projectRoot = "";
 			targets = (
 				C79FB3582A248DF100FEFD59 /* Kronometer */,
-				C7A8DFD62A38A78A00F931C5 /* KronometerTests */,
+				C79E21352C1421BF00EACF55 /* KronometerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C79E213C2C1421BF00EACF55 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C79FB3572A248DF100FEFD59 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -366,16 +358,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C7A8DFD52A38A78A00F931C5 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C79E21382C1421BF00EACF55 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C79E21392C1421BF00EACF55 /* Utils.swift in Sources */,
+				C79E214F2C14221200EACF55 /* UtilTests.swift in Sources */,
+				C79E213A2C1421BF00EACF55 /* KronometerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C79FB3552A248DF100FEFD59 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -383,21 +378,21 @@
 				C703484B2A2499C10062FD6E /* StartHome.swift in Sources */,
 				C7804D362A2794D30060CBC7 /* SensorSettings.swift in Sources */,
 				C76E99272A2721B8002C5ADD /* BikerError.swift in Sources */,
+				C74906702C12E5C6001D409B /* Utils.swift in Sources */,
 				C7ED15B22A306BE400F34AFC /* FinishList.swift in Sources */,
 				C7A8DFEA2A39C41500F931C5 /* ClearData.swift in Sources */,
 				C7A8DFBA2A3851CA00F931C5 /* CompletedList.swift in Sources */,
 				C7804D3D2A27998E0060CBC7 /* DebugMenu.swift in Sources */,
 				C7015CDF2A27526000D1F120 /* StartList.swift in Sources */,
-				C7A8DFE32A398F2B00F931C5 /* DateFormat.swift in Sources */,
 				C76E99202A25D877002C5ADD /* Kronometer.xcdatamodeld in Sources */,
 				C79FB35F2A248DF100FEFD59 /* MainView.swift in Sources */,
 				C7A8DFB62A38483300F931C5 /* FinishModel.swift in Sources */,
 				C70348442A2498570062FD6E /* CountdownModel.swift in Sources */,
-				C703484E2A2499F80062FD6E /* Separator.swift in Sources */,
-				C70348462A2499110062FD6E /* StartButton.swift in Sources */,
 				C7015CE32A27754D00D1F120 /* StartListItem.swift in Sources */,
 				C7ED15B42A306CB700F34AFC /* FinishHome.swift in Sources */,
 				C72524362A24AA8E0022680F /* BLEController.swift in Sources */,
+				C796F58D2C1436DC005BCFCA /* BluetoothStatus.swift in Sources */,
+				C74906722C12E640001D409B /* Biker.swift in Sources */,
 				C7A8DFBC2A38520F00F931C5 /* ArrivedList.swift in Sources */,
 				C7804D342A27949C0060CBC7 /* SensorLog.swift in Sources */,
 				C7A8DFE72A3996B100F931C5 /* AddEvent.swift in Sources */,
@@ -406,37 +401,72 @@
 				C725243A2A24AF0C0022680F /* Sensors.swift in Sources */,
 				C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */,
 				C7A8DFED2A39CEE500F931C5 /* KronometerAPI.swift in Sources */,
+				C7C26CA62C12F667002C32F4 /* BikerStore.swift in Sources */,
 				C76E992C2A272B88002C5ADD /* StartModel.swift in Sources */,
 				C7A8DFF12A39E85B00F931C5 /* EndEventLog.swift in Sources */,
 				C7A8DFBE2A38526200F931C5 /* SensorEvents.swift in Sources */,
-				C7A8DFE52A39923A00F931C5 /* DateComponentsFormatter.swift in Sources */,
 				C70348412A2498080062FD6E /* Countdown.swift in Sources */,
-				C76E992A2A272A40002C5ADD /* CurrentBiker.swift in Sources */,
 				C76E99222A25D926002C5ADD /* KronometerProvider.swift in Sources */,
-				C70348492A2499830062FD6E /* Color.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C7A8DFD32A38A78A00F931C5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C7A8DFDA2A38A78A00F931C5 /* KronometerTests.swift in Sources */,
-				C7A8DFE82A39C32200F931C5 /* DateFormat.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C7A8DFDC2A38A78A00F931C5 /* PBXTargetDependency */ = {
+		C79E21362C1421BF00EACF55 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C79FB3582A248DF100FEFD59 /* Kronometer */;
-			targetProxy = C7A8DFDB2A38A78A00F931C5 /* PBXContainerItemProxy */;
+			targetProxy = C79E21372C1421BF00EACF55 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		C79E213E2C1421BF00EACF55 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 8AWHVW9A5C;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.staric.KronometerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kronometer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Kronometer";
+			};
+			name = Debug;
+		};
+		C79E213F2C1421BF00EACF55 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 8AWHVW9A5C;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.staric.KronometerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kronometer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Kronometer";
+			};
+			name = Release;
+		};
 		C79FB3652A248DF200FEFD59 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -473,6 +503,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -487,7 +518,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -533,6 +564,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -541,7 +573,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -613,53 +645,18 @@
 			};
 			name = Release;
 		};
-		C7A8DFDE2A38A78A00F931C5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8AWHVW9A5C;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.staric.KronometerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kronometer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Kronometer";
-			};
-			name = Debug;
-		};
-		C7A8DFDF2A38A78A00F931C5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8AWHVW9A5C;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.staric.KronometerTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kronometer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Kronometer";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C79E213D2C1421BF00EACF55 /* Build configuration list for PBXNativeTarget "KronometerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C79E213E2C1421BF00EACF55 /* Debug */,
+				C79E213F2C1421BF00EACF55 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C79FB3542A248DF100FEFD59 /* Build configuration list for PBXProject "Kronometer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -674,15 +671,6 @@
 			buildConfigurations = (
 				C79FB3682A248DF200FEFD59 /* Debug */,
 				C79FB3692A248DF200FEFD59 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C7A8DFDD2A38A78A00F931C5 /* Build configuration list for PBXNativeTarget "KronometerTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C7A8DFDE2A38A78A00F931C5 /* Debug */,
-				C7A8DFDF2A38A78A00F931C5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

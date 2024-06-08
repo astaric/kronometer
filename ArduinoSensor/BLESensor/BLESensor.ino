@@ -7,18 +7,20 @@ BLEService sensorService(deviceServiceUuid);
 BLEByteCharacteristic sensorCharacteristic(deviceServiceCharacteristicUuid, BLENotify);
 BLEDescriptor sensorDescriptor("2901", "Sensor");
 
-const char* sensorName = "Kronometer Sensor TEST";
+const char* sensorName = "Kronometer TEST";
+int event = 0;
 
 int BUTTON_PIN = 3;
 
 void setup() {
   Serial.begin(9600);
   if (DEBUG) {
-    while (!Serial);
+    delay(100);
   }
 
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(3), sensorActivated, FALLING);
 
   if (!BLE.begin()) {
     Serial.println("- Starting Bluetooth® Low Energy module failed!");
@@ -51,16 +53,19 @@ void loop() {
     digitalWrite(LED_BUILTIN, HIGH);
     long previous = -1;
     while (central.connected()) {
-      int buttonState = digitalRead(BUTTON_PIN);
-      if (buttonState != previous) {
-        sensorCharacteristic.writeValue(buttonState);
-        Serial.print("Button state changed to: ");
-        Serial.println(buttonState);
-        previous = buttonState;
+      if (event) {
+        sensorCharacteristic.writeValue(1);
+        Serial.println("Sensor event");
+        event = 0;
+        sensorCharacteristic.writeValue(0);
       }
     }
     digitalWrite(LED_BUILTIN, LOW);
     Serial.print("Disconnected from central: ");
     Serial.println(central.address());
   }
+}
+
+void sensorActivated() {
+  event = 1;
 }

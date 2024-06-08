@@ -22,7 +22,7 @@ struct SensorLog: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                 }
-                .onChange(of: bleController.logEntries.count) { _ in
+                .onChange(of: bleController.logEntries.count) { _, _ in
                     proxy.scrollTo(bleController.logEntries.count - 1)
                 }
             }

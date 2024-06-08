@@ -20,32 +20,35 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                HStack {
-                    Image(systemName: "line.3.horizontal")
-                    Spacer()
-                    Image("Bluetooth")
-                }
-                
-                switch appMode {
-                    case .start:
-                        StartHome()
-                    case .finish:
-                        FinishHome()
-                }
+                StartHome()
+//                switch appMode {
+//                    case .start:
+//                        StartHome()
+//                    case .finish:
+//                        //FinishHome()
+//                        break;
+//                }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: SensorSettings()) {
-                        Image("Bluetooth")
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu {
+                        Button("Start") {
+                            appMode = .start
+                        }
+                        Button("Finish") {
+                            appMode = .finish
+                        }
+                        NavigationLink(destination: DebugMenu()) {
+                            Text("Debug")
+                        }
+                    } label: {
+                        Image(systemName: "line.3.horizontal")
                             .foregroundColor(.primary)
                     }
                 }
-                if debug {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        NavigationLink(destination: DebugMenu()) {
-                            Image(systemName: "line.3.horizontal")
-                                .foregroundColor(.primary)
-                        }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: SensorSettings()) {
+                        BluetoothStatus()
                     }
                 }
             }
@@ -56,7 +59,8 @@ struct MainView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
-            .environmentObject(CountdownModel())
+            .environment(CountdownModel())
+            .environment(BikerStore())
             .environmentObject(BLEController())
     }
 }

@@ -39,11 +39,13 @@ struct SensorEvent: Identifiable {
     let value: Int
 }
 
-class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,CBPeripheralDelegate {
+class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     @AppStorage("sensorId")
     private var sensorId: String = ""
     @AppStorage("sensorName")
     private var sensorName: String = ""
+    
+    @Published private (set) var sensorConnected: Bool = false
 
     @Published var status = ""
 
@@ -69,6 +71,7 @@ class BLEController: NSObject, ObservableObject, CBCentralManagerDelegate,CBPeri
             self.sensorName = sensor.name
             self.connectToSensor()
         } else {
+            self.sensorConnected = false
             self.sensorId = ""
             self.sensorName = ""
         }
@@ -137,22 +140,20 @@ extension BLEController {
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         self.log("sensor connected")
+        self.sensorConnected = true
         peripheral.discoverServices([sensorServiceUUID])
-        for index in 0..<sensors.count {
-            if sensors[index].peripheral == peripheral {
-                sensors[index].isConnected = true
-            }
+        if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral }) {
+            sensors[idx].isConnected = true
         }
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        self.sensorConnected = false
+        if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral }) {
+            sensors[idx].isConnected = false
+        }
         self.log("sensor disconnected")
         central.connect(peripheral, options: nil)
-        for index in 0..<sensors.count {
-            if sensors[index].peripheral == peripheral {
-                sensors[index].isConnected = true
-            }
-        }
     }
 }
 

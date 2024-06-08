@@ -15,7 +15,8 @@ struct KronometerApp: App {
         WindowGroup {
             MainView()
                 .environmentObject(BLEController())
-                .environmentObject(CountdownModel())
+                .environment(CountdownModel())
+                .environment(BikerStore())
                 .environmentObject(StartModel())
                 .environmentObject(FinishModel())
                 .environment(\.managedObjectContext, dataController.container.viewContext)
