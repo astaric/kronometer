@@ -8,8 +8,22 @@
 import SwiftUI
 
 @Observable
-class CountdownModel {
-    @ObservationIgnored @AppStorage("defaultCoundown") var defaultCountdown: Int = 10
+class CountdownCounter {
+    var defaultCountdown: Int 
+    {
+        didSet {
+            UserDefaults.standard.setValue(defaultCountdown, forKey: "defaultCountdown")
+        }
+    }
+    
+    init() {
+        var defaultCountdown = UserDefaults.standard.integer(forKey: "defaultCountdown")
+        if defaultCountdown == 0 {
+            defaultCountdown = 30
+        }
+        self.defaultCountdown = defaultCountdown
+    }
+    
     var endTime: Date?
     var active = false
     
@@ -32,7 +46,7 @@ class CountdownModel {
     }
 
     func reset() {
-        endTime = Date() + Double(defaultCountdown)
+        endTime = Date() + Double(defaultCountdown) + 1
         active = true
     }
 }

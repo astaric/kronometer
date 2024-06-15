@@ -11,7 +11,7 @@ class Category(models.Model):
 
 
 class Biker(models.Model):
-    number = models.IntegerField(unique=True, )
+    number = models.IntegerField(unique=True)
 
     name = models.TextField()
     surname = models.TextField()
@@ -87,8 +87,10 @@ class BikerChangeLog(models.Model):
 
 
 class Competition(models.Model):
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
+    default = models.BooleanField(default=False)
 
     result_section_1 = models.TextField(null=True, blank=True)
     result_section_2 = models.TextField(null=True, blank=True)

@@ -8,9 +8,11 @@
 import Foundation
 
 
-struct Biker: Hashable, Identifiable {
+struct Biker: Codable, Hashable, Identifiable {
     var id: Int
     var name: String
     var startTime: Date?
+    var arrivedOnFinish: Date?
     var endTime: Date?
+    
 }

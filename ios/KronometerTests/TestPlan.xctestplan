@@ -14,7 +14,13 @@
   "testTargets" : [
     {
       "selectedTests" : [
-        "KronometerTests\/testOne()"
+        "ApiTests\/testParseBikers()",
+        "ApiTests\/testParseBikersNoStartTime()",
+        "ApiTests\/testParseBikersStartTimeNoMillis()",
+        "KronometerTests\/testOne()",
+        "TestApi\/testParseBikers()",
+        "UtilTests\/testNoMatching()",
+        "UtilTests\/testSelectNextCycle()"
       ],
       "target" : {
         "containerPath" : "container:Kronometer.xcodeproj",

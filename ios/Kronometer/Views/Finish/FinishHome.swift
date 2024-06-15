@@ -1,31 +1,76 @@
 //
-//  FinishHome.swift
+//  FinishHome-iPad.swift
 //  Kronometer
 //
-//  Created by Anze Staric on 07/06/2023.
+//  Created by Anze Staric on 8. 6. 24.
 //
 
 import SwiftUI
 
 struct FinishHome: View {
+    @Environment(BikerStore.self) var bikerStore
+    @Namespace var bikerNamespace
+    
+    var pendingBikers: [Biker] {
+        bikerStore.bikers
+            .filter { $0.endTime == nil && $0.arrivedOnFinish == nil }
+    }
+    var arrivedBikers: [Biker] {
+        bikerStore.bikers
+            .filter{ $0.endTime == nil && $0.arrivedOnFinish != nil }
+            .sorted(by: { cmpOptionalDate($0.arrivedOnFinish, <, $1.arrivedOnFinish) })
+    }
+    var finishedBikers: [Biker] {
+        bikerStore.bikers
+            .filter{ $0.endTime != nil }
+            .sorted(by: { cmpOptionalDate($0.endTime, >, $1.endTime) })
+    }
+    @State var hideEventsBefore: Date?
+    
     var body: some View {
         HStack {
-            FinishList()
+            BikerList(pendingBikers, refreshable: true) { biker in
+                BikerListItem(biker)
+                    .swipeActions(edge: .leading) {
+                        AnimatedButton("Na cilju") {
+                            bikerStore.setArrived(for: biker)
+                        }
+                    }
+            }
             VStack {
-                ArrivedList()
-                SensorEvents()
+                BikerList(arrivedBikers) { biker in
+                    BikerListItem(biker)
+                }
+                SensorEvents(arrived: arrivedBikers.first)
             }
             VStack{
-                CompletedList()
+                BikerList(finishedBikers) { biker in
+                    BikerListItem(biker).swipeActions(edge: .trailing) {
+                        AnimatedButton("Razveljavi") {
+                            self.hideEventsBefore = biker.arrivedOnFinish
+                            bikerStore.setEndTime(nil, for: biker)
+                        }
+                    }
+                }
                 AddEvent()
             }
         }
     }
+    
+    func cmpOptionalDate(_ lhs: Date?, _ cmp: (Date, Date) -> Bool, _ rhs: Date?) -> Bool {
+        if let lhs, let rhs {
+            cmp(lhs, rhs)
+        } else {
+            true
+        }
+    }
 }
 
-struct FinishHome_Previews: PreviewProvider {
+
+struct FinishHome_iPad_Previews: PreviewProvider {
     static var previews: some View {
-        FinishHome()
-            .environmentObject(FinishModel())
+        return FinishHome()
+            .environment(BikerStore())
+            .environmentObject(SensorController())
     }
 }

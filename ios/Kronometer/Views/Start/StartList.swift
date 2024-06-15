@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct StartList: View {
-    var kronometerProvider: KronometerProvider = .shared
     @Environment(BikerStore.self) var bikerStore
     @Environment(\.dismiss) private var dismiss
     @State var filter: FilterType = .ready
@@ -22,28 +21,17 @@ struct StartList: View {
     }
 
     var body: some View {
-        VStack {
-            List {
-                Picker("Tekmovalci", selection: $filter ) {
-                    Text("Pripravljeni").tag(FilterType.ready)
-                    Text("Na progi").tag(FilterType.started)
-                }.pickerStyle(.segmented)
-                
-                ForEach(filter == .ready ? readyBikers : startedBikers) { biker in
-                    StartListItem(biker: biker, selected: biker.id == bikerStore.nextBikerOnStart?.id)
-                        .onTapGesture {
-                            bikerStore.nextBikerOnStart = biker
-                            dismiss()
-                        }
+        BikerList(filter == .ready ? readyBikers : startedBikers, refreshable: true) { biker in
+            BikerListItem(biker, selected: biker.id == bikerStore.nextBikerOnStart?.id, selectable: true)
+                .onTapGesture {
+                    bikerStore.nextBikerOnStart = biker
+                    dismiss()
                 }
-            }
-            .refreshable {
-                do {
-                    try await bikerStore.refresh()
-                } catch {
-                    self.error = error.localizedDescription
-                }
-            }
+        } filters: {
+            Picker("Tekmovalci", selection: $filter ) {
+                Text("Pripravljeni").tag(FilterType.ready)
+                Text("Na progi").tag(FilterType.started)
+            }.pickerStyle(.segmented)
         }
     }
 

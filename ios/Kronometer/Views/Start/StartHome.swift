@@ -9,9 +9,9 @@ import SwiftUI
 
 struct StartHome: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    @Environment(CountdownModel.self) var countdown
+    @Environment(CountdownCounter.self) var countdown
     @Environment(BikerStore.self) var bikerStore
-    @EnvironmentObject var bleController: BLEController
+    @EnvironmentObject var bleController: SensorController
     
     @State var showBikerList = false
     @State var selectedBiker: Biker?
@@ -51,16 +51,15 @@ struct StartHome: View {
         } else {
             HStack {
                 VStack() {
-                    Color.clear
-                        .overlay {
-                            Countdown()
-                        }
+                    ZStack {
+                        Color.clear
+                        Countdown()
+                    }
                     separator
                     currentBiker
                 }
                 startButton
                     .ignoresSafeArea()
-                    .background(.red)
             }
         }
     }
@@ -72,15 +71,16 @@ struct StartHome: View {
         } label: {
             bikerName
                 .contentShape(Rectangle())
+                .foregroundColor(.primary)
         }
     }
     
     @ViewBuilder
     var bikerName: some View {
         if let selectedBiker {
-            StartListItem(biker: selectedBiker)
+            BikerListItem(selectedBiker)
         } else {
-            Text("No more bikers")
+            Text("Ni več tekmovalcev")
         }
     }
     
@@ -94,7 +94,7 @@ struct StartHome: View {
                 .foregroundColor(.primary)
         }
         .background(Color(UIColor.secondarySystemGroupedBackground))
-        .onReceive(self.bleController.$events) { newValue in
+        .onChange(of: self.bleController.lastSensorEvent) {
             if countdown.timeRemaining <= 5 {
                 start()
             }
@@ -120,12 +120,12 @@ struct StartHome: View {
 
 struct StartHome_Previews: PreviewProvider {
     static var previews: some View {
-        let countdownModel = CountdownModel()
+        let countdownModel = CountdownCounter()
         countdownModel.reset()
         return NavigationStack {
             StartHome()
                 .environment(countdownModel)
-                .environmentObject(BLEController())
+                .environmentObject(SensorController())
         }        
         .environment(BikerStore())
     }

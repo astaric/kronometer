@@ -17,11 +17,7 @@ struct EndEventLog: View {
                 Text("biker \(event.biker_no), start time \(event.end_time?.formatted(.dateTime.hour().minute().second()) ??  ""), uploaded: \(event.uploaded ? "Yes" : "No")")
             }
         }.refreshable {
-            do {
-                try await KronometerProvider.shared.syncEndTimes()
-            } catch {
-
-            }
+            // TODO:
         }
     }
 }

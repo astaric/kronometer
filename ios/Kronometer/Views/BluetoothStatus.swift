@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BluetoothStatus: View {
-    @EnvironmentObject var bleController: BLEController
+    @EnvironmentObject var bleController: SensorController
     
     var body: some View {
         BTIcon()

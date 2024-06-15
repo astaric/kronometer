@@ -9,17 +9,16 @@ import SwiftUI
 
 @main
 struct KronometerApp: App {
-    @StateObject private var dataController = KronometerProvider.shared
-
+    @State var countdown = CountdownCounter()
+    @State var bikerStore = BikerStore()
+    @StateObject var sensortController = SensorController()
+    
     var body: some Scene {
         WindowGroup {
             MainView()
-                .environmentObject(BLEController())
-                .environment(CountdownModel())
-                .environment(BikerStore())
-                .environmentObject(StartModel())
-                .environmentObject(FinishModel())
-                .environment(\.managedObjectContext, dataController.container.viewContext)
+                .environmentObject(sensortController)
+                .environment(countdown)
+                .environment(bikerStore)
        }
     }
 }

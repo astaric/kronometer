@@ -26,7 +26,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 SECRET_KEY = os.environ.get("SECRET", 'django-insecure-v86fy&2!^t12b@0am@-uf8u1e$zgkdq$9vcgaq-$g9n*o1(hn&')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 

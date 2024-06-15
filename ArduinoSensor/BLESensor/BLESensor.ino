@@ -7,7 +7,7 @@ BLEService sensorService(deviceServiceUuid);
 BLEByteCharacteristic sensorCharacteristic(deviceServiceCharacteristicUuid, BLENotify);
 BLEDescriptor sensorDescriptor("2901", "Sensor");
 
-const char* sensorName = "Kronometer TEST";
+const char* sensorName = "Airwaves";
 int event = 0;
 
 int BUTTON_PIN = 3;

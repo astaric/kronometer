@@ -17,19 +17,13 @@ struct StartEventLog: View {
                 Text("biker \(event.biker_no), start time \(event.start_time?.formatted(.dateTime.hour().minute().second()) ??  ""), uploaded: \(event.uploaded ? "Yes" : "No")")
             }
         }.refreshable {
-            do {
-                try await KronometerProvider.shared.syncStartTimes()
-            } catch {
-
-            }
+            // TODO
         }
     }
 }
 
 struct StartEventLog_Previews: PreviewProvider {
-    static let kronometerProvider = KronometerProvider.shared
     static var previews: some View {
         StartEventLog()
-            .environment(\.managedObjectContext, kronometerProvider.container.viewContext)
     }
 }

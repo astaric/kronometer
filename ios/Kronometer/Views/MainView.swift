@@ -20,26 +20,24 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                StartHome()
-//                switch appMode {
-//                    case .start:
-//                        StartHome()
-//                    case .finish:
-//                        //FinishHome()
-//                        break;
-//                }
+                switch appMode {
+                    case .start:
+                        StartHome()
+                    case .finish:
+                        FinishHome()
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
-                        Button("Start") {
+                        Button("Štart") {
                             appMode = .start
                         }
-                        Button("Finish") {
+                        Button("Cilj") {
                             appMode = .finish
                         }
-                        NavigationLink(destination: DebugMenu()) {
-                            Text("Debug")
+                        NavigationLink(destination: Settings()) {
+                            Text("Nastavitve")
                         }
                     } label: {
                         Image(systemName: "line.3.horizontal")
@@ -59,8 +57,7 @@ struct MainView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
-            .environment(CountdownModel())
             .environment(BikerStore())
-            .environmentObject(BLEController())
+            .environmentObject(SensorController())
     }
 }
