@@ -11,26 +11,30 @@ from django.utils.safestring import mark_safe
 from biker.models import Biker, Category, Competition
 
 
-def results(request):
-    competition = Competition.objects.first()
-    if competition is None:
-        competition = Competition.objects.create()
+def results(request, competition_id=None):
+    if competition_id is not None:
+        competition = Competition.objects.get(id=competition_id)
+    else:
+        competition = Competition.objects.filter(active=True).first()
+
+    all_bikers = Biker.objects.filter(competition=competition).select_related("category")
 
     results = []
     results.append((mark_safe("<h2>{}</h2>".format(competition.result_section_1 or "Skupno")), []))
-    bikers = list(Biker.objects.select_related('category'))
+    bikers = list(all_bikers)
     bikers.sort(
         key=lambda b: (b.category.gender, b.duration is None, b.duration))
 
     for c, b in groupby(bikers, key=lambda b: b.category.gender):
         results.append((c, list(b)))
 
-    results.append((mark_safe("<h2>{}</h2>".format(competition.result_section_2 or "Občinsko")), []))
+    results.append(
+        (mark_safe("<h2>{}</h2>".format(competition.result_section_2 or "Občinsko")), []))
 
     if competition.section_2_domestic_only:
-        bikers = list(Biker.objects.filter(domestic=1).select_related('category'))
+        bikers = list(all_bikers.filter(domestic=1))
     else:
-        bikers = list(Biker.objects.select_related('category'))
+        bikers = list(all_bikers)
     bikers.sort(
         key=lambda b: (b.category.name, b.duration is None, b.duration))
     for c, b in groupby(bikers, key=lambda b: b.category.name):
@@ -42,8 +46,14 @@ def results(request):
     })
 
 
-def biker_list(request):
-    return HttpResponse(serializers.serialize("json", Biker.objects.all()),
+def biker_list(request, competition_id=None):
+    if competition_id is not None:
+        competition = Competition.objects.get(id=competition_id)
+    else:
+        competition = Competition.objects.filter(active=True).first()
+
+    bikers = Biker.objects.filter(competition=competition)
+    return HttpResponse(serializers.serialize("json", bikers),
                         content_type="application/json")
 
 
@@ -85,24 +95,35 @@ def biker_create(request):
         return HttpResponse(json.dumps({"error": str(e)}), status=500)
 
 
-def set_start_time(request):
-    params = request.POST if request.method == 'POST' else request.GET
-    number = params.get('number')
-    start_time = float(params.get('start_time')) / 1000
+def set_start_time(request, competition_id=None):
+    try:
+        params = request.POST if request.method == 'POST' else request.GET
+        number = params.get('number')
+        start_time = float(params.get('start_time')) / 1000
 
-    biker = Biker.objects.get(number=number)
-    biker.set_start_time(start_time)
+        if competition_id is not None:
+            competition = Competition.objects.get(id=competition_id)
+        else:
+            competition = Competition.objects.filter(active=True).first()
+        biker = Biker.objects.get(number=number, competition=competition)
+        biker.set_start_time(start_time)
 
-    return HttpResponse(serializers.serialize("json", [biker]),
-                        content_type="application/json")
+        return HttpResponse(serializers.serialize("json", [biker]),
+                            content_type="application/json")
+    except Exception as e:
+        return HttpResponse(json.dumps({"error": str(e)}), status=500)
 
 
-def set_end_time(request):
+def set_end_time(request, competition_id=None):
     params = request.POST if request.method == 'POST' else request.GET
     number = params.get('number')
     end_time = float(params.get('end_time')) / 1000
 
-    biker = Biker.objects.get(number=number)
+    if competition_id is not None:
+        competition = Competition.objects.get(id=competition_id)
+    else:
+        competition = Competition.objects.filter(active=True).first()
+    biker = Biker.objects.get(number=number, competition=competition)
     biker.set_end_time(end_time)
 
     return HttpResponse(serializers.serialize("json", [biker]),
@@ -152,3 +173,9 @@ def biker_finish(request):
         "finished": finished,
     })
 
+
+def competitions(request):
+    return HttpResponse(
+        serializers.serialize("json", Competition.objects.all()),
+        content_type="application/json; charset=utf-8"
+    )

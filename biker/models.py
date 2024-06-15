@@ -2,7 +2,24 @@ from datetime import datetime, timezone
 from django.db import models
 
 
+class Competition(models.Model):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=100)
+    description = models.TextField(null=True, blank=True)
+    active = models.BooleanField(default=False)
+
+    result_section_1 = models.TextField(null=True, blank=True)
+    result_section_2 = models.TextField(null=True, blank=True)
+
+    section_2_domestic_only = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.title)
+
+
 class Category(models.Model):
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)
     name = models.TextField()
     gender = models.TextField(null=True, blank=True)
 
@@ -11,7 +28,8 @@ class Category(models.Model):
 
 
 class Biker(models.Model):
-    number = models.IntegerField(unique=True)
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    number = models.IntegerField()
 
     name = models.TextField()
     surname = models.TextField()
@@ -22,6 +40,9 @@ class Biker(models.Model):
 
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('competition', 'number')
 
     @property
     def duration(self):
@@ -48,7 +69,7 @@ class Biker(models.Model):
         if isinstance(start_time, float):
             start_time = datetime.fromtimestamp(start_time, tz=timezone.utc)
 
-        BikerChangeLog.objects.create(biker=self, start_time=start_time)
+        BikerChangeLog.objects.create(competition=self.competition, biker=self, start_time=start_time)
 
         self.start_time = start_time
         self.save()
@@ -57,7 +78,7 @@ class Biker(models.Model):
         if isinstance(end_time, float):
             end_time = datetime.fromtimestamp(end_time, tz=timezone.utc)
 
-        BikerChangeLog.objects.create(biker=self, end_time=end_time)
+        BikerChangeLog.objects.create(competition=self.competition, biker=self, end_time=end_time)
 
         self.end_time = end_time
         self.save()
@@ -67,6 +88,7 @@ class Biker(models.Model):
 
 
 class BikerChangeLog(models.Model):
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     biker = models.ForeignKey(Biker, on_delete=models.CASCADE)
 
     change_time = models.DateTimeField(auto_now_add=True)
@@ -84,18 +106,3 @@ class BikerChangeLog(models.Model):
 
     def __str__(self):
         return str(self.change_time)
-
-
-class Competition(models.Model):
-    id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=100)
-    description = models.TextField(null=True, blank=True)
-    default = models.BooleanField(default=False)
-
-    result_section_1 = models.TextField(null=True, blank=True)
-    result_section_2 = models.TextField(null=True, blank=True)
-
-    section_2_domestic_only = models.BooleanField(default=False)
-
-    def __str__(self):
-        return str(self.title)
