@@ -9,8 +9,10 @@ import SwiftUI
 
 struct Settings: View {
     @Environment(CountdownCounter.self) var countdown
+    @Environment(CompetitionStore.self) var competitionStore
     
     @State var showDebug = false
+    @State var selectedCompetition: Int?
     
     var body: some View {
         Form {
@@ -20,6 +22,9 @@ struct Settings: View {
             }
             
             Section("Napredno") {
+                NavigationLink(destination: UpdateLog()) {
+                    Text("Updates")
+                }
                 Toggle(isOn: $showDebug, label: {
                     Text("Napredne nastavitve")
                 })

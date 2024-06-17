@@ -39,6 +39,9 @@ struct MainView: View {
                         NavigationLink(destination: Settings()) {
                             Text("Nastavitve")
                         }
+                        NavigationLink(destination: UpdateLog()) {
+                            Text("Sinhronizacija")
+                        }
                     } label: {
                         Image(systemName: "line.3.horizontal")
                             .foregroundColor(.primary)

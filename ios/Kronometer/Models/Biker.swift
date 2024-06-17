@@ -14,5 +14,4 @@ struct Biker: Codable, Hashable, Identifiable {
     var startTime: Date?
     var arrivedOnFinish: Date?
     var endTime: Date?
-    
 }

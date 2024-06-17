@@ -11,12 +11,6 @@ struct DebugActions: View {
     @Environment(BikerStore.self) var bikerStore
     
     var body: some View {
-            NavigationLink(destination: StartEventLog()) {
-                Text("Start events")
-            }
-            NavigationLink(destination: EndEventLog()) {
-                Text("End events")
-            }
             clearData
     }
     
@@ -28,7 +22,7 @@ struct DebugActions: View {
             "Are you sure?",
             isPresented: $showConfirmation) {
                 Button("Delete all data?", role: .destructive) {
-                    bikerStore.createTestBikers()
+                    bikerStore.removeAllData()
                 }
                 
             }

@@ -33,13 +33,18 @@ struct FinishHome: View {
                 BikerListItem(biker)
                     .swipeActions(edge: .leading) {
                         AnimatedButton("Na cilju") {
-                            bikerStore.setArrived(for: biker)
+                            bikerStore.setArrived(Date(), for: biker)
                         }
                     }
             }
             VStack {
                 BikerList(arrivedBikers) { biker in
                     BikerListItem(biker)
+                        .swipeActions(edge: .trailing) {
+                            AnimatedButton("Razveljavi") {
+                                bikerStore.setArrived(nil, for: biker)
+                            }
+                        }
                 }
                 SensorEvents(arrived: arrivedBikers.first)
             }

@@ -10,12 +10,33 @@ import Foundation
 
 class KronometerApi {
     private static let bikerListUrl = URL(string:"https://kronometer.staric.net/biker/list")!
+    private static let competitionListUrl = URL(string:"https://kronometer.staric.net/competition/list")!
     private static let setStartTimeUrl = URL(string: "https://kronometer.staric.net/biker/set_start_time")!
     private static let setEndTimeUrl = URL(string: "https://kronometer.staric.net/biker/set_end_time")!
 
+    static func getCompetitions() async throws -> [Competition] {
+        let session = URLSession.shared
+        
+        guard let (data, response) = try? await session.data(from: competitionListUrl),
+              let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200
+        else {
+            throw BikerError.fetchError
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            let nodes = try decoder.decode([CompetitionNode].self, from: data)
+            return nodes.map { Competition(id: $0.pk, title: $0.fields.title) }
+        } catch {
+            print(error)
+            throw BikerError.wrongDataFormat(error: error)
+        }
+    }
+    
     static func getBikers() async throws -> [BikerData] {
-        let sesion = URLSession.shared
-        guard let (data, response) = try? await sesion.data(from: bikerListUrl),
+        let session = URLSession.shared
+        guard let (data, response) = try? await session.data(from: bikerListUrl),
               let httpResponse = response as? HTTPURLResponse,
               httpResponse.statusCode == 200
         else {
@@ -78,7 +99,6 @@ class KronometerApi {
     }
 }
 
-
 struct BikerNode: Decodable {
     let fields: BikerData
 }
@@ -88,16 +108,9 @@ struct BikerData: Decodable {
     let name: String
     let surname: String
     let start_time: Date?
-
-    var dictionaryValue: [String: Any] {
-        [
-            "number": number,
-            "name": "\(name) \(surname)",
-            "start_time": start_time as Any
-        ]
-    }
+    let end_time: Date?
     
-    private enum CodingKeys : String, CodingKey { case number, name, surname, start_time }
+    private enum CodingKeys : String, CodingKey { case number, name, surname, start_time, end_time }
     private static let dateFormatter = ISO8601DateFormatter()
     
     init(from decoder: Decoder) throws {
@@ -112,8 +125,24 @@ struct BikerData: Decodable {
         } else {
             start_time = nil
         }
+        if var rawDate = try? container.decode(String?.self, forKey: .end_time) {
+            rawDate.replace(/\.\d+/, with: "")
+            end_time = Self.dateFormatter.date(from: rawDate)
+        } else {
+            end_time = nil
+        }
         
     }
+}
+
+struct CompetitionNode: Decodable {
+    let pk: Int
+    let fields: CompetitionData
+}
+
+struct CompetitionData: Decodable {
+    var id: Int?
+    let title: String
 }
 
 enum BikerError: Error {

@@ -18,7 +18,7 @@
 		C74906722C12E640001D409B /* Biker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74906712C12E640001D409B /* Biker.swift */; };
 		C76E99202A25D877002C5ADD /* Kronometer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C76E991E2A25D877002C5ADD /* Kronometer.xcdatamodeld */; };
 		C7804D362A2794D30060CBC7 /* SensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D352A2794D30060CBC7 /* SensorSettings.swift */; };
-		C7804D382A27956F0060CBC7 /* StartEventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D372A27956F0060CBC7 /* StartEventLog.swift */; };
+		C7804D382A27956F0060CBC7 /* UpdateLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D372A27956F0060CBC7 /* UpdateLog.swift */; };
 		C7804D3D2A27998E0060CBC7 /* DebugActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D3C2A27998E0060CBC7 /* DebugActions.swift */; };
 		C796F58D2C1436DC005BCFCA /* BluetoothStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C796F58C2C1436DC005BCFCA /* BluetoothStatus.swift */; };
 		C796F58F2C145EB9005BCFCA /* ApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C796F58E2C145EB9005BCFCA /* ApiTests.swift */; };
@@ -34,10 +34,11 @@
 		C7A8DFBE2A38526200F931C5 /* SensorEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFBD2A38526200F931C5 /* SensorEvents.swift */; };
 		C7A8DFE72A3996B100F931C5 /* AddEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFE62A3996B100F931C5 /* AddEvent.swift */; };
 		C7A8DFED2A39CEE500F931C5 /* KronometerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFEC2A39CEE500F931C5 /* KronometerAPI.swift */; };
-		C7A8DFF12A39E85B00F931C5 /* EndEventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFF02A39E85B00F931C5 /* EndEventLog.swift */; };
 		C7C26CA62C12F667002C32F4 /* BikerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C26CA52C12F667002C32F4 /* BikerStore.swift */; };
 		C7EEC4052C1C26D200EA551E /* AnimatedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEC4042C1C26D200EA551E /* AnimatedButton.swift */; };
 		C7EEC4072C1CA11000EA551E /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEC4062C1CA11000EA551E /* Settings.swift */; };
+		C7EEC40B2C1D740400EA551E /* Competition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEC40A2C1D740400EA551E /* Competition.swift */; };
+		C7EEC40D2C1D74BD00EA551E /* CompetitionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEC40C2C1D74BD00EA551E /* CompetitionStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,7 +63,7 @@
 		C74906712C12E640001D409B /* Biker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biker.swift; sourceTree = "<group>"; };
 		C76E991F2A25D877002C5ADD /* Kronometer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Kronometer.xcdatamodel; sourceTree = "<group>"; };
 		C7804D352A2794D30060CBC7 /* SensorSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorSettings.swift; sourceTree = "<group>"; };
-		C7804D372A27956F0060CBC7 /* StartEventLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartEventLog.swift; sourceTree = "<group>"; };
+		C7804D372A27956F0060CBC7 /* UpdateLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLog.swift; sourceTree = "<group>"; };
 		C7804D3C2A27998E0060CBC7 /* DebugActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugActions.swift; sourceTree = "<group>"; };
 		C796F58C2C1436DC005BCFCA /* BluetoothStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStatus.swift; sourceTree = "<group>"; };
 		C796F58E2C145EB9005BCFCA /* ApiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTests.swift; sourceTree = "<group>"; };
@@ -79,10 +80,11 @@
 		C7A8DFBD2A38526200F931C5 /* SensorEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorEvents.swift; sourceTree = "<group>"; };
 		C7A8DFE62A3996B100F931C5 /* AddEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEvent.swift; sourceTree = "<group>"; };
 		C7A8DFEC2A39CEE500F931C5 /* KronometerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerAPI.swift; sourceTree = "<group>"; };
-		C7A8DFF02A39E85B00F931C5 /* EndEventLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndEventLog.swift; sourceTree = "<group>"; };
 		C7C26CA52C12F667002C32F4 /* BikerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikerStore.swift; sourceTree = "<group>"; };
 		C7EEC4042C1C26D200EA551E /* AnimatedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedButton.swift; sourceTree = "<group>"; };
 		C7EEC4062C1CA11000EA551E /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		C7EEC40A2C1D740400EA551E /* Competition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Competition.swift; sourceTree = "<group>"; };
+		C7EEC40C2C1D74BD00EA551E /* CompetitionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,7 +116,6 @@
 				C7EEC4092C1CB26B00EA551E /* Finish */,
 				C7EEC4042C1C26D200EA551E /* AnimatedButton.swift */,
 				C7804D322A2783940060CBC7 /* Settings */,
-				C7804D3B2A27996F0060CBC7 /* Debug */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -124,6 +125,7 @@
 			children = (
 				C74906712C12E640001D409B /* Biker.swift */,
 				C7A8DFEC2A39CEE500F931C5 /* KronometerAPI.swift */,
+				C7EEC40A2C1D740400EA551E /* Competition.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -134,6 +136,7 @@
 				C72524352A24AA8E0022680F /* SensorController.swift */,
 				C7C26CA52C12F667002C32F4 /* BikerStore.swift */,
 				C70348432A2498570062FD6E /* CountdownCounter.swift */,
+				C7EEC40C2C1D74BD00EA551E /* CompetitionStore.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -151,18 +154,10 @@
 			children = (
 				C7EEC4062C1CA11000EA551E /* Settings.swift */,
 				C7804D352A2794D30060CBC7 /* SensorSettings.swift */,
-				C7804D372A27956F0060CBC7 /* StartEventLog.swift */,
-				C7A8DFF02A39E85B00F931C5 /* EndEventLog.swift */,
+				C7804D372A27956F0060CBC7 /* UpdateLog.swift */,
 				C7804D3C2A27998E0060CBC7 /* DebugActions.swift */,
 			);
 			path = Settings;
-			sourceTree = "<group>";
-		};
-		C7804D3B2A27996F0060CBC7 /* Debug */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Debug;
 			sourceTree = "<group>";
 		};
 		C79FB3502A248DF100FEFD59 = {
@@ -356,16 +351,17 @@
 				C79FB35F2A248DF100FEFD59 /* MainView.swift in Sources */,
 				C70348442A2498570062FD6E /* CountdownCounter.swift in Sources */,
 				C7015CE32A27754D00D1F120 /* BikerListItem.swift in Sources */,
+				C7EEC40D2C1D74BD00EA551E /* CompetitionStore.swift in Sources */,
 				C72524362A24AA8E0022680F /* SensorController.swift in Sources */,
 				C796F58D2C1436DC005BCFCA /* BluetoothStatus.swift in Sources */,
 				C74906722C12E640001D409B /* Biker.swift in Sources */,
 				C7A8DFBC2A38520F00F931C5 /* BikerList.swift in Sources */,
 				C7A8DFE72A3996B100F931C5 /* AddEvent.swift in Sources */,
-				C7804D382A27956F0060CBC7 /* StartEventLog.swift in Sources */,
+				C7EEC40B2C1D740400EA551E /* Competition.swift in Sources */,
+				C7804D382A27956F0060CBC7 /* UpdateLog.swift in Sources */,
 				C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */,
 				C7A8DFED2A39CEE500F931C5 /* KronometerAPI.swift in Sources */,
 				C7C26CA62C12F667002C32F4 /* BikerStore.swift in Sources */,
-				C7A8DFF12A39E85B00F931C5 /* EndEventLog.swift in Sources */,
 				C7EEC4072C1CA11000EA551E /* Settings.swift in Sources */,
 				C7A8DFBE2A38526200F931C5 /* SensorEvents.swift in Sources */,
 				C70348412A2498080062FD6E /* Countdown.swift in Sources */,
