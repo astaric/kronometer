@@ -1,10 +1,12 @@
-from django.urls import path
+from django.urls import path, include
 
 from django.contrib import admin
+from allauth.account.decorators import secure_admin_login
 
 import biker.views
 
 admin.autodiscover()
+admin.site.login = secure_admin_login(admin.site.login)
 
 urlpatterns = [
     path(r'biker/list', biker.views.biker_list, name='biker_list'),
@@ -22,5 +24,6 @@ urlpatterns = [
     path(r'<int:competition_id>/biker/set_start_time', biker.views.set_start_time, name='set_start_time'),
     path(r'<int:competition_id>/biker/set_end_time', biker.views.set_end_time, name='set_end_time'),
     path(r'admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     path(r'', biker.views.results, name='results'),
 ]
