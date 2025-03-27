@@ -1,4 +1,5 @@
 import datetime
+from dataclasses import dataclass
 from itertools import groupby
 import json
 
@@ -6,9 +7,20 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.utils.safestring import mark_safe
 
 from biker.models import Biker, Category, Competition
+
+
+@dataclass
+class CategoryResults:
+    category_name: str
+    bikers: list[Biker]
+
+
+@dataclass
+class CategoryGroup:
+    name: str
+    categories: list[CategoryResults]
 
 
 def results(request, competition_id=None):
@@ -19,17 +31,22 @@ def results(request, competition_id=None):
 
     all_bikers = Biker.objects.filter(competition=competition).select_related("category")
 
-    results = []
-    results.append((mark_safe("<h2>{}</h2>".format(competition.result_section_1 or "Skupno")), []))
+    results = list[CategoryGroup]()
+
     bikers = list(all_bikers)
     bikers.sort(
         key=lambda b: (b.category.gender, b.duration is None, b.duration))
 
-    for c, b in groupby(bikers, key=lambda b: b.category.gender):
-        results.append((c, list(b)))
-
-    results.append(
-        (mark_safe("<h2>{}</h2>".format(competition.result_section_2 or "Občinsko")), []))
+    results.append(CategoryGroup(
+        name=competition.result_section_1 or "Skupno",
+        categories=[
+            CategoryResults(
+                category_name=category_name,
+                bikers=list(bikers)
+            )
+            for category_name, bikers in groupby(bikers, key=lambda biker: biker.category.gender)
+        ]
+    ))
 
     if competition.section_2_domestic_only:
         bikers = list(all_bikers.filter(domestic=1))
@@ -37,8 +54,17 @@ def results(request, competition_id=None):
         bikers = list(all_bikers)
     bikers.sort(
         key=lambda b: (b.category.name, b.duration is None, b.duration))
-    for c, b in groupby(bikers, key=lambda b: b.category.name):
-        results.append((c, list(b)))
+
+    results.append(CategoryGroup(
+        name=competition.result_section_2 or "Občinsko",
+        categories=[
+            CategoryResults(
+                category_name=category_name,
+                bikers=list(bikers)
+            )
+            for category_name, bikers in groupby(bikers, key=lambda biker: biker.category.name)
+        ]
+    ))
 
     return render(request, 'biker/results.html', {
         "competition": competition,

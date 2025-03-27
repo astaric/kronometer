@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from django.db import models
 
 
@@ -45,11 +45,24 @@ class Biker(models.Model):
         unique_together = ('competition', 'number')
 
     @property
-    def duration(self):
+    def duration(self) -> timedelta | None:
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
         else:
             return None
+
+    @property
+    def nice_duration(self) -> str:
+        duration = self.duration
+        if duration is not None:
+            minutes = duration.seconds // 60
+            seconds = duration.seconds % 60
+            millis = duration.microseconds // 1000
+
+            return f"{minutes:02}:{seconds:02}.{millis:03}"
+        else:
+            return ""
+
 
     @property
     def category_name(self):
