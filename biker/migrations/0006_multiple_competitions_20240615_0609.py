@@ -5,52 +5,63 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('biker', '0005_auto_20220906_1245'),
+        ("biker", "0005_auto_20220906_1245"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='biker',
-            name='competition',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='biker.competition'),
+            model_name="biker",
+            name="competition",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="biker.competition",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='bikerchangelog',
-            name='competition',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='biker.competition'),
+            model_name="bikerchangelog",
+            name="competition",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="biker.competition",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='category',
-            name='competition',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='biker.competition'),
+            model_name="category",
+            name="competition",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="biker.competition",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='competition',
-            name='active',
+            model_name="competition",
+            name="active",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='biker',
-            name='number',
+            model_name="biker",
+            name="number",
             field=models.IntegerField(),
         ),
         migrations.AlterField(
-            model_name='category',
-            name='id',
+            model_name="category",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterField(
-            model_name='competition',
-            name='id',
+            model_name="competition",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
         migrations.AlterUniqueTogether(
-            name='biker',
-            unique_together={('competition', 'number')},
+            name="biker",
+            unique_together={("competition", "number")},
         ),
     ]

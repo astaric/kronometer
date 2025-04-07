@@ -6,15 +6,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('biker', '0003_competition_add_section_titles'),
+        ("biker", "0003_competition_add_section_titles"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='competition',
-            name='section_2_domestic_only',
+            model_name="competition",
+            name="section_2_domestic_only",
             field=models.BooleanField(default=False),
             preserve_default=False,
         ),

@@ -6,20 +6,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('biker', '0002_competition'),
+        ("biker", "0002_competition"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='competition',
-            name='result_section_1',
+            model_name="competition",
+            name="result_section_1",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='competition',
-            name='result_section_2',
+            model_name="competition",
+            name="result_section_2",
             field=models.TextField(blank=True, null=True),
         ),
     ]
