@@ -1,0 +1,32 @@
+{% extends "competition/base.html" %}
+{% load competition_extras %}
+
+{% block content %}
+    <a href="{% url "competition_list" %}">
+        <h1>{{ competition.name }}</h1>
+    </a>
+    <p>{{ competition.description|safe }}</p>
+
+    <div class="row">
+        {% for results_group in results %}
+            <div class="col-md-5 p-2 pb-4">
+                <h2 class="border-bottom">{{ results_group.name }}</h2>
+                {% for section in results_group.sections %}
+                    <div class="mb-4">
+                        <h3>{{ section.name }}</h3>
+
+                        {% for biker in section.bikers %}
+                            <div class="row">
+                                <div class="col-1">{{ forloop.counter }}.</div>
+                                <div class="col-7">{{ biker.biker.name }} {{ biker.biker.surname }}</div>
+                                <div class="col-4"
+                                     style="text-align: right;">{{ biker.duration | nice_duration }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-2"></div>
+        {% endfor %}
+    </div>
+{% endblock %}

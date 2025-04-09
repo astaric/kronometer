@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     "allauth.socialaccount.providers.google",
     "whitenoise.runserver_nostatic",
     "biker",
+    "competition",
 )
 
 MIDDLEWARE = [

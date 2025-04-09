@@ -32,5 +32,5 @@ urlpatterns = [
     ),
     path(r"admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
-    path(r"", biker.views.results, name="results"),
+    path(r"", include("competition.urls")),
 ]

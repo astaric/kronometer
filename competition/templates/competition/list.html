@@ -1,0 +1,12 @@
+{% extends "competition/base.html" %}
+
+{% block content %}
+    <h1>Pretekla tekmovanja</h1>
+    <div class="pb-2">
+        {% for competition in competitions %}
+            <li><a href="{% url 'competition_results' slug=competition.slug %}">
+                {{ competition.name }}
+            </a></li>
+        {% endfor %}
+    </div>
+{% endblock %}
