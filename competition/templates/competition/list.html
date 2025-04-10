@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="container shadow col-6 p-4" style="background-color: white;">
+        <div class="container shadow col-md-6 p-4" style="background-color: white;">
             {% for competition in competitions %}
                 <div class="pb-2">
                     <a href="{% url 'competition_results' slug=competition.slug %}">
