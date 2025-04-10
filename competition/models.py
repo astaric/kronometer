@@ -23,10 +23,14 @@ class Biker(models.Model):
 
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
+    comment = models.CharField(max_length=100, null=True, blank=True)
     domestic = models.BooleanField(default=False, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.name} {self.surname}"
+        if self.comment is not None:
+            return f"{self.name} {self.surname} {self.comment}"
+        else:
+            return f"{self.name} {self.surname}"
 
 
 class ResultTemplate(models.Model):
