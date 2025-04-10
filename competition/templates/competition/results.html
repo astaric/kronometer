@@ -2,10 +2,17 @@
 {% load competition_extras %}
 
 {% block title %}
-    <a href="{% url "competition_list" %}">
-        <h1>{{ competition.name }}</h1>
-    </a>
-    <p>{{ competition.description|safe }}</p>
+    <div class="row pt-4 px-4">
+        <h1>
+            <a href="{% url "competition_list" %}">
+                {{ competition.name }}
+            </a>
+        </h1>
+        <p>{{ competition.description|safe }}</p>
+    </div>
+    <div class="row p-md-4">
+
+    </div>
 {% endblock %}
 
 {% block content %}
