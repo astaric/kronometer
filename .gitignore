@@ -8,3 +8,5 @@ KronometerApp/key.store
 .idea/workspace.xml
 *.pyc
 db.sqlite3
+
+kronometer/staticfiles
