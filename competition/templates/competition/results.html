@@ -1,24 +1,35 @@
 {% extends "competition/base.html" %}
 {% load competition_extras %}
 
-{% block content %}
+{% block title %}
     <a href="{% url "competition_list" %}">
         <h1>{{ competition.name }}</h1>
     </a>
     <p>{{ competition.description|safe }}</p>
+{% endblock %}
 
-    <div class="row">
+{% block content %}
+    <div class="row p-md-4">
+        {% if results|length == 1 %}
+            <div class="col-md-3"></div>
+        {% endif %}
         {% for results_group in results %}
-            <div class="col-md-5 p-2 pb-4">
-                <h2 class="border-bottom">{{ results_group.name }}</h2>
+            <div class="col-md-6">
+                <div class="container">
+                    <h2>{{ results_group.name }}</h2>
+                </div>
                 {% for section in results_group.sections %}
-                    <div class="mb-4">
-                        <h3>{{ section.name }}</h3>
+                    <div class="container shadow p-4 mb-4" style="background: white;">
+                        <h4>{{ section.name }}</h4>
 
                         {% for biker in section.bikers %}
                             <div class="row">
                                 <div class="col-1">{{ forloop.counter }}.</div>
-                                <div class="col-7">{{ biker.biker.name }} {{ biker.biker.surname }}</div>
+                                <div class="col-7">
+                                    <a href="{% url "biker_results" biker_id=biker.biker.id %}">
+                                        {{ biker.biker.name }} {{ biker.biker.surname }}
+                                    </a>
+                                </div>
                                 <div class="col-4"
                                      style="text-align: right;">{{ biker.duration | nice_duration }}</div>
                             </div>
@@ -26,7 +37,6 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="col-md-2"></div>
         {% endfor %}
     </div>
 {% endblock %}

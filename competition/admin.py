@@ -42,6 +42,7 @@ class BikerResultsInline(admin.TabularInline[CompetitionBiker, Biker]):
 @admin.register(Biker)
 class BikerAdmin(admin.ModelAdmin[Biker]):
     inlines = [BikerResultsInline]
+    search_fields = ["name", "surname"]
 
 
 @admin.register(CompetitionBiker)
@@ -52,8 +53,9 @@ class CompetitionBikerAdmin(admin.ModelAdmin[CompetitionBiker]):
 class BikerInline(admin.TabularInline[CompetitionBiker, Competition]):
     model = CompetitionBiker
 
-    fields = ["number", "biker", "category", "domestic"]
-    extra = 0
+    fields = ["number", "biker", "category", "domestic", "duration"]
+    readonly_fields = ["duration"]
+    autocomplete_fields = ["biker"]
     show_change_link = True
 
     formfield_overrides = {

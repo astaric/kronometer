@@ -102,7 +102,7 @@ class CompetitionBiker(models.Model):
     )
     number = models.IntegerField()
     biker = models.ForeignKey(
-        Biker, on_delete=models.CASCADE, related_name="competition_bikers"
+        Biker, on_delete=models.CASCADE, related_name="competitions"
     )
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="competition_bikers"

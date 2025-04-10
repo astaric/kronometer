@@ -5,6 +5,7 @@ from django.db.models import Prefetch
 from django.shortcuts import redirect, render
 
 from competition.models import (
+    Biker,
     CAPTION,
     Competition,
     CompetitionBiker,
@@ -98,5 +99,20 @@ def results(request: http.HttpRequest, slug: str) -> http.HttpResponse:
         {
             "competition": competition,
             "results": competition_results,
+        },
+    )
+
+
+def biker_results(request: http.HttpRequest, biker_id: int) -> http.HttpResponse:
+    biker = Biker.objects.get(id=biker_id)
+
+    results = CompetitionBiker.objects.filter(biker=biker).select_related("competition")
+
+    return render(
+        request,
+        "competition/biker_results.html",
+        {
+            "biker": biker,
+            "results": results,
         },
     )
