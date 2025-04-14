@@ -1,11 +1,6 @@
-from allauth.account.decorators import secure_admin_login
-from django.contrib import admin
 from django.urls import path
 
 import competition.views
-
-admin.autodiscover()
-admin.site.login = secure_admin_login(admin.site.login)  # type: ignore[method-assign]
 
 urlpatterns = [
     path(r"", competition.views.index, name="competition_index"),

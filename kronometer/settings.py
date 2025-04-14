@@ -49,11 +49,9 @@ INSTALLED_APPS: tuple[str, ...] = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
     "whitenoise.runserver_nostatic",
+    "oauth2_provider",
+    "users",
     "biker",
     "competition",
 )
@@ -70,7 +68,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "kronometer.urls"
@@ -90,13 +87,6 @@ TEMPLATES = [
             ],
         },
     },
-]
-
-AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
-    "django.contrib.auth.backends.ModelBackend",
-    # `allauth` specific authentication methods, such as login by email
-    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 WSGI_APPLICATION = "kronometer.wsgi.application"
@@ -128,6 +118,15 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+# Use custom user model
+AUTH_USER_MODEL = "users.User"
+
+# USe django admin login screen
+LOGIN_URL = "/admin/login/"
+
+SCOPES = ["read", "write"]
+DEFAULT_SCOPES = ["read", "write"]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -163,23 +162,3 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        "SCOPE": [
-            "profile",
-            "email",
-        ],
-        "AUTH_PARAMS": {
-            "access_type": "online",
-        },
-        "OAUTH_PKCE_ENABLED": True,
-    }
-}
-
-# Django allauth config
-SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
-ACCOUNT_LOGIN_METHODS = {"email"}
-LOGIN_REDIRECT_URL = "/admin"

@@ -17,7 +17,7 @@ repos:
       - id: mypy
         additional_dependencies:
           - dj-database-url
-          - django-allauth[socialaccount]
+          - django-oauth-toolkit
           - django-stubs
           - pymysql
           - types-PyMySQL

@@ -1,11 +1,9 @@
-from allauth.account.decorators import secure_admin_login
 from django.contrib import admin
 from django.urls import include, path
 
 import biker.views
 
 admin.autodiscover()
-admin.site.login = secure_admin_login(admin.site.login)  # type: ignore[method-assign]
 
 urlpatterns = [
     path(r"biker/list", biker.views.biker_list, name="biker_list"),
@@ -31,6 +29,6 @@ urlpatterns = [
         name="set_end_time",
     ),
     path(r"admin/", admin.site.urls),
-    path("accounts/", include("allauth.urls")),
+    path("auth/", include("oauth2_provider.urls")),
     path(r"", include("competition.urls")),
 ]
