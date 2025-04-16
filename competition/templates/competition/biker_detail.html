@@ -13,7 +13,7 @@
                 {% for result in results %}
                     <div class="row pb-2">
                         <div class="col-12">
-                            <a href="{% url "competition_results" slug=result.competition.slug %}">
+                            <a href="{% url "competition_detail" slug=result.competition.slug %}">
                                 {{ result.competition.name }}
                             </a>
                         </div>

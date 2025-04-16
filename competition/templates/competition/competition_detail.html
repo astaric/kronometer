@@ -28,7 +28,7 @@
                             <div class="row">
                                 <div class="col-1">{{ forloop.counter }}.</div>
                                 <div class="col-7">
-                                    <a href="{% url "biker_results" biker_id=biker.biker.id %}">
+                                    <a href="{% url "biker_detail" pk=biker.biker.id %}">
                                         {{ biker.biker.name }} {{ biker.biker.surname }}
                                     </a>
                                 </div>

@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 import biker.views
+from kronometer import settings
 
 admin.autodiscover()
 
@@ -29,6 +30,11 @@ urlpatterns = [
         name="set_end_time",
     ),
     path(r"admin/", admin.site.urls),
-    path("auth/", include("oauth2_provider.urls")),
+    path("oauth/", include("oauth2_provider.urls")),
     path(r"", include("competition.urls")),
 ]
+
+if settings.DEBUG:
+    from debug_toolbar.toolbar import debug_toolbar_urls
+
+    urlpatterns += debug_toolbar_urls()
