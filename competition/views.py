@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from django import http
+from django.db.models import QuerySet
 from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView
 
@@ -43,14 +44,21 @@ class CompetitionDetailView(DetailView[Competition]):
 
     def get_context_data(self, **kwargs: dict[str, Any]) -> dict[str, object]:
         context = super().get_context_data(**kwargs)
-        competition: Competition = context["object"]
+        context["bikers"] = CompetitionBiker.objects.filter(
+            competition=context["competition"]
+        ).select_related("biker")
+        context["results"] = self._create_competition_results(
+            context["competition"], context["bikers"]
+        )
+        return context
 
+    @staticmethod
+    def _create_competition_results(
+        competition: Competition, competition_bikers: QuerySet[CompetitionBiker]
+    ) -> list[CompetitionResultsGroup]:
         result_sections = ResultSection.objects.filter(
             result_template_id=competition.result_template_id
         ).prefetch_related("categories")
-        competition_bikers = CompetitionBiker.objects.filter(
-            competition=competition
-        ).select_related("biker")
 
         competition_results = list[CompetitionResultsGroup]()
         current_group: CompetitionResultsGroup | None = None
@@ -77,13 +85,9 @@ class CompetitionDetailView(DetailView[Competition]):
                     )
             else:
                 raise Exception("Unsupported section type")
-
         if current_group is not None:
             competition_results.append(current_group)
-
-        context["results"] = competition_results
-
-        return context
+        return competition_results
 
 
 class BikerDetailView(DetailView[Biker]):

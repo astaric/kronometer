@@ -63,13 +63,21 @@ class BikerInline(admin.TabularInline[CompetitionBiker, Competition]):
     }
 
 
+@admin.action(description="Archive selected competitions")
+def archive_competitions(
+    modeladmin: admin.ModelAdmin[Competition],
+    request: http.HttpRequest,
+    queryset: models.QuerySet[Competition],
+) -> None:
+    queryset.update(archived=True)
+
+
 @admin.register(Competition)
 class CompetitionAdmin(admin.ModelAdmin[Competition]):
+    list_display = ["name", "archived"]
     prepopulated_fields = {"slug": ("name",)}
-
-    inlines = [
-        BikerInline,
-    ]
+    inlines = [BikerInline]
+    actions = [archive_competitions]
 
 
 class ResultSectionInline(admin.TabularInline[ResultSection, ResultTemplate]):

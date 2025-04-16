@@ -1,11 +1,32 @@
 from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
 
+import competition.api_views
 import competition.views
 
-urlpatterns = [
+api_urlpatterns = [
+    path(
+        "api/competition/<int:competition_id>/",
+        competition.api_views.CompetitionDetailView.as_view(),
+    ),
+    path(
+        "api/competition/",
+        competition.api_views.CompetitionListView.as_view(),
+    ),
+    path(
+        "api/competition/<int:competition_id>/biker/",
+        csrf_exempt(competition.api_views.CompetitionBikerListView.as_view()),
+    ),
+    path(
+        "api/competition/<int:competition_id>/biker/<int:biker_number>/",
+        csrf_exempt(competition.api_views.CompetitionBikerDetailView.as_view()),
+    ),
+]
+
+urlpatterns = api_urlpatterns + [
     path(r"", competition.views.index, name="index"),
     path(
-        r"list",
+        r"list/",
         competition.views.CompetitionListView.as_view(),
         name="competition_list",
     ),

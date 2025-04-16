@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 
 from django.db import models
 
@@ -84,6 +84,7 @@ class Competition(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(null=True, blank=True)
     active = models.BooleanField(default=False)
+    archived = models.BooleanField(default=False)
     result_template = models.ForeignKey(
         ResultTemplate,
         on_delete=models.CASCADE,
@@ -115,6 +116,28 @@ class CompetitionBiker(models.Model):
 
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
+
+    def set_start_time(self, start_time: datetime | float) -> None:
+        if isinstance(start_time, float):
+            start_time = datetime.fromtimestamp(start_time, tz=timezone.utc)
+
+        CompetitionChangeLog.objects.create(
+            competition=self.competition, biker=self, start_time=start_time
+        )
+
+        self.start_time = start_time
+        self.save()
+
+    def set_end_time(self, end_time: datetime | float) -> None:
+        if isinstance(end_time, float):
+            end_time = datetime.fromtimestamp(end_time, tz=timezone.utc)
+
+        CompetitionChangeLog.objects.create(
+            competition=self.competition, biker=self, end_time=end_time
+        )
+
+        self.end_time = end_time
+        self.save()
 
     @property
     def duration(self) -> timedelta | None:
