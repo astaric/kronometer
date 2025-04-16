@@ -28,9 +28,9 @@ struct StartList: View {
                     dismiss()
                 }
         } filters: {
-            Picker("Tekmovalci", selection: $filter ) {
-                Text("Pripravljeni").tag(FilterType.ready)
-                Text("Na progi").tag(FilterType.started)
+            Picker(String(localized: "contestants"), selection: $filter ) {
+                Text(String(localized: "contestants_ready")).tag(FilterType.ready)
+                Text(String(localized: "contestants_racing")).tag(FilterType.started)
             }.pickerStyle(.segmented)
         }
     }

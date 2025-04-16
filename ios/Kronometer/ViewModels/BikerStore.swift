@@ -9,14 +9,16 @@ import SwiftUI
 
 @Observable
 class BikerStore {
-    private (set) var bikers = [Biker]() {
+    var selectedCompetitionId: ApiService.Competition.ID?
+    
+    private(set) var bikers = [Biker]() {
         didSet {
             autosaveBikers()
         }
     }
     var nextBikerOnStart: Biker?
     
-    private (set) var updates = [Update]() {
+    private(set) var updates = [Update]() {
         didSet {
             autosaveUpdates()
             Task {
@@ -64,7 +66,7 @@ class BikerStore {
     }
     
     func refresh() async throws {
-        let bikerData = try await KronometerApi.getBikers()
+        let bikerData = try await ApiManager.shared.getBikers()
         bikers = bikerData.map { Biker(id: $0.number, name: "\($0.name) \($0.surname)", startTime: $0.start_time, endTime: $0.end_time) }
         selectNextBikerToStart()
     }
@@ -74,9 +76,9 @@ class BikerStore {
             let update = updates[idx]
             switch update.field {
             case .startTime:
-                try await KronometerApi.setStartTime(for: update.biker.id, to: update.value)
+                try await ApiManager.shared.setStartTime(for: update.biker.id, to: update.value)
             case .endTime:
-                try await KronometerApi.setEndTime(for: update.biker.id, to: update.value)
+                try await ApiManager.shared.setEndTime(for: update.biker.id, to: update.value)
             }
             updates[idx].synced = true
         }

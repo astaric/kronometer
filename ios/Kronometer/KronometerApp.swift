@@ -11,7 +11,6 @@ import SwiftUI
 struct KronometerApp: App {
     @State var countdown = CountdownCounter()
     @State var bikerStore = BikerStore()
-    @State var competitionStore = CompetitionStore()
     @StateObject var sensortController = SensorController()
     
     var body: some Scene {
@@ -20,7 +19,6 @@ struct KronometerApp: App {
                 .environmentObject(sensortController)
                 .environment(countdown)
                 .environment(bikerStore)
-                .environment(competitionStore)
        }
     }
 }

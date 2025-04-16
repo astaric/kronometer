@@ -42,7 +42,7 @@ struct SensorEvents: View {
                 }
             }
             .swipeActions(edge: .trailing) {
-                AnimatedButton("Skrij") {
+                AnimatedButton(String(localized: "button_hide")) {
                     hideEventsBefore = event.time
                 }
             }

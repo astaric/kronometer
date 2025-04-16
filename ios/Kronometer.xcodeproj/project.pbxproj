@@ -16,13 +16,11 @@
 		C725243C2A24F2F30022680F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C725243B2A24F2F30022680F /* Settings.bundle */; };
 		C74906702C12E5C6001D409B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C749066F2C12E5C6001D409B /* Utils.swift */; };
 		C74906722C12E640001D409B /* Biker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C74906712C12E640001D409B /* Biker.swift */; };
-		C76E99202A25D877002C5ADD /* Kronometer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C76E991E2A25D877002C5ADD /* Kronometer.xcdatamodeld */; };
 		C7804D362A2794D30060CBC7 /* SensorSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D352A2794D30060CBC7 /* SensorSettings.swift */; };
 		C7804D382A27956F0060CBC7 /* UpdateLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D372A27956F0060CBC7 /* UpdateLog.swift */; };
-		C7804D3D2A27998E0060CBC7 /* DebugActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7804D3C2A27998E0060CBC7 /* DebugActions.swift */; };
 		C796F58D2C1436DC005BCFCA /* BluetoothStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C796F58C2C1436DC005BCFCA /* BluetoothStatus.swift */; };
 		C796F58F2C145EB9005BCFCA /* ApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C796F58E2C145EB9005BCFCA /* ApiTests.swift */; };
-		C796F5902C145FF7005BCFCA /* KronometerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFEC2A39CEE500F931C5 /* KronometerAPI.swift */; };
+		C796F5902C145FF7005BCFCA /* ApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFEC2A39CEE500F931C5 /* ApiService.swift */; };
 		C796F5922C147BEB005BCFCA /* FinishHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = C796F5912C147BEB005BCFCA /* FinishHome.swift */; };
 		C79E21392C1421BF00EACF55 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C749066F2C12E5C6001D409B /* Utils.swift */; };
 		C79E214F2C14221200EACF55 /* UtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E21312C141F4700EACF55 /* UtilTests.swift */; };
@@ -33,12 +31,17 @@
 		C7A8DFBC2A38520F00F931C5 /* BikerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFBB2A38520F00F931C5 /* BikerList.swift */; };
 		C7A8DFBE2A38526200F931C5 /* SensorEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFBD2A38526200F931C5 /* SensorEvents.swift */; };
 		C7A8DFE72A3996B100F931C5 /* AddEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFE62A3996B100F931C5 /* AddEvent.swift */; };
-		C7A8DFED2A39CEE500F931C5 /* KronometerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFEC2A39CEE500F931C5 /* KronometerAPI.swift */; };
+		C7A8DFED2A39CEE500F931C5 /* ApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A8DFEC2A39CEE500F931C5 /* ApiService.swift */; };
 		C7C26CA62C12F667002C32F4 /* BikerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C26CA52C12F667002C32F4 /* BikerStore.swift */; };
+		C7CABDFE2DAD01C500D2D1A8 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABDFD2DAD01BD00D2D1A8 /* KeychainManager.swift */; };
+		C7CABE092DAE9E8100D2D1A8 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABE082DAE9E7B00D2D1A8 /* AuthService.swift */; };
+		C7CABE0A2DAE9E8100D2D1A8 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABE082DAE9E7B00D2D1A8 /* AuthService.swift */; };
+		C7CABE0C2DAEA12000D2D1A8 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C7CABE0B2DAEA11200D2D1A8 /* Secrets.xcconfig */; };
+		C7CABE102DAF7FC900D2D1A8 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABE0F2DAF7FC500D2D1A8 /* ApiManager.swift */; };
+		C7CABE112DAF7FC900D2D1A8 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABE0F2DAF7FC500D2D1A8 /* ApiManager.swift */; };
+		C7CABE192DAFEDDC00D2D1A8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = C7CABE182DAFEDDC00D2D1A8 /* Localizable.xcstrings */; };
 		C7EEC4052C1C26D200EA551E /* AnimatedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEC4042C1C26D200EA551E /* AnimatedButton.swift */; };
 		C7EEC4072C1CA11000EA551E /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEC4062C1CA11000EA551E /* Settings.swift */; };
-		C7EEC40B2C1D740400EA551E /* Competition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEC40A2C1D740400EA551E /* Competition.swift */; };
-		C7EEC40D2C1D74BD00EA551E /* CompetitionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EEC40C2C1D74BD00EA551E /* CompetitionStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,10 +64,8 @@
 		C725243B2A24F2F30022680F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		C749066F2C12E5C6001D409B /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		C74906712C12E640001D409B /* Biker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biker.swift; sourceTree = "<group>"; };
-		C76E991F2A25D877002C5ADD /* Kronometer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Kronometer.xcdatamodel; sourceTree = "<group>"; };
 		C7804D352A2794D30060CBC7 /* SensorSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorSettings.swift; sourceTree = "<group>"; };
 		C7804D372A27956F0060CBC7 /* UpdateLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLog.swift; sourceTree = "<group>"; };
-		C7804D3C2A27998E0060CBC7 /* DebugActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugActions.swift; sourceTree = "<group>"; };
 		C796F58C2C1436DC005BCFCA /* BluetoothStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStatus.swift; sourceTree = "<group>"; };
 		C796F58E2C145EB9005BCFCA /* ApiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiTests.swift; sourceTree = "<group>"; };
 		C796F5912C147BEB005BCFCA /* FinishHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishHome.swift; sourceTree = "<group>"; };
@@ -79,12 +80,16 @@
 		C7A8DFBB2A38520F00F931C5 /* BikerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikerList.swift; sourceTree = "<group>"; };
 		C7A8DFBD2A38526200F931C5 /* SensorEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorEvents.swift; sourceTree = "<group>"; };
 		C7A8DFE62A3996B100F931C5 /* AddEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEvent.swift; sourceTree = "<group>"; };
-		C7A8DFEC2A39CEE500F931C5 /* KronometerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KronometerAPI.swift; sourceTree = "<group>"; };
+		C7A8DFEC2A39CEE500F931C5 /* ApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiService.swift; sourceTree = "<group>"; };
 		C7C26CA52C12F667002C32F4 /* BikerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikerStore.swift; sourceTree = "<group>"; };
+		C7CABDFD2DAD01BD00D2D1A8 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		C7CABE082DAE9E7B00D2D1A8 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		C7CABE0B2DAEA11200D2D1A8 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		C7CABE0D2DAEA31900D2D1A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C7CABE0F2DAF7FC500D2D1A8 /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
+		C7CABE182DAFEDDC00D2D1A8 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		C7EEC4042C1C26D200EA551E /* AnimatedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedButton.swift; sourceTree = "<group>"; };
 		C7EEC4062C1CA11000EA551E /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		C7EEC40A2C1D740400EA551E /* Competition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Competition.swift; sourceTree = "<group>"; };
-		C7EEC40C2C1D74BD00EA551E /* CompetitionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,9 +117,9 @@
 				C796F58C2C1436DC005BCFCA /* BluetoothStatus.swift */,
 				C7A8DFBB2A38520F00F931C5 /* BikerList.swift */,
 				C7015CE22A27754D00D1F120 /* BikerListItem.swift */,
+				C7EEC4042C1C26D200EA551E /* AnimatedButton.swift */,
 				C7EEC4082C1CB25C00EA551E /* Start */,
 				C7EEC4092C1CB26B00EA551E /* Finish */,
-				C7EEC4042C1C26D200EA551E /* AnimatedButton.swift */,
 				C7804D322A2783940060CBC7 /* Settings */,
 			);
 			path = Views;
@@ -124,8 +129,6 @@
 			isa = PBXGroup;
 			children = (
 				C74906712C12E640001D409B /* Biker.swift */,
-				C7A8DFEC2A39CEE500F931C5 /* KronometerAPI.swift */,
-				C7EEC40A2C1D740400EA551E /* Competition.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -136,17 +139,8 @@
 				C72524352A24AA8E0022680F /* SensorController.swift */,
 				C7C26CA52C12F667002C32F4 /* BikerStore.swift */,
 				C70348432A2498570062FD6E /* CountdownCounter.swift */,
-				C7EEC40C2C1D74BD00EA551E /* CompetitionStore.swift */,
 			);
 			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		C76E99282A2721D0002C5ADD /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				C76E991E2A25D877002C5ADD /* Kronometer.xcdatamodeld */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		C7804D322A2783940060CBC7 /* Settings */ = {
@@ -155,7 +149,6 @@
 				C7EEC4062C1CA11000EA551E /* Settings.swift */,
 				C7804D352A2794D30060CBC7 /* SensorSettings.swift */,
 				C7804D372A27956F0060CBC7 /* UpdateLog.swift */,
-				C7804D3C2A27998E0060CBC7 /* DebugActions.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -181,15 +174,18 @@
 		C79FB35B2A248DF100FEFD59 /* Kronometer */ = {
 			isa = PBXGroup;
 			children = (
-				C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */,
 				C703483E2A2497BE0062FD6E /* Views */,
+				C7CABE032DAE9DEF00D2D1A8 /* Services */,
 				C70348422A24982B0062FD6E /* Models */,
 				C74906732C12E653001D409B /* ViewModels */,
 				C749066F2C12E5C6001D409B /* Utils.swift */,
-				C76E99282A2721D0002C5ADD /* Resources */,
 				C79FB3602A248DF200FEFD59 /* Assets.xcassets */,
 				C79FB3622A248DF200FEFD59 /* Preview Content */,
 				C725243B2A24F2F30022680F /* Settings.bundle */,
+				C79FB35C2A248DF100FEFD59 /* KronometerApp.swift */,
+				C7CABE182DAFEDDC00D2D1A8 /* Localizable.xcstrings */,
+				C7CABE0D2DAEA31900D2D1A8 /* Info.plist */,
+				C7CABE0B2DAEA11200D2D1A8 /* Secrets.xcconfig */,
 			);
 			path = Kronometer;
 			sourceTree = "<group>";
@@ -210,6 +206,41 @@
 				C796F58E2C145EB9005BCFCA /* ApiTests.swift */,
 			);
 			path = KronometerTests;
+			sourceTree = "<group>";
+		};
+		C7CABE032DAE9DEF00D2D1A8 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C7CABE052DAE9E0400D2D1A8 /* API */,
+				C7CABE062DAE9E1600D2D1A8 /* Auth */,
+				C7CABE072DAE9E4C00D2D1A8 /* Storage */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		C7CABE052DAE9E0400D2D1A8 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				C7CABE0F2DAF7FC500D2D1A8 /* ApiManager.swift */,
+				C7A8DFEC2A39CEE500F931C5 /* ApiService.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		C7CABE062DAE9E1600D2D1A8 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				C7CABE082DAE9E7B00D2D1A8 /* AuthService.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		C7CABE072DAE9E4C00D2D1A8 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				C7CABDFD2DAD01BD00D2D1A8 /* KeychainManager.swift */,
+			);
+			path = Storage;
 			sourceTree = "<group>";
 		};
 		C7EEC4082C1CB25C00EA551E /* Start */ = {
@@ -278,7 +309,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					C79FB3582A248DF100FEFD59 = {
 						CreatedOnToolsVersion = 14.3;
@@ -292,6 +323,7 @@
 			knownRegions = (
 				en,
 				Base,
+				sl,
 			);
 			mainGroup = C79FB3502A248DF100FEFD59;
 			productRefGroup = C79FB35A2A248DF100FEFD59 /* Products */;
@@ -316,6 +348,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7CABE0C2DAEA12000D2D1A8 /* Secrets.xcconfig in Resources */,
+				C7CABE192DAFEDDC00D2D1A8 /* Localizable.xcstrings in Resources */,
 				C79FB3642A248DF200FEFD59 /* Preview Assets.xcassets in Resources */,
 				C725243C2A24F2F30022680F /* Settings.bundle in Resources */,
 				C79FB3612A248DF200FEFD59 /* Assets.xcassets in Resources */,
@@ -329,9 +363,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C796F5902C145FF7005BCFCA /* KronometerAPI.swift in Sources */,
+				C796F5902C145FF7005BCFCA /* ApiService.swift in Sources */,
 				C79E21392C1421BF00EACF55 /* Utils.swift in Sources */,
+				C7CABE0A2DAE9E8100D2D1A8 /* AuthService.swift in Sources */,
 				C79E214F2C14221200EACF55 /* UtilTests.swift in Sources */,
+				C7CABE112DAF7FC900D2D1A8 /* ApiManager.swift in Sources */,
 				C796F58F2C145EB9005BCFCA /* ApiTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,26 +381,25 @@
 				C7804D362A2794D30060CBC7 /* SensorSettings.swift in Sources */,
 				C74906702C12E5C6001D409B /* Utils.swift in Sources */,
 				C796F5922C147BEB005BCFCA /* FinishHome.swift in Sources */,
-				C7804D3D2A27998E0060CBC7 /* DebugActions.swift in Sources */,
 				C7015CDF2A27526000D1F120 /* StartList.swift in Sources */,
-				C76E99202A25D877002C5ADD /* Kronometer.xcdatamodeld in Sources */,
 				C79FB35F2A248DF100FEFD59 /* MainView.swift in Sources */,
 				C70348442A2498570062FD6E /* CountdownCounter.swift in Sources */,
 				C7015CE32A27754D00D1F120 /* BikerListItem.swift in Sources */,
-				C7EEC40D2C1D74BD00EA551E /* CompetitionStore.swift in Sources */,
 				C72524362A24AA8E0022680F /* SensorController.swift in Sources */,
+				C7CABE102DAF7FC900D2D1A8 /* ApiManager.swift in Sources */,
+				C7CABDFE2DAD01C500D2D1A8 /* KeychainManager.swift in Sources */,
 				C796F58D2C1436DC005BCFCA /* BluetoothStatus.swift in Sources */,
 				C74906722C12E640001D409B /* Biker.swift in Sources */,
 				C7A8DFBC2A38520F00F931C5 /* BikerList.swift in Sources */,
 				C7A8DFE72A3996B100F931C5 /* AddEvent.swift in Sources */,
-				C7EEC40B2C1D740400EA551E /* Competition.swift in Sources */,
 				C7804D382A27956F0060CBC7 /* UpdateLog.swift in Sources */,
 				C79FB35D2A248DF100FEFD59 /* KronometerApp.swift in Sources */,
-				C7A8DFED2A39CEE500F931C5 /* KronometerAPI.swift in Sources */,
+				C7A8DFED2A39CEE500F931C5 /* ApiService.swift in Sources */,
 				C7C26CA62C12F667002C32F4 /* BikerStore.swift in Sources */,
 				C7EEC4072C1CA11000EA551E /* Settings.swift in Sources */,
 				C7A8DFBE2A38526200F931C5 /* SensorEvents.swift in Sources */,
 				C70348412A2498080062FD6E /* Countdown.swift in Sources */,
+				C7CABE092DAE9E8100D2D1A8 /* AuthService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,7 +421,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 8AWHVW9A5C;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
@@ -409,7 +443,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = 8AWHVW9A5C;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
@@ -429,6 +462,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -459,6 +493,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8AWHVW9A5C;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -482,6 +517,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -490,6 +526,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -520,6 +557,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8AWHVW9A5C;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -536,6 +574,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -543,13 +582,13 @@
 		};
 		C79FB3682A248DF200FEFD59 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C7CABE0B2DAEA11200D2D1A8 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Kronometer/Preview Content\"";
-				DEVELOPMENT_TEAM = 8AWHVW9A5C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kronometer/Info.plist;
@@ -574,13 +613,13 @@
 		};
 		C79FB3692A248DF200FEFD59 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C7CABE0B2DAEA11200D2D1A8 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Kronometer/Preview Content\"";
-				DEVELOPMENT_TEAM = 8AWHVW9A5C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kronometer/Info.plist;
@@ -634,19 +673,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		C76E991E2A25D877002C5ADD /* Kronometer.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				C76E991F2A25D877002C5ADD /* Kronometer.xcdatamodel */,
-			);
-			currentVersion = C76E991F2A25D877002C5ADD /* Kronometer.xcdatamodel */;
-			path = Kronometer.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = C79FB3512A248DF100FEFD59 /* Project object */;
 }

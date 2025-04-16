@@ -13,7 +13,7 @@ struct SensorSettings: View {
     var body: some View {
         VStack(alignment: .leading) {
             sensors
-            Text("Log")
+            Text(String(localized: "section_log"))
             sensorLog
         }
     }
@@ -24,13 +24,13 @@ struct SensorSettings: View {
                 Button {
                     sensorController.stopDiscovery()
                 } label: {
-                    Text("Stop Discovery")
+                    Text(String(localized: "button_stop_discovery"))
                 }
             } else {
                 Button {
                     sensorController.startDiscovery()
                 } label: {
-                    Text("Discover sensors")
+                    Text(String(localized: "button_discover_sensors"))
                 }
             }
             

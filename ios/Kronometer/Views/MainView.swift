@@ -30,17 +30,14 @@ struct MainView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
-                        Button("Štart") {
+                        Button(String(localized: "start")) {
                             appMode = .start
                         }
-                        Button("Cilj") {
+                        Button(String(localized: "finish")) {
                             appMode = .finish
                         }
                         NavigationLink(destination: Settings()) {
-                            Text("Nastavitve")
-                        }
-                        NavigationLink(destination: UpdateLog()) {
-                            Text("Sinhronizacija")
+                            Text(String(localized: "settings"))
                         }
                     } label: {
                         Image(systemName: "line.3.horizontal")

@@ -55,7 +55,7 @@ class SensorController: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     @AppStorage("sensorName")
     private var sensorName: String = ""
     
-    @Published private (set) var sensorConnected: Bool = false
+    @Published private(set) var sensorConnected: Bool = false
 
     @Published var status = ""
 
@@ -107,13 +107,13 @@ class SensorController: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         guard let sensorId = UUID(uuidString: sensorId) else { return }
 
         for peripheral in myCentral.retrievePeripherals(withIdentifiers: [sensorId]) {
-            self.log("connecting to \(sensorName)")
+            self.log(String(localized: "bluetooth_connecting_to_sensor", defaultValue: "Connecting to \(sensorName)"))
             peripheral.delegate = self
             addSensor(peripheral)
             myCentral.connect(peripheral, options: nil)
             return
         }
-        self.log("could not connect to sensor")
+        self.log(String(localized: "bluetooth_could_not_connect_to_sensor"))
         connect(nil)
     }
 }
@@ -123,7 +123,7 @@ extension SensorController {
         if let discoveryTimer = discoveryTimer {
             discoveryTimer.invalidate()
         }
-        self.log("scanning for sensors")
+        self.log(String(localized: "bluetooth_scanning_for_sensors"))
         discovering = true
         myCentral.scanForPeripherals(withServices: [sensorServiceUUID], options: nil)
         discoveryTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(stopDiscovery), userInfo: nil, repeats: false)
@@ -136,9 +136,9 @@ extension SensorController {
 
     func addSensor(_ peripheral: CBPeripheral) {
         if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral}) {
-            sensors[idx].name = peripheral.name ?? "NoName"
+            sensors[idx].name = peripheral.name ?? String(localized: "bluetooth_default_peripheral_name")
         } else {
-            sensors.append(Sensor(peripheral: peripheral, name: peripheral.name ?? "NoName", isConnected: false))
+            sensors.append(Sensor(peripheral: peripheral, name: peripheral.name ?? String(localized: "bluetooth_default_peripheral_name"), isConnected: false))
         }
     }
 }
@@ -147,13 +147,13 @@ extension SensorController {
 extension SensorController {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if central.state == .poweredOn {
-            self.log("Bluetooth is available")
+            self.log(String(localized: "bluetooth_available"))
             if self.sensorId != "" {
                 connectToSensor()
             }
         }
         else {
-            self.log("Bluetooth is not available")
+            self.log(String(localized: "bluetooth_not_available"))
         }
     }
     
@@ -166,7 +166,7 @@ extension SensorController {
     
     func centralManager(_ central: CBCentralManager,
                         didConnect peripheral: CBPeripheral) {
-        self.log("sensor connected")
+        self.log(String(localized: "bluetooth_sensor_connected"))
         self.sensorConnected = true
         peripheral.discoverServices([sensorServiceUUID])
         if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral }) {
@@ -181,7 +181,7 @@ extension SensorController {
         if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral }) {
             sensors[idx].isConnected = false
         }
-        self.log("sensor disconnected")
+        self.log(String(localized: "bluetooth_sensor_disconnected"))
         central.connect(peripheral, options: nil)
     }
 }
@@ -205,10 +205,10 @@ extension SensorController {
     func peripheral(_ peripheral: CBPeripheral,
                     didUpdateNotificationStateFor characteristic: CBCharacteristic,
                     error: Error?) {
-        if error == nil {
-            self.log("listening for events")
+        if let error {
+            self.log(String(localized: "bluetooth_could_not_subscribe", defaultValue: "Could not subscribe to sensor \(error.localizedDescription)"))
         } else {
-            self.log("could not subscribe to sensor \(error!)")
+            self.log(String(localized: "bluetooth_listening_for_events"))
         }
     }
 

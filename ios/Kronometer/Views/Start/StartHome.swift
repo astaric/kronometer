@@ -80,7 +80,7 @@ struct StartHome: View {
         if let selectedBiker {
             BikerListItem(selectedBiker)
         } else {
-            Text("Ni več tekmovalcev")
+            Text(String(localized: "no_more_contestants"))
         }
     }
     
@@ -88,7 +88,7 @@ struct StartHome: View {
         Button {
             start()
         } label: {
-            Text("Start")
+            Text(String(localized: "start"))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .font(.custom("", size: 50, relativeTo: .largeTitle))
                 .foregroundColor(.primary)

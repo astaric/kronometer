@@ -32,7 +32,7 @@ struct FinishHome: View {
             BikerList(pendingBikers, refreshable: true) { biker in
                 BikerListItem(biker)
                     .swipeActions(edge: .leading) {
-                        AnimatedButton("Na cilju") {
+                        AnimatedButton(String(localized: "button_arrived")) {
                             bikerStore.setArrived(Date(), for: biker)
                         }
                     }
@@ -41,7 +41,7 @@ struct FinishHome: View {
                 BikerList(arrivedBikers) { biker in
                     BikerListItem(biker)
                         .swipeActions(edge: .trailing) {
-                            AnimatedButton("Razveljavi") {
+                            AnimatedButton(String(localized: "button_undo")) {
                                 bikerStore.setArrived(nil, for: biker)
                             }
                         }
@@ -51,7 +51,7 @@ struct FinishHome: View {
             VStack{
                 BikerList(finishedBikers) { biker in
                     BikerListItem(biker).swipeActions(edge: .trailing) {
-                        AnimatedButton("Razveljavi") {
+                        AnimatedButton(String(localized: "button_undo")) {
                             self.hideEventsBefore = biker.arrivedOnFinish
                             bikerStore.setEndTime(nil, for: biker)
                         }
