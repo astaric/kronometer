@@ -50,6 +50,7 @@ class CompetitionBikerListView(ProtectedResourceView):  # type: ignore
             {
                 "bikers": [
                     {
+                        "competition_id": biker.competition_id,
                         "number": biker.number,
                         "name": biker.biker.name,
                         "surname": biker.biker.surname,
@@ -76,6 +77,7 @@ class CompetitionBikerDetailView(ProtectedResourceView):  # type: ignore
         )
         return http.JsonResponse(
             {
+                "competition_id": biker.competition_id,
                 "number": biker.number,
                 "name": biker.biker.name,
                 "surname": biker.biker.surname,
