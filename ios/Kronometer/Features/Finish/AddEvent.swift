@@ -17,7 +17,7 @@ struct AddEvent: View {
         } label: {
             Text(String(localized: "button_add_event"))
                 .frame(
-                    maxWidth: /*@START_MENU_TOKEN@*/ .infinity /*@END_MENU_TOKEN@*/, maxHeight: 250
+                    maxWidth: .infinity, maxHeight: 250
                 )
                 .font(.largeTitle)
                 .foregroundColor(.primary)

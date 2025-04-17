@@ -1,5 +1,5 @@
 //
-//  FinishHome-iPad.swift
+//  FinishHome.swift
 //  Kronometer
 //
 //  Created by Anze Staric on 8. 6. 24.
