@@ -7,8 +7,28 @@ BLEService sensorService(deviceServiceUuid);
 BLEByteCharacteristic sensorCharacteristic(deviceServiceCharacteristicUuid, BLENotify);
 BLEDescriptor sensorDescriptor("2901", "Sensor");
 
-const char* sensorName = "Airwaves";
+const char* sensorNames[] = {
+  "Sensor",
+  "Airwaves",
+  "Box",
+};
+
+const char* getSensorName() {
+  int id1 = NRF_FICR->DEVICEID[0];
+  switch (id1) {
+    case 3130652232:
+      return sensorNames[1];
+    case 1374214276:
+      return sensorNames[2];
+    default:
+      return sensorNames[0];
+  }
+}
+
 int event = 0;
+void sensorActivated() {
+  event = 1;
+}
 
 int BUTTON_PIN = 3;
 
@@ -28,6 +48,7 @@ void setup() {
     Serial.println("- Started Bluetooth® Low Energy module");
   }
 
+  const char* sensorName = getSensorName();
   BLE.setDeviceName(sensorName);
   BLE.setLocalName(sensorName);
   BLE.setAdvertisedService(sensorService);  
@@ -64,8 +85,4 @@ void loop() {
     Serial.print("Disconnected from central: ");
     Serial.println(central.address());
   }
-}
-
-void sensorActivated() {
-  event = 1;
 }
