@@ -26,7 +26,7 @@ struct BikerListItem: View {
                     .frame(maxWidth: 5)
                     .offset(x: -5)
             }
-            Text("\(biker.id)")
+            Text(String(biker.id))
                 .foregroundColor(.primary)
                 .font(.largeTitle)
                 .frame(minWidth: 50)
@@ -60,9 +60,9 @@ struct BikerListItem: View {
 struct StartListItem_Previews: PreviewProvider {
     static var previews: some View {
         List {
-            BikerListItem(Biker(id: 1, name: "Janez Novak", startTime: Date.now), selected: true)
-            BikerListItem(Biker(id: 2, name: "Janez Novak", startTime: Date.now))
-            BikerListItem(Biker(id: 33, name: "Janez Novak", startTime: Date.now))
+            BikerListItem(Biker(competition_id: 0, id: 1, name: "Janez Novak", startTime: Date.now), selected: true)
+            BikerListItem(Biker(competition_id: 0, id: 2, name: "Janez Novak", startTime: Date.now))
+            BikerListItem(Biker(competition_id: 0, id: 33, name: "Janez Novak", startTime: Date.now))
         }
     }
 }

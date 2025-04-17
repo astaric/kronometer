@@ -1,5 +1,5 @@
 //
-//  CountdownModel.swift
+//  CountdownViewModel.swift
 //  Kronometer
 //
 //  Created by Anze Staric on 29/05/2023.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @Observable
-class CountdownCounter {
+class CountdownViewModel {
     var defaultCountdown: Int 
     {
         didSet {

@@ -10,8 +10,6 @@ import CryptoKit
 import SwiftUI
 
 class ApiService {
-    let baseUrl = URL(string: "https://kronometer.staric.net")!
-    
     static let shared = ApiService()
     
     private let session: URLSession
@@ -22,28 +20,70 @@ class ApiService {
 
 
 extension ApiService {
-    func getCompetitions(accessToken: String) async throws -> [Competition] {
-        var request = URLRequest(url: baseUrl.appendingPathComponent("/api/competition/"))
+    static let baseUrl = URL(string: "https://kronometer.staric.net")!
+    
+    func makeRequest(
+        method: String,
+        path: String,
+        parameters: [URLQueryItem]? = nil,
+        accessToken: String
+    ) async throws -> Data {
+        var components = URLComponents(url: Self.baseUrl, resolvingAgainstBaseURL: true)!
+        components.path = path
+        if let parameters {
+            components.queryItems = parameters
+        }
+        
+        var request: URLRequest
+        switch method {
+        case "GET":
+            request = URLRequest(url: components.url!)
+            
+        case "POST":
+            let body = components.query
+            components.queryItems = nil
+            
+            request = URLRequest(url: components.url!)
+            request.httpMethod = "POST"
+            request.httpBody = body?.data(using: .utf8)
+            
+        default:
+            throw ApiError.invalidRequest("Unsupported httpMethod \(method)")
+        }
+        
         request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
-        guard let (data, response) = try? await session.data(for: request),
-              let httpResponse = response as? HTTPURLResponse
-        else {
-            throw ApiError.fetchError
-        }
+        let (data, response) = try await session.data(for: request)
         
-        guard httpResponse.statusCode == 200
-        else {
-            let message = String(data: data, encoding: .utf8)
-            throw ApiError.invalidResponse("\(httpResponse.statusCode) \(message ?? "")")
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw ApiError.invalidResponse("No HTTP response received")
         }
-        
-        do {
+        guard (200...299).contains(httpResponse.statusCode) else {
             let decoder = JSONDecoder()
-            return try decoder.decode(CompetitionApiResponse.self, from: data).competitions
-        } catch {
-            throw ApiError.wrongDataFormat(error: error)
+            
+            if let errorMessage = try? decoder.decode(ErrorResponse.self, from: data).error {
+                throw ApiError.serverError(errorMessage)
+            } else if let responseString = String(data: data, encoding: .utf8) {
+                throw ApiError.serverError(responseString)
+            } else {
+                throw ApiError.serverError("Server error: \(httpResponse.statusCode)")
+            }
         }
+        
+        return data
+    }
+    
+    struct ErrorResponse : Decodable {
+        let error: String
+    }
+}
+
+extension ApiService {
+    func getCompetitions(accessToken: String) async throws -> [Competition] {
+        let data = try await makeRequest(method: "GET", path: "/api/competition/", accessToken: accessToken)
+        
+        let decoder = JSONDecoder()
+        return try decoder.decode(CompetitionApiResponse.self, from: data).competitions
     }
     
     struct Competition: Decodable, Hashable, Identifiable {
@@ -59,283 +99,68 @@ extension ApiService {
 
 extension ApiService {
     func getBikers(competitionId: Int, accessToken: String) async throws -> [Biker] {
-        var request = URLRequest(url: baseUrl.appendingPathComponent("/api/competition/\(competitionId)/biker/"))
-        request.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        let data = try await makeRequest(method: "GET", path: "/api/competition/\(competitionId)/biker/", accessToken: accessToken)
         
-        guard let (data, response) = try? await session.data(for: request),
-              let httpResponse = response as? HTTPURLResponse
-        else {
-            throw ApiError.fetchError
-        }
-                
-        guard httpResponse.statusCode == 200
-        else {
-            let message = String(data: data, encoding: .utf8)
-            throw ApiError.invalidResponse("\(httpResponse.statusCode) \(message ?? "")")
-        }
-
-        do {
-            let decoder = JSONDecoder()
-            return try decoder.decode(BikerApiResponse.self, from: data).bikers
-        } catch {
-            throw ApiError.wrongDataFormat(error: error)
-        }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601withFractionalSeconds
+        return try decoder.decode(BikerApiResponse.self, from: data).bikers
     }
     
     struct Biker: Decodable {
+        let competition_id: Int
         let number: Int
         let name: String
         let surname: String
         let start_time: Date?
         let end_time: Date?
-
-        private enum CodingKeys: String, CodingKey {
-            case number, name, surname, start_time, end_time
-        }
-        private static let dateFormatter = ISO8601DateFormatter()
-
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            number = try container.decode(Int.self, forKey: .number)
-            name = try container.decode(String.self, forKey: .name)
-            surname = try container.decode(String.self, forKey: .surname)
-
-            if var rawDate = try? container.decode(
-                String?.self,
-                forKey: .start_time
-            ) {
-                rawDate.replace(/\.\d+/, with: "")
-                start_time = Self.dateFormatter.date(from: rawDate)
-            } else {
-                start_time = nil
-            }
-            if var rawDate = try? container.decode(String?.self, forKey: .end_time)
-            {
-                rawDate.replace(/\.\d+/, with: "")
-                end_time = Self.dateFormatter.date(from: rawDate)
-            } else {
-                end_time = nil
-            }
-
-        }
     }
     
     private struct BikerApiResponse: Decodable {
         let bikers: [Biker]
     }
-
-
-    func setStartTime(for bikerId: Int, to time: Date) async throws {
-    }
-
-    func setEndTime(for bikerId: Int, to time: Date) async throws {
-    }
-}
-
-@MainActor
-class ApiManager2 {
-    let baseUrl = URL(string: "https://kronometer.staric.net")!
-    static let shared = ApiManager()
-
-    private var _token: AccessToken?
     
-    private let session: URLSession
-    init(session: URLSession = .shared) {
-        self.session = session
-    }
 }
-
-
-extension ApiManager2 {
-    
-    private var bikerListUrl: URL { URL(string: "\(baseUrl)/biker/list")! }
-    private var competitionListUrl: URL {
-        URL(string: "competition/list", relativeTo: baseUrl)!
-    }
-    private var setStartTimeUrl: URL {
-        URL(string: "biker/set_start_time", relativeTo: baseUrl)!
-    }
-    private var setEndTimeUrl: URL {
-        URL(string: "biker/set_end_time", relativeTo: baseUrl)!
-    }
-
-    func getBikers() async throws -> [BikerData] {
-        guard
-            let (data, response) = try? await session.data(
-                from: bikerListUrl
-            ),
-            let httpResponse = response as? HTTPURLResponse,
-            httpResponse.statusCode == 200
-        else {
-            throw ApiError.fetchError
-        }
-
-        return try parseBikers(data: data)
-    }
-
-    func parseBikers(data: Data) throws -> [BikerData] {
-        do {
-            let decoder = JSONDecoder()
-            let nodes = try decoder.decode([BikerNode].self, from: data)
-            return nodes.map { $0.fields }
-        } catch {
-            throw ApiError.wrongDataFormat(error: error)
-        }
-    }
-
-    func setStartTime(for bikerId: Int, to time: Date) async throws {
-        var urlComponents = URLComponents(
-            url: setStartTimeUrl,
-            resolvingAgainstBaseURL: false
-        )!
-        urlComponents.queryItems = [
-            URLQueryItem(name: "number", value: "\(bikerId)"),
-            URLQueryItem(
-                name: "start_time",
-                value: "\(Int(time.timeIntervalSince1970 * 1000))"
-            ),
-
-        ]
-        let response: URLResponse
-        let data: Data
-        do {
-            (data, response) = try await session.data(
-                from: urlComponents.url!
-            )
-        } catch {
-            throw ApiError.pushError(error: error)
-        }
-        guard
-            let response = response as? HTTPURLResponse,
-            (200...299).contains(response.statusCode)
-        else {
-            throw ApiError.serverError(
-                error: String(data: data, encoding: .utf8) ?? "unknown error"
+extension ApiService {
+    func updateTimes(competitionId: Int, bikerNumber: Int, startTime: Date? = nil, endTime: Date? = nil, accessToken: String) async throws {
+        var parameters = [URLQueryItem]()
+        if let startTime {
+            parameters.append(
+                .init(name: "start_time", value: String(Int(startTime.timeIntervalSince1970 * 1000)))
             )
         }
-    }
-
-    func setEndTime(for bikerId: Int, to time: Date) async throws {
-        var urlComponents = URLComponents(
-            url: setEndTimeUrl,
-            resolvingAgainstBaseURL: false
-        )!
-        urlComponents.queryItems = [
-            URLQueryItem(name: "number", value: "\(bikerId)"),
-            URLQueryItem(
-                name: "end_time",
-                value: "\(Int(time.timeIntervalSince1970 * 1000))"
-            ),
-        ]
-        let response: URLResponse
-        let data: Data
-        do {
-            (data, response) = try await session.data(
-                from: urlComponents.url!
-            )
-        } catch {
-            throw ApiError.pushError(error: error)
-        }
-        guard
-            let response = response as? HTTPURLResponse,
-            (200...299).contains(response.statusCode)
-        else {
-            throw ApiError.serverError(
-                error: String(data: data, encoding: .utf8) ?? "unknown error"
+        if let endTime {
+            parameters.append(
+                .init(name: "end_time", value: String(Int(endTime.timeIntervalSince1970 * 1000)))
             )
         }
+        
+        let _ = try await makeRequest(
+            method: "POST",
+            path: "/api/competition/\(competitionId)/biker/\(bikerNumber)/",
+            parameters: parameters,
+            accessToken: accessToken
+        )
     }
-}
-
-struct BikerNode: Decodable {
-    let fields: BikerData
-}
-
-struct BikerData: Decodable {
-    let number: Int
-    let name: String
-    let surname: String
-    let start_time: Date?
-    let end_time: Date?
-
-    private enum CodingKeys: String, CodingKey {
-        case number, name, surname, start_time, end_time
-    }
-    private static let dateFormatter = ISO8601DateFormatter()
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        number = try container.decode(Int.self, forKey: .number)
-        name = try container.decode(String.self, forKey: .name)
-        surname = try container.decode(String.self, forKey: .surname)
-
-        if var rawDate = try? container.decode(
-            String?.self,
-            forKey: .start_time
-        ) {
-            rawDate.replace(/\.\d+/, with: "")
-            start_time = Self.dateFormatter.date(from: rawDate)
-        } else {
-            start_time = nil
-        }
-        if var rawDate = try? container.decode(String?.self, forKey: .end_time)
-        {
-            rawDate.replace(/\.\d+/, with: "")
-            end_time = Self.dateFormatter.date(from: rawDate)
-        } else {
-            end_time = nil
-        }
-
-    }
-}
-
-struct CompetitionNode: Decodable {
-    let pk: Int
-    let fields: CompetitionData
-}
-
-struct CompetitionData: Decodable {
-    var id: Int?
-    let title: String
 }
 
 enum ApiError: Error {
-    case tokenExchangeError(_ error: Error)
+    case noCompetitionSelected
     case invalidRequest(_ message: String)
     case invalidResponse(_ message: String)
-    case invalidRefreshToken
-
-    case noCompetitionSelected
-    case batchInsertError
-    case fetchError
-    case pushError(error: Error)
-    case serverError(error: String)
-    case wrongDataFormat(error: Error)
+    case serverError(_ error: String)
 }
 
 extension ApiError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .noCompetitionSelected:
-            return "Please select competition"            
-        case .tokenExchangeError(let error):
-            return "Could not exchange token: \(error.localizedDescription)"
+            return String(localized: "error_select_competition")
         case .invalidRequest(let message):
-            return "Invalid request: \(message)"
+            return String(localized: "error_invalid_request", defaultValue: "Invalid request: \(message)")
         case .invalidResponse(let message):
-            return "Invalid server response: \(message)"
-        case .invalidRefreshToken:
-            return "Refresh token is invalid"
-        case .batchInsertError:
-            return "Could not execute batch insert request"
-        case .fetchError:
-            return "Could not download biker data"
-        case .pushError(let error):
-            return "Could not upload data: \(error.localizedDescription)"
+            return String(localized: "error_invalid_response", defaultValue: "Invalid server response: \(message)")
         case .serverError(let error):
-            return "Server returned error: \(error)"
-        case .wrongDataFormat(let error):
-            return "Could not parse JSON data: \(error.localizedDescription)"
+            return error
         }
     }
 }

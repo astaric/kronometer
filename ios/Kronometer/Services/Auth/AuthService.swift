@@ -232,11 +232,11 @@ enum AuthError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missingToken:
-            return "Missing authentication token. Login required."
+            return String(localized: "error_missing_token")
         case .invalidRequest(let message):
-            return "Invalid request: \(message)"
+            return String(localized: "error_invalid_request", defaultValue: "Invalid request: \(message)")
         case .invalidResponse(let message):
-            return "Invalid server response: \(message)"
+            return String(localized: "error_invalid_response", defaultValue: "Invalid server response: \(message)")
         }
     }
 }

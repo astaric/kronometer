@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct Countdown: View {
-    @Environment(CountdownCounter.self) var countdown
+    @Environment(CountdownViewModel.self) var countdown
 
     var body: some View {
         ZStack {
@@ -30,6 +30,6 @@ struct Countdown: View {
 struct Countdown_Previews: PreviewProvider {
     static var previews: some View {
         return Countdown()
-            .environment(CountdownCounter())
+            .environment(CountdownViewModel())
     }
 }

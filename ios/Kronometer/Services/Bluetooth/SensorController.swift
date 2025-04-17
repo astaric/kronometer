@@ -8,6 +8,11 @@
 import CoreBluetooth
 import SwiftUI
 
+struct SensorInfo: Codable, Equatable {
+    var id: UUID
+    var name: String
+}
+
 struct Sensor: Identifiable {
     let peripheral: CBPeripheral
     var name: String
@@ -19,41 +24,32 @@ struct Sensor: Identifiable {
 }
 
 struct LogEntry : Identifiable {
-    let id: Int
+    let id = UUID()
     let time: Date
     let message: String
 
     static private var lastId = 0
 
     init(_ message: String) {
-        Self.lastId += 1
-        self.id = Self.lastId
         self.time = Date.now
         self.message = message
     }
 }
 
 struct SensorEvent: Hashable, Identifiable {
-    let id: Int
+    let id = UUID()
     let time: Date
     let value: Int
     let manual: Bool
-    
-    private static var lastId = 0
-    init(time: Date, value: Int, manual: Bool = false) {
-        Self.lastId += 1
-        self.id = Self.lastId
-        self.time = time
-        self.value = value
-        self.manual = manual
-    }
 }
 
-class SensorController: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
-    @AppStorage("sensorId")
-    private var sensorId: String = ""
-    @AppStorage("sensorName")
-    private var sensorName: String = ""
+class SensorController: NSObject, ObservableObject {
+    @Published private(set) var sensorInfo: SensorInfo? {
+        didSet {
+            saveSensorInfo()
+        }
+    }
+    private let sensorInfoKey = "sensorInfo"
     
     @Published private(set) var sensorConnected: Bool = false
 
@@ -73,6 +69,7 @@ class SensorController: NSObject, ObservableObject, CBCentralManagerDelegate, CB
 
     override init() {
         super.init()
+        loadSensorInfo()
         myCentral = CBCentralManager(delegate: self, queue: nil)
     }
     
@@ -81,39 +78,38 @@ class SensorController: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
     
     private func addEvent(value: Int = 1, manual: Bool = false) {
-        self.events.append(SensorEvent(time: Date(), value: 1, manual: manual))
+        events.append(SensorEvent(time: Date(), value: 1, manual: manual))
         if !manual {
-            self.lastSensorEvent = self.events.last
+            lastSensorEvent = events.last
         }
     }
 
     func connect(_ sensor: Sensor?) {
-        if let sensor = sensor {
-            self.sensorId = sensor.id.uuidString
-            self.sensorName = sensor.name
-            self.connectToSensor()
+        if let sensor {
+            sensorInfo = SensorInfo(id: sensor.id, name: sensor.name)
+            connectToSensor()
         } else {
-            self.sensorConnected = false
-            self.sensorId = ""
-            self.sensorName = ""
+            sensorConnected = false
+            sensorInfo = nil
         }
     }
 
     func disconnect(_ sensor: Sensor) {
         myCentral.cancelPeripheralConnection(sensor.peripheral)
+        sensorInfo = nil
     }
 
-    func connectToSensor() {
-        guard let sensorId = UUID(uuidString: sensorId) else { return }
+    private func connectToSensor() {
+        guard let sensorInfo else { return }
 
-        for peripheral in myCentral.retrievePeripherals(withIdentifiers: [sensorId]) {
-            self.log(String(localized: "bluetooth_connecting_to_sensor", defaultValue: "Connecting to \(sensorName)"))
+        for peripheral in myCentral.retrievePeripherals(withIdentifiers: [sensorInfo.id]) {
+            log(String(localized: "bluetooth_connecting_to_sensor", defaultValue: "Connecting to \(sensorInfo.name)"))
             peripheral.delegate = self
             addSensor(peripheral)
             myCentral.connect(peripheral, options: nil)
             return
         }
-        self.log(String(localized: "bluetooth_could_not_connect_to_sensor"))
+        log(String(localized: "bluetooth_could_not_connect_to_sensor"))
         connect(nil)
     }
 }
@@ -143,17 +139,17 @@ extension SensorController {
     }
 }
 
-// MARK: CentralManager
-extension SensorController {
+// MARK: CBCentralManagerDelegate
+extension SensorController: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if central.state == .poweredOn {
-            self.log(String(localized: "bluetooth_available"))
-            if self.sensorId != "" {
+            log(String(localized: "bluetooth_available"))
+            if sensorInfo != nil {
                 connectToSensor()
             }
         }
         else {
-            self.log(String(localized: "bluetooth_not_available"))
+            log(String(localized: "bluetooth_not_available"))
         }
     }
     
@@ -166,8 +162,8 @@ extension SensorController {
     
     func centralManager(_ central: CBCentralManager,
                         didConnect peripheral: CBPeripheral) {
-        self.log(String(localized: "bluetooth_sensor_connected"))
-        self.sensorConnected = true
+        log(String(localized: "bluetooth_sensor_connected"))
+        sensorConnected = true
         peripheral.discoverServices([sensorServiceUUID])
         if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral }) {
             sensors[idx].isConnected = true
@@ -177,31 +173,32 @@ extension SensorController {
     func centralManager(_ central: CBCentralManager,
                         didDisconnectPeripheral peripheral: CBPeripheral,
                         error: Error?) {
-        self.sensorConnected = false
+        sensorConnected = false
         if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral }) {
             sensors[idx].isConnected = false
         }
-        self.log(String(localized: "bluetooth_sensor_disconnected"))
-        central.connect(peripheral, options: nil)
+        log(String(localized: "bluetooth_sensor_disconnected"))
+        if sensorInfo != nil {
+            central.connect(peripheral, options: nil)
+        }
     }
 }
 
-extension SensorController {
+// MARK: CBPeripheralDelegate
+extension SensorController: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral,
                     didDiscoverServices error: Error?) {
-        if let services = peripheral.services {
-            peripheral.discoverCharacteristics([sensorCharacteristicUUID], for: services.first!)
-        }
+        guard let service = peripheral.services?.first else { return }
+        peripheral.discoverCharacteristics([sensorCharacteristicUUID], for: service)
     }
-
+    
     func peripheral(_ peripheral: CBPeripheral,
                     didDiscoverCharacteristicsFor service: CBService,
                     error: Error?) {
-        if let characteristics = service.characteristics {
-            peripheral.setNotifyValue(true, for: characteristics.first!)
-        }
+        guard let characteristic = service.characteristics?.first else { return }
+        peripheral.setNotifyValue(true, for: characteristic)
     }
-
+    
     func peripheral(_ peripheral: CBPeripheral,
                     didUpdateNotificationStateFor characteristic: CBCharacteristic,
                     error: Error?) {
@@ -211,11 +208,12 @@ extension SensorController {
             self.log(String(localized: "bluetooth_listening_for_events"))
         }
     }
-
+    
     func peripheral(_ peripheral: CBPeripheral,
                     didUpdateValueFor characteristic: CBCharacteristic,
                     error: Error?) {
-        if let value = characteristic.value?.withUnsafeBytes({ $0.load(as: Int8.self) }) {
+        if let byte = characteristic.value?.first {
+            let value = Int8(bitPattern: byte)
             if value == 0 {
                 let now = Date.now
                 if let lastEvent = events.last {
@@ -227,8 +225,9 @@ extension SensorController {
             }
         }
     }
+}
 
-    // MARK: Logging
+extension SensorController {
     private func log(_ message: String) {
         self.status = message
         self.logEntries.append(LogEntry(message))
@@ -236,3 +235,18 @@ extension SensorController {
 }
 
 
+extension SensorController {
+    private func loadSensorInfo() {
+        if let loaded: SensorInfo = UserDefaults.standard.codable(forKey: self.sensorInfoKey) {
+            sensorInfo = loaded
+        }
+    }
+    
+    private func saveSensorInfo() {
+        if let sensorInfo {
+            UserDefaults.standard.setCodable(sensorInfo, forKey: sensorInfoKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: sensorInfoKey)
+        }
+    }
+}

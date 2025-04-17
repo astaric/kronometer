@@ -12,13 +12,13 @@ struct SensorSettings: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            sensors
+            sensorList
             Text(String(localized: "section_log"))
-            sensorLog
-        }
+            sensorEventLog
+        }.navigationTitle(String(localized: "bluetooth_settings"))
     }
     
-    var sensors: some View {
+    var sensorList: some View {
         List {
             if sensorController.discovering {
                 Button {
@@ -52,18 +52,17 @@ struct SensorSettings: View {
         }
     }
     
-    var sensorLog: some View {
+    var sensorEventLog: some View {
         ScrollView {
-            ScrollViewReader { proxy in
-                ForEach(sensorController.logEntries.reversed()) { entry in
-                    Text("\(entry.time.formatted(.dateTime.hour().minute().second())) \(entry.message)")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
+            ForEach(sensorController.logEntries.reversed()) { entry in
+                HStack {
+                    Text(entry.time.formatted(.dateTime.hour().minute().second()))
+                    Text(entry.message)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }
-    
 }
 
 struct SensorSettings_Previews: PreviewProvider {

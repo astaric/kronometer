@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct KronometerApp: App {
-    @State var countdown = CountdownCounter()
+    @State var countdown = CountdownViewModel()
     @State var bikerStore = BikerStore()
     @StateObject var sensortController = SensorController()
     

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StartHome: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    @Environment(CountdownCounter.self) var countdown
+    @Environment(CountdownViewModel.self) var countdown
     @Environment(BikerStore.self) var bikerStore
     @EnvironmentObject var bleController: SensorController
     
@@ -120,7 +120,7 @@ struct StartHome: View {
 
 struct StartHome_Previews: PreviewProvider {
     static var previews: some View {
-        let countdownModel = CountdownCounter()
+        let countdownModel = CountdownViewModel()
         countdownModel.reset()
         return NavigationStack {
             StartHome()

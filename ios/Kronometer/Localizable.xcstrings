@@ -1,23 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%@" : {
-      "shouldTranslate" : false
-    },
-    "%@ %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ %2$@"
-          }
-        }
-      },
-      "shouldTranslate" : false
-    },
-    "%lld" : {
-      "shouldTranslate" : false
-    },
     "are_you_sure" : {
       "localizations" : {
         "en" : {
@@ -192,6 +175,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Povezava prekinjena"
+          }
+        }
+      }
+    },
+    "bluetooth_settings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth Settings"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nastavitve Bluetooth"
           }
         }
       }
@@ -388,6 +387,72 @@
         }
       }
     },
+    "error_invalid_request" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Invalid request: %@"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neveljaven zahtevek: %@"
+          }
+        }
+      }
+    },
+    "error_invalid_response" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Invalid server response: %@"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neveljaven odgovor strežnika: %@"
+          }
+        }
+      }
+    },
+    "error_missing_token" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missing authentication token. Login required."
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Potrebna je prijava"
+          }
+        }
+      }
+    },
+    "error_select_competition" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please select competition"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izberi tekmovanje"
+          }
+        }
+      }
+    },
     "error_title" : {
       "localizations" : {
         "en" : {
@@ -416,6 +481,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cilj"
+          }
+        }
+      }
+    },
+    "invalid_date" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Invalid date: %@"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepravilen datum: %@"
           }
         }
       }
@@ -467,9 +549,6 @@
           }
         }
       }
-    },
-    "N" : {
-
     },
     "no_more_contestants" : {
       "localizations" : {
@@ -584,8 +663,21 @@
         }
       }
     },
-    "Y" : {
-
+    "update_log" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Log"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zgodovina sprememb"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
