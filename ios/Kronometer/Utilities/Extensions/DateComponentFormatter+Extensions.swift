@@ -10,7 +10,8 @@ import Foundation
 extension DateComponentsFormatter {
     func string(from: Date?, to: Date?) -> String? {
         guard let from = from,
-              let to = to else {
+            let to = to
+        else {
             return nil
         }
 

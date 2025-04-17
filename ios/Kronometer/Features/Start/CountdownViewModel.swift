@@ -9,13 +9,13 @@ import SwiftUI
 
 @Observable
 class CountdownViewModel {
-    var defaultCountdown: Int 
+    var defaultCountdown: Int
     {
         didSet {
             UserDefaults.standard.setValue(defaultCountdown, forKey: "defaultCountdown")
         }
     }
-    
+
     init() {
         var defaultCountdown = UserDefaults.standard.integer(forKey: "defaultCountdown")
         if defaultCountdown == 0 {
@@ -23,10 +23,10 @@ class CountdownViewModel {
         }
         self.defaultCountdown = defaultCountdown
     }
-    
+
     var endTime: Date?
     var active = false
-    
+
     var timeRemaining: Double {
         if let endTime {
             let timeRemaining = endTime.timeIntervalSince(Date())

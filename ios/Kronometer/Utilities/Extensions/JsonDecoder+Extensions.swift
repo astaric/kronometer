@@ -15,7 +15,9 @@ extension JSONDecoder.DateDecodingStrategy {
         if let date = try? Date(dateString, strategy: format) {
             return date
         }
-        throw DecodingError.dataCorruptedError(in: container, debugDescription: String(localized: "invalid_date", defaultValue: "Invalid date: \(dateString)"))
+        throw DecodingError.dataCorruptedError(
+            in: container,
+            debugDescription: String(
+                localized: "invalid_date", defaultValue: "Invalid date: \(dateString)"))
     }
 }
-

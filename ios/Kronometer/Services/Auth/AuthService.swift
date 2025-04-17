@@ -12,7 +12,7 @@ struct AccessToken: Codable {
     var accessToken: String
     var expires: Date
     var refreshToken: String
-    
+
     var willExpireSoon: Bool {
         expires.timeIntervalSinceNow < 5 * 60
     }
@@ -20,9 +20,9 @@ struct AccessToken: Codable {
 
 class AuthService {
     typealias AuthenticateHandler = (URL, String) async throws -> URL
-    
+
     let baseUrl = URL(string: "https://kronometer.staric.net")!
-    
+
     @KeychainBacked(key: "net.staric.kronometer.access_token")
     var token: AccessToken?
 
@@ -34,7 +34,7 @@ class AuthService {
     }
 
     // MARK: - Public Methods
-    
+
     func validAccessToken() async throws -> AccessToken? {
         guard var currentToken = token else { return nil }
         if currentToken.willExpireSoon {
@@ -63,7 +63,8 @@ class AuthService {
             throw AuthError.invalidResponse("Missing authorization code")
         }
 
-        return try await getOAuthToken(code: code, codeVerifier: codeVerifier, redirectURI: redirectURI)
+        return try await getOAuthToken(
+            code: code, codeVerifier: codeVerifier, redirectURI: redirectURI)
     }
 
     func refresh(token: AccessToken) async throws -> AccessToken {
@@ -77,13 +78,13 @@ class AuthService {
     }
 
     // MARK: - Private Helpers
-    
+
     private var clientId: String? {
         Bundle.main.object(forInfoDictionaryKey: "CLIENT_ID") as? String
     }
     private var clientSecret: String? {
         Bundle.main.object(forInfoDictionaryKey: "CLIENT_SECRET") as? String
-    }    
+    }
 
     private func buildOAuthAuthorizeUrl(
         codeChallenge: String,
@@ -131,7 +132,7 @@ class AuthService {
             .replacingOccurrences(of: "/", with: "_")
             .replacingOccurrences(of: "=", with: "")  // Remove padding
     }
-    
+
     private func getOAuthToken(
         code: String,
         codeVerifier: String,
@@ -143,10 +144,10 @@ class AuthService {
             .init(name: "client_id", value: clientId),
             .init(name: "client_secret", value: clientSecret),
             .init(name: "code_verifier", value: codeVerifier),
-            .init(name: "redirect_uri", value: redirectURI)
+            .init(name: "redirect_uri", value: redirectURI),
         ])
     }
-    
+
     private func getOAuthToken(
         refreshToken: String
     ) async throws -> AccessToken {
@@ -171,7 +172,8 @@ class AuthService {
             let expiresIn = json["expires_in"] as? Double,
             let refreshToken = json["refresh_token"] as? String
         else {
-            throw AuthError.invalidResponse("Invalid token data \(String(data: data, encoding: .utf8) ?? "No data)")")
+            throw AuthError.invalidResponse(
+                "Invalid token data \(String(data: data, encoding: .utf8) ?? "No data)")")
         }
 
         return AccessToken(
@@ -215,7 +217,7 @@ class AuthService {
         request.httpBody = components.query?.data(using: .utf8)
         return request
     }
-    
+
     private enum Constants {
         static let callbackURLScheme = "x-kronometer-app"
         static let authorizePath = "/oauth/authorize/"
@@ -234,10 +236,12 @@ enum AuthError: Error, LocalizedError {
         case .missingToken:
             return String(localized: "error_missing_token")
         case .invalidRequest(let message):
-            return String(localized: "error_invalid_request", defaultValue: "Invalid request: \(message)")
+            return String(
+                localized: "error_invalid_request", defaultValue: "Invalid request: \(message)")
         case .invalidResponse(let message):
-            return String(localized: "error_invalid_response", defaultValue: "Invalid server response: \(message)")
+            return String(
+                localized: "error_invalid_response",
+                defaultValue: "Invalid server response: \(message)")
         }
     }
 }
-

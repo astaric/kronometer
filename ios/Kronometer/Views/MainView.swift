@@ -21,10 +21,10 @@ struct MainView: View {
         NavigationStack {
             VStack {
                 switch appMode {
-                    case .start:
-                        StartHome()
-                    case .finish:
-                        FinishHome()
+                case .start:
+                    StartHome()
+                case .finish:
+                    FinishHome()
                 }
             }
             .toolbar {

@@ -20,8 +20,6 @@ extension DateFormatter {
         return fmt
     }()
 
-
-
     static var jsonUtc: DateFormatter = {
         let fmt = DateFormatter()
         fmt.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"

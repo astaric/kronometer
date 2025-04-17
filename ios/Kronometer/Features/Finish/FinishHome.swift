@@ -10,23 +10,23 @@ import SwiftUI
 struct FinishHome: View {
     @Environment(BikerStore.self) var bikerStore
     @Namespace var bikerNamespace
-    
+
     var pendingBikers: [Biker] {
         bikerStore.bikers
             .filter { $0.endTime == nil && $0.arrivedOnFinish == nil }
     }
     var arrivedBikers: [Biker] {
         bikerStore.bikers
-            .filter{ $0.endTime == nil && $0.arrivedOnFinish != nil }
+            .filter { $0.endTime == nil && $0.arrivedOnFinish != nil }
             .sorted(by: { cmpOptionalDate($0.arrivedOnFinish, <, $1.arrivedOnFinish) })
     }
     var finishedBikers: [Biker] {
         bikerStore.bikers
-            .filter{ $0.endTime != nil }
+            .filter { $0.endTime != nil }
             .sorted(by: { cmpOptionalDate($0.endTime, >, $1.endTime) })
     }
     @State var hideEventsBefore: Date?
-    
+
     var body: some View {
         HStack {
             BikerList(pendingBikers, refreshable: true) { biker in
@@ -48,7 +48,7 @@ struct FinishHome: View {
                 }
                 SensorEvents(arrived: arrivedBikers.first)
             }
-            VStack{
+            VStack {
                 BikerList(finishedBikers) { biker in
                     BikerListItem(biker).swipeActions(edge: .trailing) {
                         AnimatedButton(String(localized: "button_undo")) {
@@ -61,7 +61,7 @@ struct FinishHome: View {
             }
         }
     }
-    
+
     func cmpOptionalDate(_ lhs: Date?, _ cmp: (Date, Date) -> Bool, _ rhs: Date?) -> Bool {
         if let lhs, let rhs {
             cmp(lhs, rhs)
@@ -70,7 +70,6 @@ struct FinishHome: View {
         }
     }
 }
-
 
 struct FinishHome_iPad_Previews: PreviewProvider {
     static var previews: some View {

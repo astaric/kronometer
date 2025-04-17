@@ -10,12 +10,12 @@ import SwiftUI
 struct AnimatedButton: View {
     var action: () -> Void
     var text: String
-    
+
     init(_ text: String, action: @escaping () -> Void) {
         self.action = action
         self.text = text
     }
-    
+
     var body: some View {
         Button {
             withAnimation {
@@ -28,5 +28,5 @@ struct AnimatedButton: View {
 }
 
 #Preview {
-    AnimatedButton("test") { }
+    AnimatedButton("test") {}
 }

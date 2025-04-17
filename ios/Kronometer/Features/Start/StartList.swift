@@ -12,7 +12,7 @@ struct StartList: View {
     @Environment(\.dismiss) private var dismiss
     @State var filter: FilterType = .ready
     @State var error: String?
-    
+
     var readyBikers: [Biker] {
         bikerStore.bikers.filter { $0.startTime == nil }
     }
@@ -22,22 +22,24 @@ struct StartList: View {
 
     var body: some View {
         BikerList(filter == .ready ? readyBikers : startedBikers, refreshable: true) { biker in
-            BikerListItem(biker, selected: biker.id == bikerStore.nextBikerOnStart?.id, selectable: true)
-                .onTapGesture {
-                    bikerStore.nextBikerOnStart = biker
-                    dismiss()
-                }
+            BikerListItem(
+                biker, selected: biker.id == bikerStore.nextBikerOnStart?.id, selectable: true
+            )
+            .onTapGesture {
+                bikerStore.nextBikerOnStart = biker
+                dismiss()
+            }
         } filters: {
-            Picker(String(localized: "contestants"), selection: $filter ) {
+            Picker(String(localized: "contestants"), selection: $filter) {
                 Text(String(localized: "contestants_ready")).tag(FilterType.ready)
                 Text(String(localized: "contestants_racing")).tag(FilterType.started)
             }.pickerStyle(.segmented)
         }
     }
 
-enum FilterType {
-    case ready, started
-}
+    enum FilterType {
+        case ready, started
+    }
 }
 
 struct StartList_Previews: PreviewProvider {

@@ -23,7 +23,7 @@ struct Sensor: Identifiable {
     }
 }
 
-struct LogEntry : Identifiable {
+struct LogEntry: Identifiable {
     let id = UUID()
     let time: Date
     let message: String
@@ -50,7 +50,7 @@ class SensorController: NSObject, ObservableObject {
         }
     }
     private let sensorInfoKey = "sensorInfo"
-    
+
     @Published private(set) var sensorConnected: Bool = false
 
     @Published var status = ""
@@ -72,11 +72,11 @@ class SensorController: NSObject, ObservableObject {
         loadSensorInfo()
         myCentral = CBCentralManager(delegate: self, queue: nil)
     }
-    
+
     func addManualEvent() {
         addEvent(manual: true)
     }
-    
+
     private func addEvent(value: Int = 1, manual: Bool = false) {
         events.append(SensorEvent(time: Date(), value: 1, manual: manual))
         if !manual {
@@ -103,7 +103,10 @@ class SensorController: NSObject, ObservableObject {
         guard let sensorInfo else { return }
 
         for peripheral in myCentral.retrievePeripherals(withIdentifiers: [sensorInfo.id]) {
-            log(String(localized: "bluetooth_connecting_to_sensor", defaultValue: "Connecting to \(sensorInfo.name)"))
+            log(
+                String(
+                    localized: "bluetooth_connecting_to_sensor",
+                    defaultValue: "Connecting to \(sensorInfo.name)"))
             peripheral.delegate = self
             addSensor(peripheral)
             myCentral.connect(peripheral, options: nil)
@@ -122,7 +125,9 @@ extension SensorController {
         self.log(String(localized: "bluetooth_scanning_for_sensors"))
         discovering = true
         myCentral.scanForPeripherals(withServices: [sensorServiceUUID], options: nil)
-        discoveryTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(stopDiscovery), userInfo: nil, repeats: false)
+        discoveryTimer = Timer.scheduledTimer(
+            timeInterval: 10.0, target: self, selector: #selector(stopDiscovery), userInfo: nil,
+            repeats: false)
     }
 
     @objc func stopDiscovery() {
@@ -131,10 +136,15 @@ extension SensorController {
     }
 
     func addSensor(_ peripheral: CBPeripheral) {
-        if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral}) {
-            sensors[idx].name = peripheral.name ?? String(localized: "bluetooth_default_peripheral_name")
+        if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral }) {
+            sensors[idx].name =
+                peripheral.name ?? String(localized: "bluetooth_default_peripheral_name")
         } else {
-            sensors.append(Sensor(peripheral: peripheral, name: peripheral.name ?? String(localized: "bluetooth_default_peripheral_name"), isConnected: false))
+            sensors.append(
+                Sensor(
+                    peripheral: peripheral,
+                    name: peripheral.name ?? String(localized: "bluetooth_default_peripheral_name"),
+                    isConnected: false))
         }
     }
 }
@@ -147,21 +157,24 @@ extension SensorController: CBCentralManagerDelegate {
             if sensorInfo != nil {
                 connectToSensor()
             }
-        }
-        else {
+        } else {
             log(String(localized: "bluetooth_not_available"))
         }
     }
-    
-    func centralManager(_ central: CBCentralManager,
-                        didDiscover peripheral: CBPeripheral,
-                        advertisementData: [String : Any],
-                        rssi RSSI: NSNumber) {
+
+    func centralManager(
+        _ central: CBCentralManager,
+        didDiscover peripheral: CBPeripheral,
+        advertisementData: [String: Any],
+        rssi RSSI: NSNumber
+    ) {
         addSensor(peripheral)
     }
-    
-    func centralManager(_ central: CBCentralManager,
-                        didConnect peripheral: CBPeripheral) {
+
+    func centralManager(
+        _ central: CBCentralManager,
+        didConnect peripheral: CBPeripheral
+    ) {
         log(String(localized: "bluetooth_sensor_connected"))
         sensorConnected = true
         peripheral.discoverServices([sensorServiceUUID])
@@ -169,10 +182,12 @@ extension SensorController: CBCentralManagerDelegate {
             sensors[idx].isConnected = true
         }
     }
-    
-    func centralManager(_ central: CBCentralManager,
-                        didDisconnectPeripheral peripheral: CBPeripheral,
-                        error: Error?) {
+
+    func centralManager(
+        _ central: CBCentralManager,
+        didDisconnectPeripheral peripheral: CBPeripheral,
+        error: Error?
+    ) {
         sensorConnected = false
         if let idx = sensors.firstIndex(where: { $0.peripheral == peripheral }) {
             sensors[idx].isConnected = false
@@ -186,38 +201,51 @@ extension SensorController: CBCentralManagerDelegate {
 
 // MARK: CBPeripheralDelegate
 extension SensorController: CBPeripheralDelegate {
-    func peripheral(_ peripheral: CBPeripheral,
-                    didDiscoverServices error: Error?) {
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didDiscoverServices error: Error?
+    ) {
         guard let service = peripheral.services?.first else { return }
         peripheral.discoverCharacteristics([sensorCharacteristicUUID], for: service)
     }
-    
-    func peripheral(_ peripheral: CBPeripheral,
-                    didDiscoverCharacteristicsFor service: CBService,
-                    error: Error?) {
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didDiscoverCharacteristicsFor service: CBService,
+        error: Error?
+    ) {
         guard let characteristic = service.characteristics?.first else { return }
         peripheral.setNotifyValue(true, for: characteristic)
     }
-    
-    func peripheral(_ peripheral: CBPeripheral,
-                    didUpdateNotificationStateFor characteristic: CBCharacteristic,
-                    error: Error?) {
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didUpdateNotificationStateFor characteristic: CBCharacteristic,
+        error: Error?
+    ) {
         if let error {
-            self.log(String(localized: "bluetooth_could_not_subscribe", defaultValue: "Could not subscribe to sensor \(error.localizedDescription)"))
+            self.log(
+                String(
+                    localized: "bluetooth_could_not_subscribe",
+                    defaultValue: "Could not subscribe to sensor \(error.localizedDescription)"))
         } else {
             self.log(String(localized: "bluetooth_listening_for_events"))
         }
     }
-    
-    func peripheral(_ peripheral: CBPeripheral,
-                    didUpdateValueFor characteristic: CBCharacteristic,
-                    error: Error?) {
+
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didUpdateValueFor characteristic: CBCharacteristic,
+        error: Error?
+    ) {
         if let byte = characteristic.value?.first {
             let value = Int8(bitPattern: byte)
             if value == 0 {
                 let now = Date.now
                 if let lastEvent = events.last {
-                    if Calendar.current.dateComponents([.nanosecond], from: lastEvent.time, to: now).nanosecond ?? 0 < 100_000_000 {
+                    if Calendar.current.dateComponents([.nanosecond], from: lastEvent.time, to: now)
+                        .nanosecond ?? 0 < 100_000_000
+                    {
                         return
                     }
                 }
@@ -234,14 +262,13 @@ extension SensorController {
     }
 }
 
-
 extension SensorController {
     private func loadSensorInfo() {
         if let loaded: SensorInfo = UserDefaults.standard.codable(forKey: self.sensorInfoKey) {
             sensorInfo = loaded
         }
     }
-    
+
     private func saveSensorInfo() {
         if let sensorInfo {
             UserDefaults.standard.setCodable(sensorInfo, forKey: sensorInfoKey)

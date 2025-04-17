@@ -9,22 +9,24 @@ import SwiftUI
 
 struct BikerList<Content: View, Filters: View>: View {
     @Environment(BikerStore.self) var bikerStore
-    
+
     var bikers: [Biker]
     var refreshable: Bool = false
     @State private var error: String?
-    
+
     var content: (Biker) -> Content
     var filters: (() -> Filters)?
-    
-    
-    init(_ bikers: [Biker], refreshable: Bool = false, @ViewBuilder content: @escaping (Biker) -> Content, filters: (() -> Filters)?) {
+
+    init(
+        _ bikers: [Biker], refreshable: Bool = false,
+        @ViewBuilder content: @escaping (Biker) -> Content, filters: (() -> Filters)?
+    ) {
         self.bikers = bikers
         self.refreshable = refreshable
         self.content = content
         self.filters = filters
     }
-    
+
     var body: some View {
         VStack {
             if let filters {
@@ -47,7 +49,7 @@ struct BikerList<Content: View, Filters: View>: View {
             }
         }
     }
-    
+
     var bikerList: some View {
         List {
             ForEach(bikers) { biker in
@@ -58,7 +60,10 @@ struct BikerList<Content: View, Filters: View>: View {
 }
 
 extension BikerList where Filters == Text {
-    init(_ bikers: [Biker], refreshable: Bool = false, @ViewBuilder content: @escaping (Biker) -> Content) {
+    init(
+        _ bikers: [Biker], refreshable: Bool = false,
+        @ViewBuilder content: @escaping (Biker) -> Content
+    ) {
         self.init(bikers, refreshable: refreshable, content: content, filters: nil)
     }
 }

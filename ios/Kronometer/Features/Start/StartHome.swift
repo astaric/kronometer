@@ -12,7 +12,7 @@ struct StartHome: View {
     @Environment(CountdownViewModel.self) var countdown
     @Environment(BikerStore.self) var bikerStore
     @EnvironmentObject var bleController: SensorController
-    
+
     @State var showBikerList = false
     @State var selectedBiker: Biker?
 
@@ -31,7 +31,7 @@ struct StartHome: View {
                 }
             }
     }
-    
+
     @ViewBuilder
     var orientationDependentLayout: some View {
         if verticalSizeClass == .regular {
@@ -50,7 +50,7 @@ struct StartHome: View {
             }
         } else {
             HStack {
-                VStack() {
+                VStack {
                     ZStack {
                         Color.clear
                         Countdown()
@@ -63,7 +63,7 @@ struct StartHome: View {
             }
         }
     }
-    
+
     @ViewBuilder
     var currentBiker: some View {
         NavigationLink {
@@ -74,7 +74,7 @@ struct StartHome: View {
                 .foregroundColor(.primary)
         }
     }
-    
+
     @ViewBuilder
     var bikerName: some View {
         if let selectedBiker {
@@ -83,7 +83,7 @@ struct StartHome: View {
             Text(String(localized: "no_more_contestants"))
         }
     }
-    
+
     var startButton: some View {
         Button {
             start()
@@ -103,7 +103,7 @@ struct StartHome: View {
             countdown.reset()
         }
     }
-    
+
     var separator: some View {
         Rectangle()
             .foregroundColor(.secondary)
@@ -126,7 +126,7 @@ struct StartHome_Previews: PreviewProvider {
             StartHome()
                 .environment(countdownModel)
                 .environmentObject(SensorController())
-        }        
+        }
         .environment(BikerStore())
     }
 }

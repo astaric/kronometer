@@ -20,7 +20,7 @@ struct Countdown: View {
             }
         }
     }
-    
+
     func countdownText(_ text: String) -> some View {
         Text(text)
             .font(.custom("", size: 100, relativeTo: .largeTitle))

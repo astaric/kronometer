@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SensorSettings: View {
     @EnvironmentObject var sensorController: SensorController
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             sensorList
@@ -17,7 +17,7 @@ struct SensorSettings: View {
             sensorEventLog
         }.navigationTitle(String(localized: "bluetooth_settings"))
     }
-    
+
     var sensorList: some View {
         List {
             if sensorController.discovering {
@@ -33,7 +33,7 @@ struct SensorSettings: View {
                     Text(String(localized: "button_discover_sensors"))
                 }
             }
-            
+
             ForEach(sensorController.sensors) { sensor in
                 Button {
                     if sensor.isConnected {
@@ -51,7 +51,7 @@ struct SensorSettings: View {
             }
         }
     }
-    
+
     var sensorEventLog: some View {
         ScrollView {
             ForEach(sensorController.logEntries.reversed()) { entry in

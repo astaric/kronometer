@@ -10,16 +10,18 @@ import SwiftUI
 struct UpdateLog: View {
     private(set) var updateManager: UpdateManager? = UpdateManager.shared
     @State private(set) var updates = [TimeUpdate]()
-    
+
     var body: some View {
         List {
             ForEach(updates) { update in
-                UpdateRow(update: update, retryAction: {
-                    Task {
-                        await updateManager?.retry(update)
-                        await refreshUpdates()
-                    }
-                })
+                UpdateRow(
+                    update: update,
+                    retryAction: {
+                        Task {
+                            await updateManager?.retry(update)
+                            await refreshUpdates()
+                        }
+                    })
             }
         }
         .task {
@@ -34,17 +36,17 @@ struct UpdateLog: View {
         }
         .navigationTitle(String(localized: "update_log"))
     }
-    
+
     private func refreshUpdates() async {
         if let updateManager {
             updates = await updateManager.getUpdates()
         }
     }
-    
+
     private struct UpdateRow: View {
         let update: TimeUpdate
         let retryAction: () -> Void
-        
+
         var body: some View {
             VStack {
                 HStack {
@@ -60,7 +62,7 @@ struct UpdateLog: View {
                 }
             }
         }
-        
+
         private var bikerNameAndTimes: some View {
             VStack {
                 HStack {
@@ -76,12 +78,12 @@ struct UpdateLog: View {
                 }
             }
         }
-        
+
         private var okIcon: some View {
             Image(systemName: "checkmark.circle")
                 .foregroundStyle(.green)
         }
-        
+
         private var retryButton: some View {
             Button {
                 retryAction()
@@ -89,7 +91,7 @@ struct UpdateLog: View {
                 Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90.circle")
             }
         }
-        
+
         private func errorMessage(_ error: String) -> some View {
             HStack {
                 Text(error)
@@ -98,7 +100,7 @@ struct UpdateLog: View {
             }
         }
     }
-    
+
     private struct TimeView: View {
         static private let formatter: DateFormatter = {
             let f = DateFormatter()
@@ -107,11 +109,11 @@ struct UpdateLog: View {
         }()
         let caption: String
         let time: Date
-        
+
         private var formattedTime: String {
             Self.formatter.string(from: time)
         }
-        
+
         var body: some View {
             HStack {
                 Text(caption)
@@ -124,9 +126,13 @@ struct UpdateLog: View {
 
 struct StartEventLog_Previews: PreviewProvider {
     static var previews: some View {
-        return UpdateLog(updateManager: nil, updates: [
-            TimeUpdate(biker: Biker(competition_id: 0, id: 1, name: "Anže"), startTime: .now),
-            TimeUpdate(biker: Biker(competition_id: 0, id: 2, name: "Jure"), endTime: .now, error: "Some error occured")
-        ])
+        return UpdateLog(
+            updateManager: nil,
+            updates: [
+                TimeUpdate(biker: Biker(competition_id: 0, id: 1, name: "Anže"), startTime: .now),
+                TimeUpdate(
+                    biker: Biker(competition_id: 0, id: 2, name: "Jure"), endTime: .now,
+                    error: "Some error occured"),
+            ])
     }
 }

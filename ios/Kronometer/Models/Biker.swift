@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct Biker: Codable, Hashable, Identifiable {
     var competition_id: Int
     var id: Int

@@ -13,11 +13,13 @@ struct SensorEvents: View {
     var sensorController: SensorController
     var arrived: Biker?
     @State var hideEventsBefore: Date?
-    
+
     var visibleEvents: [SensorEvent] {
-        sensorController.events.filter { if let hideEventsBefore { $0.time > hideEventsBefore} else { true }}
+        sensorController.events.filter {
+            if let hideEventsBefore { $0.time > hideEventsBefore } else { true }
+        }
     }
-    
+
     var body: some View {
         List {
             ForEach(visibleEvents) { event in
@@ -29,7 +31,7 @@ struct SensorEvents: View {
             }
         }
     }
-    
+
     fileprivate func eventView(_ event: SensorEvent) -> some View {
         return Text(event.time.formatted(.dateTime.hour().minute().second()))
             .bold(event.manual)
@@ -47,9 +49,9 @@ struct SensorEvents: View {
                 }
             }
     }
-    
+
     func showFivePreviousEvents() {
-        
+
         guard let hideEventsBefore = self.hideEventsBefore else { return }
         let hidden = self.sensorController.events.filter { $0.time < hideEventsBefore }
         if hidden.count <= 5 {
@@ -57,7 +59,7 @@ struct SensorEvents: View {
         } else {
             self.hideEventsBefore = hidden[hidden.count - 5].time
         }
-        
+
     }
 }
 

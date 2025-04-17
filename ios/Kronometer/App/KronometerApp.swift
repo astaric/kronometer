@@ -12,13 +12,13 @@ struct KronometerApp: App {
     @State var countdown = CountdownViewModel()
     @State var bikerStore = BikerStore()
     @StateObject var sensortController = SensorController()
-    
+
     var body: some Scene {
         WindowGroup {
             MainView()
                 .environmentObject(sensortController)
                 .environment(countdown)
                 .environment(bikerStore)
-       }
+        }
     }
 }

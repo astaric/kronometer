@@ -17,7 +17,7 @@ struct BikerListItem: View {
         self.selected = selected
         self.selectable = selectable
     }
-    
+
     var body: some View {
         HStack {
             if selectable {
@@ -40,13 +40,14 @@ struct BikerListItem: View {
                     .lineLimit(1)
             }
             Spacer()
-        }        
+        }
         .contentShape(Rectangle())
     }
-    
+
     var description: String {
         if let startTime = biker.startTime,
-           let endTime = biker.endTime {
+            let endTime = biker.endTime
+        {
             let fmt = DateComponentsFormatter()
             return fmt.string(from: startTime, to: endTime) ?? "finished"
         } else if let startTime = biker.startTime {
@@ -60,9 +61,12 @@ struct BikerListItem: View {
 struct StartListItem_Previews: PreviewProvider {
     static var previews: some View {
         List {
-            BikerListItem(Biker(competition_id: 0, id: 1, name: "Janez Novak", startTime: Date.now), selected: true)
+            BikerListItem(
+                Biker(competition_id: 0, id: 1, name: "Janez Novak", startTime: Date.now),
+                selected: true)
             BikerListItem(Biker(competition_id: 0, id: 2, name: "Janez Novak", startTime: Date.now))
-            BikerListItem(Biker(competition_id: 0, id: 33, name: "Janez Novak", startTime: Date.now))
+            BikerListItem(
+                Biker(competition_id: 0, id: 33, name: "Janez Novak", startTime: Date.now))
         }
     }
 }

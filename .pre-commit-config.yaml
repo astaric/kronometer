@@ -30,3 +30,8 @@ repos:
         entry: bash -c "poetry run python manage.py makemigrations --check --dry-run"
         types: [ "python" ]
         pass_filenames: false
+      - id: swift-format
+        name: SwiftFormat
+        entry: swift format -i
+        language: system
+        types: [swift]

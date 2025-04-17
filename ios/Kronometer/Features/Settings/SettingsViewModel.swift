@@ -17,18 +17,17 @@ class SettingsViewModel {
             apiManager.selectedCompetitionId = selectedCompetitionId
         }
     }
-    
+
     var hasError: Bool = false
     var errorMessage: String = ""
-    
-    
+
     let apiManager: ApiManager
     init(apiManager: ApiManager = .shared) {
         self.apiManager = apiManager
         self.isAuthenticated = apiManager.isAuthenticated
         self.selectedCompetitionId = apiManager.selectedCompetitionId
     }
-    
+
     func login(authenticateHandler: @escaping AuthService.AuthenticateHandler) async {
         do {
             try await apiManager.login(authenticateHandler: authenticateHandler)
@@ -39,7 +38,7 @@ class SettingsViewModel {
             handleError(error)
         }
     }
-    
+
     func logout() async {
         do {
             try await apiManager.logout()
@@ -47,9 +46,9 @@ class SettingsViewModel {
         } catch {
             handleError(error)
         }
-            
+
     }
-    
+
     func refresh() async {
         do {
             try await updateCompetitions()
@@ -57,7 +56,7 @@ class SettingsViewModel {
             handleError(error)
         }
     }
-    
+
     private func updateCompetitions() async throws {
         competitionsLoaded = false
         if apiManager.isAuthenticated {
@@ -65,7 +64,7 @@ class SettingsViewModel {
             competitionsLoaded = true
         }
     }
-    
+
     private func handleError(_ error: Error) {
         self.errorMessage = error.localizedDescription
         self.hasError = true
