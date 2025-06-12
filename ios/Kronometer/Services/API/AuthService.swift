@@ -8,7 +8,7 @@
 import CryptoKit
 import Foundation
 
-struct AccessToken: Codable {
+struct AccessToken: Codable, Equatable {
     var accessToken: String
     var expires: Date
     var refreshToken: String
@@ -55,13 +55,17 @@ class AuthService {
             redirectURI: redirectURI
         )
 
-        let callbackURL = try await authenticateHandler(
-            authorizeURL,
-            Constants.callbackURLScheme
-        )
-        guard let code = parseAuthorizationCode(from: callbackURL) else {
-            throw AuthError.invalidResponse("Missing authorization code")
+        var callbackURL: URL
+        do {
+            callbackURL = try await authenticateHandler(
+                authorizeURL,
+                Constants.callbackURLScheme
+            )
+        } catch {
+            print(error)
+            throw ApiError.loginCancelled
         }
+        let code = try parseAuthorizationCode(from: callbackURL)
 
         return try await getOAuthToken(
             code: code, codeVerifier: codeVerifier, redirectURI: redirectURI)
@@ -104,15 +108,22 @@ class AuthService {
         ]
 
         guard let authorizeURL = components?.url else {
-            throw AuthError.invalidRequest("Failed to construct authorize URL")
+            throw ApiError.invalidRequest("Failed to construct authorize URL")
         }
 
         return authorizeURL
     }
 
-    private func parseAuthorizationCode(from callbackURL: URL) -> String? {
-        URLComponents(string: callbackURL.absoluteString)?
-            .queryItems?.first(where: { $0.name == "code" })?.value
+    private func parseAuthorizationCode(from callbackURL: URL) throws -> String {
+        let queryItems = URLComponents(string: callbackURL.absoluteString)?
+            .queryItems
+        if let code = queryItems?.first(where: { $0.name == "code" })?.value {
+            return code
+        }
+        if let error = queryItems?.first(where: { $0.name == "error" })?.value {
+            throw ApiError.serverError(nil, error)
+        }
+        throw ApiError.serverError(nil, "Invalid callbackURL")
     }
 
     private func generateCodeVerifier() -> String {
@@ -163,7 +174,23 @@ class AuthService {
         _ body: [URLQueryItem]
     ) async throws -> AccessToken {
         let request = makePOSTRequest(path: Constants.tokenPath, body: body)
-        let (data, _) = try await session.data(for: request)
+        let (data, response) = try await session.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw ApiError.invalidResponse("No HTTP response received")
+        }
+        guard (200...299).contains(httpResponse.statusCode) else {
+            let decoder = JSONDecoder()
+
+            if let errorMessage = try? decoder.decode(ErrorResponse.self, from: data).error {
+                throw ApiError.serverError(httpResponse.statusCode, errorMessage)
+            } else if let responseString = String(data: data, encoding: .utf8) {
+                throw ApiError.serverError(httpResponse.statusCode, responseString)
+            } else {
+                throw ApiError.serverError(
+                    httpResponse.statusCode, "Server error: \(httpResponse.statusCode)")
+            }
+        }
 
         guard
             let json = try JSONSerialization.jsonObject(with: data)
@@ -172,15 +199,20 @@ class AuthService {
             let expiresIn = json["expires_in"] as? Double,
             let refreshToken = json["refresh_token"] as? String
         else {
-            throw AuthError.invalidResponse(
+            throw ApiError.invalidResponse(
                 "Invalid token data \(String(data: data, encoding: .utf8) ?? "No data)")")
         }
 
-        return AccessToken(
+        let token = AccessToken(
             accessToken: accessToken,
             expires: Date(timeIntervalSinceNow: expiresIn),
             refreshToken: refreshToken
         )
+        return token
+    }
+
+    struct ErrorResponse: Decodable {
+        let error: String
     }
 
     private func revokeOAuthToken(token: String) async throws {
@@ -195,10 +227,10 @@ class AuthService {
         let (_, response) = try await session.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw AuthError.invalidResponse("No HTTP response received")
+            throw ApiError.invalidResponse("No HTTP response received")
         }
         guard httpResponse.statusCode == 200 else {
-            throw AuthError.invalidResponse("Unexpected response from server")
+            throw ApiError.invalidResponse("Unexpected response from server")
         }
     }
 
@@ -223,25 +255,5 @@ class AuthService {
         static let authorizePath = "/oauth/authorize/"
         static let tokenPath = "/oauth/token/"
         static let revokePath = "/oauth/revoke_token/"
-    }
-}
-
-enum AuthError: Error, LocalizedError {
-    case missingToken
-    case invalidRequest(_ message: String)
-    case invalidResponse(_ message: String)
-
-    var errorDescription: String? {
-        switch self {
-        case .missingToken:
-            return String(localized: "error_missing_token")
-        case .invalidRequest(let message):
-            return String(
-                localized: "error_invalid_request", defaultValue: "Invalid request: \(message)")
-        case .invalidResponse(let message):
-            return String(
-                localized: "error_invalid_response",
-                defaultValue: "Invalid server response: \(message)")
-        }
     }
 }

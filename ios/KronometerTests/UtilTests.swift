@@ -7,6 +7,8 @@
 
 import XCTest
 
+@testable import Kronometer
+
 final class UtilTests: XCTestCase {
     func testSelectNextCycle() throws {
         let arr = [1, 2, 3, 4, 5]

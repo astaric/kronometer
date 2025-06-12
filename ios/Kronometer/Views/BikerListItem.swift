@@ -44,16 +44,18 @@ struct BikerListItem: View {
         .contentShape(Rectangle())
     }
 
+    static let durationFmt = DateComponentsFormatter()
+
     var description: String {
         if let startTime = biker.startTime,
             let endTime = biker.endTime
         {
-            let fmt = DateComponentsFormatter()
-            return fmt.string(from: startTime, to: endTime) ?? "finished"
+            return Self.durationFmt.string(from: startTime, to: endTime)
+                ?? String(localized: "duration_finished")
         } else if let startTime = biker.startTime {
-            return startTime.formatted(.dateTime.hour().minute().second())
+            return DateFormatter.hmsms.string(from: startTime)
         } else {
-            return "waiting"
+            return String(localized: "duration_waiting")
         }
     }
 }

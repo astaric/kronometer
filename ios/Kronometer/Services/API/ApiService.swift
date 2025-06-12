@@ -61,11 +61,12 @@ extension ApiService {
             let decoder = JSONDecoder()
 
             if let errorMessage = try? decoder.decode(ErrorResponse.self, from: data).error {
-                throw ApiError.serverError(errorMessage)
+                throw ApiError.serverError(httpResponse.statusCode, errorMessage)
             } else if let responseString = String(data: data, encoding: .utf8) {
-                throw ApiError.serverError(responseString)
+                throw ApiError.serverError(httpResponse.statusCode, responseString)
             } else {
-                throw ApiError.serverError("Server error: \(httpResponse.statusCode)")
+                throw ApiError.serverError(
+                    httpResponse.statusCode, "Server error: \(httpResponse.statusCode)")
             }
         }
 
@@ -146,30 +147,5 @@ extension ApiService {
             parameters: parameters,
             accessToken: accessToken
         )
-    }
-}
-
-enum ApiError: Error {
-    case noCompetitionSelected
-    case invalidRequest(_ message: String)
-    case invalidResponse(_ message: String)
-    case serverError(_ error: String)
-}
-
-extension ApiError: LocalizedError {
-    var errorDescription: String? {
-        switch self {
-        case .noCompetitionSelected:
-            return String(localized: "error_select_competition")
-        case .invalidRequest(let message):
-            return String(
-                localized: "error_invalid_request", defaultValue: "Invalid request: \(message)")
-        case .invalidResponse(let message):
-            return String(
-                localized: "error_invalid_response",
-                defaultValue: "Invalid server response: \(message)")
-        case .serverError(let error):
-            return error
-        }
     }
 }

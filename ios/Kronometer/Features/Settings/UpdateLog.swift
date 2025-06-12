@@ -25,7 +25,7 @@ struct UpdateLog: View {
             }
         }
         .task {
-            while true {
+            while !Task.isCancelled {
                 await refreshUpdates()
                 try? await Task.sleep(for: .seconds(2))
             }
@@ -37,6 +37,7 @@ struct UpdateLog: View {
         .navigationTitle(String(localized: "update_log"))
     }
 
+    @MainActor
     private func refreshUpdates() async {
         if let updateManager {
             updates = await updateManager.getUpdates()
@@ -102,16 +103,11 @@ struct UpdateLog: View {
     }
 
     private struct TimeView: View {
-        static private let formatter: DateFormatter = {
-            let f = DateFormatter()
-            f.dateFormat = "HH:mm:ss.SSS"
-            return f
-        }()
         let caption: String
         let time: Date
 
         private var formattedTime: String {
-            Self.formatter.string(from: time)
+            DateFormatter.hmsms.string(from: time)
         }
 
         var body: some View {

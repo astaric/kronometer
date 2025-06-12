@@ -55,8 +55,9 @@ struct SensorSettings: View {
     var sensorEventLog: some View {
         ScrollView {
             ForEach(sensorController.logEntries.reversed()) { entry in
+                let formattedTime = DateFormatter.hms.string(from: entry.time)
                 HStack {
-                    Text(entry.time.formatted(.dateTime.hour().minute().second()))
+                    Text(formattedTime)
                     Text(entry.message)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

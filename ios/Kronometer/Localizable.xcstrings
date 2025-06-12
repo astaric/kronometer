@@ -387,6 +387,38 @@
         }
       }
     },
+    "duration_finished" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "finished"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "na cilju"
+          }
+        }
+      }
+    },
+    "duration_waiting" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "waiting"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pripravljen"
+          }
+        }
+      }
+    },
     "error_invalid_request" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -420,6 +452,9 @@
           }
         }
       }
+    },
+    "error_login_cancelled" : {
+
     },
     "error_missing_token" : {
       "localizations" : {

@@ -47,7 +47,7 @@ extension ApiManager {  // Authenticate
 extension ApiManager {  // Competition
     func getNonArchivedCompetitions() async throws -> [ApiService.Competition] {
         guard let token = try await authService.validAccessToken() else {
-            throw AuthError.missingToken
+            throw ApiError.missingToken
         }
         return try await apiService.getCompetitions(accessToken: token.accessToken).filter {
             $0.archived == false
@@ -56,7 +56,7 @@ extension ApiManager {  // Competition
 
     func getBikers() async throws -> [ApiService.Biker] {
         guard let token = try await authService.validAccessToken() else {
-            throw AuthError.missingToken
+            throw ApiError.missingToken
         }
         guard let selectedCompetitionId else { throw ApiError.noCompetitionSelected }
         return try await apiService.getBikers(
@@ -65,7 +65,7 @@ extension ApiManager {  // Competition
 
     func updateTimes(for biker: Biker, startTime: Date? = nil, endTime: Date? = nil) async throws {
         guard let token = try await authService.validAccessToken() else {
-            throw AuthError.missingToken
+            throw ApiError.missingToken
         }
         return try await apiService.updateTimes(
             competitionId: biker.competition_id,
