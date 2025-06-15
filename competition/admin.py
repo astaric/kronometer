@@ -42,7 +42,7 @@ class BikerResultsInline(admin.TabularInline[CompetitionBiker, Biker]):
 @admin.register(Biker)
 class BikerAdmin(admin.ModelAdmin[Biker]):
     inlines = [BikerResultsInline]
-    list_display = ["name", "surname", "birth_year"]
+    list_display = ["name", "surname", "place", "birth_year"]
     search_fields = ["name", "surname"]
 
 

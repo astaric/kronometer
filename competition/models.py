@@ -24,6 +24,7 @@ class Biker(models.Model):
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     birth_year = models.IntegerField(null=True, blank=True)
+    place = models.CharField(max_length=100, null=True, blank=True)
     comment = models.CharField(max_length=100, null=True, blank=True)
     domestic = models.BooleanField(default=False, blank=True)
 
