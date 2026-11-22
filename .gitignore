@@ -10,3 +10,8 @@ KronometerApp/key.store
 db.sqlite3
 
 kronometer/staticfiles
+
+# KiCad local files
+pcb/**/*.kicad_prl
+pcb/**/fp-info-cache
+pcb/**/*-backups/
