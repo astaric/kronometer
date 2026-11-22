@@ -10,10 +10,12 @@ extension JSONDecoder.DateDecodingStrategy {
     static let iso8601withFractionalSeconds = custom { decoder in
         let container = try decoder.singleValueContainer()
         let dateString = try container.decode(String.self)
-        // Use the built-in Date.ISO8601FormatStyle with fractional seconds
-        let format = Date.ISO8601FormatStyle(includingFractionalSeconds: true)
-        if let date = try? Date(dateString, strategy: format) {
-            return date
+        // The server omits the fractional part when it is zero, so accept both forms.
+        for fractional in [true, false] {
+            let format = Date.ISO8601FormatStyle(includingFractionalSeconds: fractional)
+            if let date = try? Date(dateString, strategy: format) {
+                return date
+            }
         }
         throw DecodingError.dataCorruptedError(
             in: container,
