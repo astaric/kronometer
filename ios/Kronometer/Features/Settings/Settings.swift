@@ -5,6 +5,7 @@
 //  Created by Anze Staric on 14. 6. 24.
 //
 
+import AuthenticationServices
 import SwiftUI
 
 struct Settings: View {
@@ -112,7 +113,7 @@ struct Settings: View {
             Button(String(localized: "delete_all_data"), role: .destructive) {
                 Task {
                     bikerStore.removeAllData()
-                    try await bikerStore.refresh()
+                    try? await bikerStore.refresh()
                     await UpdateManager.shared.removeAllData()
                     showRemoveData = false
                 }
