@@ -15,6 +15,7 @@ repos:
     rev: v1.15.0
     hooks:
       - id: mypy
+        entry: env SECRET=pre-commit mypy
         additional_dependencies:
           - dj-database-url
           - django-oauth-toolkit
@@ -27,7 +28,7 @@ repos:
       - id: migrations-check
         language: system
         name: Check for uncreated migrations.
-        entry: bash -c "poetry run python manage.py makemigrations --check --dry-run"
+        entry: bash -c "SECRET=pre-commit poetry run python manage.py makemigrations --check --dry-run"
         types: [ "python" ]
         pass_filenames: false
       - id: swift-format

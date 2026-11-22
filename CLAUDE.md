@@ -13,7 +13,7 @@ Kronometer is a timing system for amateur bike races (Slovenian hill climbs such
 
 ## Backend commands
 
-Python 3.13, dependencies via Poetry. Default DB is `db.sqlite3` (gitignored); `DATABASE_URL` overrides it. Debug mode (debug toolbar, django-sass, `/static/`) only turns on with `DEBUG=True`.
+Python 3.13, dependencies via Poetry. The `SECRET` env var (Django `SECRET_KEY`) is required: settings raise `ImproperlyConfigured` without it, so `export SECRET=dev` locally. Default DB is `db.sqlite3` (gitignored); `DATABASE_URL` overrides it. Debug mode (debug toolbar, django-sass, `/static/`) only turns on with `DEBUG=True`.
 
 ```bash
 poetry install

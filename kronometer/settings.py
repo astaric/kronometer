@@ -16,6 +16,7 @@ from pathlib import Path
 import dj_database_url
 import django_stubs_ext
 import pymysql
+from django.core.exceptions import ImproperlyConfigured
 
 # Monkeypatch MySQLdb to use pymysql behind the scenes.
 pymysql.install_as_MySQLdb()
@@ -31,9 +32,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    "SECRET", "django-insecure-v86fy&2!^t12b@0am@-uf8u1e$zgkdq$9vcgaq-$g9n*o1(hn&"
-)
+try:
+    SECRET_KEY = os.environ["SECRET"]
+except KeyError:
+    raise ImproperlyConfigured("The SECRET environment variable must be set.") from None
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False") == "True"
