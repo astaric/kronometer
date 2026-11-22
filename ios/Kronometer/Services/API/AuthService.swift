@@ -86,9 +86,6 @@ class AuthService {
     private var clientId: String? {
         Bundle.main.object(forInfoDictionaryKey: "CLIENT_ID") as? String
     }
-    private var clientSecret: String? {
-        Bundle.main.object(forInfoDictionaryKey: "CLIENT_SECRET") as? String
-    }
 
     private func buildOAuthAuthorizeUrl(
         codeChallenge: String,
@@ -153,7 +150,6 @@ class AuthService {
             .init(name: "grant_type", value: "authorization_code"),
             .init(name: "code", value: code),
             .init(name: "client_id", value: clientId),
-            .init(name: "client_secret", value: clientSecret),
             .init(name: "code_verifier", value: codeVerifier),
             .init(name: "redirect_uri", value: redirectURI),
         ])
@@ -165,7 +161,6 @@ class AuthService {
         return try await getOAuthToken([
             .init(name: "grant_type", value: "refresh_token"),
             .init(name: "client_id", value: clientId),
-            .init(name: "client_secret", value: clientSecret),
             .init(name: "refresh_token", value: refreshToken),
         ])
     }
@@ -221,7 +216,6 @@ class AuthService {
             body: [
                 .init(name: "token", value: token),
                 .init(name: "client_id", value: clientId),
-                .init(name: "client_secret", value: clientSecret),
             ]
         )
         let (_, response) = try await session.data(for: request)
