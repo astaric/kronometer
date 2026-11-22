@@ -21,4 +21,4 @@ jobs:
       - name: Pull and deploy
         run: |
           ssh -i ~/.ssh/id_deploy naring85@cp-54.controlpanel.si \
-            'cd ~/repositories/kronometer && git pull --ff-only && /usr/local/cpanel/bin/uapi VersionControlDeployment create repository_root=$PWD'
+            'cd ~/repositories/kronometer && git pull --ff-only && bash deploy.sh'
