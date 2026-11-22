@@ -3,7 +3,7 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/naring85/kronometer.staric.net
     - export PYTHON=/home/naring85/virtualenv/kronometer.staric.net/3.13/bin/python
-    - /bin/rsync -a --exclude='.git' --exclude='.venv' --exclude='.idea' --exclude='*_cache' --exclude='db.sqlite3' --exclude='android' --exclude='ios' --exclude='pcb' --exclude='ArduinoSensor' --exclude='DummyArduinoSensor' ./ $DEPLOYPATH/
+    - /bin/rsync -rlt --no-perms --exclude='.git' --exclude='.venv' --exclude='.idea' --exclude='*_cache' --exclude='db.sqlite3' --exclude='android' --exclude='ios' --exclude='pcb' --exclude='ArduinoSensor' --exclude='DummyArduinoSensor' ./ $DEPLOYPATH/
     - cd $DEPLOYPATH && $PYTHON manage.py migrate --noinput
     - cd $DEPLOYPATH && $PYTHON manage.py collectstatic --noinput
     - mkdir -p $DEPLOYPATH/tmp && touch $DEPLOYPATH/tmp/restart.txt
