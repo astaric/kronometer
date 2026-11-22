@@ -15,3 +15,9 @@ kronometer/staticfiles
 pcb/**/*.kicad_prl
 pcb/**/fp-info-cache
 pcb/**/*-backups/
+
+# IDE and user-specific files
+.idea/
+**/.idea/
+xcuserdata/
+.DS_Store
