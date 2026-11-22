@@ -33,7 +33,6 @@
 		C7CABDFE2DAD01C500D2D1A8 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABDFD2DAD01BD00D2D1A8 /* KeychainManager.swift */; };
 		C7CABE092DAE9E8100D2D1A8 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABE082DAE9E7B00D2D1A8 /* AuthService.swift */; };
 		C7CABE0A2DAE9E8100D2D1A8 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABE082DAE9E7B00D2D1A8 /* AuthService.swift */; };
-		C7CABE0C2DAEA12000D2D1A8 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C7CABE0B2DAEA11200D2D1A8 /* Secrets.xcconfig */; };
 		C7CABE102DAF7FC900D2D1A8 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABE0F2DAF7FC500D2D1A8 /* ApiManager.swift */; };
 		C7CABE112DAF7FC900D2D1A8 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CABE0F2DAF7FC500D2D1A8 /* ApiManager.swift */; };
 		C7CABE192DAFEDDC00D2D1A8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = C7CABE182DAFEDDC00D2D1A8 /* Localizable.xcstrings */; };
@@ -378,7 +377,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 2720;
 				TargetAttributes = {
 					C79FB3582A248DF100FEFD59 = {
 						CreatedOnToolsVersion = 14.3;
@@ -417,7 +416,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7CABE0C2DAEA12000D2D1A8 /* Secrets.xcconfig in Resources */,
 				C7CABE192DAFEDDC00D2D1A8 /* Localizable.xcstrings in Resources */,
 				C79FB3642A248DF200FEFD59 /* Preview Assets.xcassets in Resources */,
 				C725243C2A24F2F30022680F /* Settings.bundle in Resources */,
@@ -501,7 +499,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.staric.KronometerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -523,7 +521,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.staric.KronometerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -541,6 +539,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -594,6 +593,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -605,6 +605,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -651,6 +652,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
